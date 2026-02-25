@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #1B3A5C;
+  --color-teal: #2A7F7F;
+  --color-warm-white: #FAFAF8;
+  --color-amber: #D4840A;
+  --color-light-gray: #F0EFED;
+  --color-text-main: #2C2C2C;
+  --color-text-light: #6B6B6B;
+  --color-green: #2D7D4A;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-serif: var(--font-playfair), Georgia, serif;
+}
