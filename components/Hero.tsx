@@ -1,16 +1,10 @@
+import Image from "next/image";
 import { CheckIcon, ArrowRightIcon } from "./Icons";
 
 const heroChecks = [
   "Antwort innerhalb von 24 Stunden — garantiert",
   "Preise ab €24/Einheit/Monat — offen auf dieser Seite",
   "Hamburger Unternehmen, kein anonymes Callcenter",
-];
-
-const painPoints = [
-  { label: "Telefonisch nie erreichbar", pct: 78 },
-  { label: "Abrechnung kam zu spät", pct: 63 },
-  { label: "Keine Transparenz bei Kosten", pct: 71 },
-  { label: "Handwerker-Probleme ungeklärt", pct: 55 },
 ];
 
 export function Hero() {
@@ -75,33 +69,24 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right — Pain point card */}
+          {/* Right — Hamburg hero image */}
           <div className="relative hidden lg:block">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 space-y-6">
-              <div className="text-sm font-semibold text-text-light uppercase tracking-wide">
-                Warum Eigentümer wechseln
-              </div>
-              {painPoints.map((p) => (
-                <div key={p.label}>
-                  <div className="flex justify-between items-center mb-1.5">
-                    <span className="text-sm text-navy font-medium">{p.label}</span>
-                    <span className="text-sm font-bold text-amber">{p.pct}%</span>
-                  </div>
-                  <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-teal to-navy rounded-full"
-                      style={{ width: `${p.pct}%` }}
-                    />
-                  </div>
-                </div>
-              ))}
-              <div className="pt-2 border-t border-gray-100 text-xs text-text-light">
-                [Estimate] Basierend auf Kundengesprächen und Google-Rezensionen Hamburger Hausverwaltungen
-              </div>
+            <div className="rounded-2xl overflow-hidden shadow-2xl">
+              <Image
+                src="/hero-hamburg.png"
+                alt="Hamburg HafenCity — Standort von einfach verwaltet."
+                width={1408}
+                height={768}
+                priority
+                className="w-full h-auto object-cover"
+              />
             </div>
-            <div className="absolute -top-4 -right-4 bg-amber text-white rounded-xl px-4 py-2 shadow-lg">
-              <div className="text-xs font-medium">Ab sofort in Hamburg</div>
-              <div className="text-lg font-bold">ab €24/Einheit</div>
+            <div className="absolute -bottom-4 -left-4 bg-white rounded-xl px-5 py-3 shadow-lg border border-gray-100">
+              <div className="text-xs font-medium text-text-light">Ab sofort in Hamburg</div>
+              <div className="text-xl font-bold text-navy">ab €24<span className="text-sm font-normal text-text-light">/Einheit/Monat</span></div>
+            </div>
+            <div className="absolute -top-3 -right-3 bg-teal text-white rounded-xl px-4 py-2 shadow-lg">
+              <div className="text-xs font-semibold">✓ 24h Antwortgarantie</div>
             </div>
           </div>
         </div>
