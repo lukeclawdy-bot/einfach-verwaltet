@@ -38,7 +38,7 @@ export function Kontakt() {
               Wir melden uns innerhalb von 24 Stunden
             </h2>
             <p className="text-text-light text-lg leading-relaxed mb-8">
-              Kein automatisierter Rückruf. Kein Warteschlangensystem. Eine echte Person aus Hamburg, die Ihre Situation versteht und ein konkretes Angebot vorbereitet.
+              Kein Warteschlangensystem. Kein „Wir melden uns irgendwann." Sie bekommen eine verbindliche Rückmeldung innerhalb von 24 Stunden — mit einem konkreten Angebot, das zu Ihrer Situation passt.
             </p>
 
             <div className="space-y-4">

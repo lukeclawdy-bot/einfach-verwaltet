@@ -3,7 +3,7 @@ import { ShieldIcon, CheckIcon } from "./Icons";
 const promises = [
   "Wir kündigen Ihre alte Verwaltung — Sie unterschreiben nur.",
   "Lückenlose Dokumentenübernahme in 30 Tagen.",
-  "Ihr Ansprechpartner bleibt der gleiche — vom Erstgespräch bis zur ersten Abrechnung.",
+  "Ein Wechsel, der tatsächlich funktioniert — vom Erstgespräch bis zur ersten Abrechnung.",
   "Keine Ausfallzeit. Kein Chaos. Keine bösen Überraschungen.",
 ];
 

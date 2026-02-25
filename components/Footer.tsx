@@ -13,7 +13,7 @@ export function Footer() {
               <span className="font-bold text-xl">einfach verwaltet.</span>
             </div>
             <p className="text-white/70 text-sm leading-relaxed max-w-xs">
-              Professionelle Hausverwaltung in Hamburg. Transparent, zuverlässig, menschlich.
+              Professionelle Hausverwaltung in Hamburg. Transparent, zuverlässig, immer erreichbar.
             </p>
             <div className="mt-4 text-sm font-semibold text-teal italic">
               „Ihre Immobilie? Einfach verwaltet."

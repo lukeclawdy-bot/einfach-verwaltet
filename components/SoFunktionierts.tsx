@@ -47,7 +47,7 @@ export function SoFunktionierts() {
           <HandshakeIcon className="w-10 h-10 mx-auto mb-4 opacity-80" />
           <h3 className="text-2xl font-bold mb-3 font-serif">Unser 24-Stunden-Versprechen</h3>
           <p className="text-white/80 max-w-xl mx-auto mb-6 leading-relaxed">
-            Jede Anfrage — per Telefon, E-Mail oder Portal — wird innerhalb von 24 Stunden beantwortet. Nicht von einem Bot. Von einem Menschen, der Ihre Immobilie kennt.
+            Jede Anfrage — per Telefon, E-Mail oder Portal — wird innerhalb von 24 Stunden beantwortet. Verbindlich, nachvollziehbar und ohne Warteschleife. Weil Ihre Immobilie nicht warten kann.
           </p>
           <div className="inline-flex items-center gap-2 bg-white/10 rounded-xl px-5 py-3 text-sm font-medium">
             <span className="text-amber flex gap-0.5">

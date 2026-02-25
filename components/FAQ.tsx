@@ -9,7 +9,7 @@ const faqs = [
   },
   {
     q: "Wie läuft der Wechsel von meiner bisherigen Hausverwaltung ab?",
-    a: "Wir übernehmen den gesamten Wechselprozess für Sie. Sie kündigen Ihren bestehenden Vertrag (oder wir unterstützen Sie dabei), und wir koordinieren die Übergabe aller Dokumente, Verträge und Konten. Der Übergang dauert in der Regel 3–4 Wochen. Ihr persönlicher Ansprechpartner begleitet Sie vom Erstgespräch bis zur ersten Abrechnung.",
+    a: "Wir übernehmen den gesamten Wechselprozess für Sie. Sie kündigen Ihren bestehenden Vertrag (oder wir unterstützen Sie dabei), und wir koordinieren die Übergabe aller Dokumente, Verträge und Konten. Der Übergang dauert in der Regel 3–4 Wochen — ohne Lücken, ohne Chaos, ohne Stress für Sie oder Ihre Mieter.",
   },
   {
     q: "Was ist im Preis enthalten?",
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     q: "Was unterscheidet Sie von großen Hausverwaltungen wie Buena oder Matera?",
-    a: "Transparenz und Nähe. Wir zeigen unsere Preise offen — bei den meisten Wettbewerbern müssen Sie erst ein Formular ausfüllen. Und wir sind ein Hamburger Unternehmen, das vor Ort ist — kein Fernverwalter aus Berlin oder München. Dazu kommt: 24h Reaktionszeit (nicht 48h), persönlicher Ansprechpartner, und ein digitales Portal für volle Kostentransparenz.",
+    a: "Transparenz und Nähe. Wir zeigen unsere Preise offen — bei den meisten Wettbewerbern müssen Sie erst ein Formular ausfüllen. Und wir sind ein Hamburger Unternehmen, das vor Ort ist — kein Fernverwalter aus Berlin oder München. Dazu kommt: 24h Reaktionszeit statt 48h, ein digitales Portal mit voller Kostentransparenz, und ein Wechselprozess, der tatsächlich reibungslos funktioniert.",
   },
   {
     q: "Verwalten Sie auch WEG-Gemeinschaften?",
