@@ -68,7 +68,7 @@ export function Kontakt() {
                 </div>
                 <div>
                   <div className="text-xs font-semibold text-text-light uppercase tracking-wide">Standort</div>
-                  <div className="text-navy font-medium">HafenCity, Hamburg</div>
+                  <div className="text-navy font-medium">Singapurstr. 19, 20457 Hamburg</div>
                 </div>
               </div>
             </div>

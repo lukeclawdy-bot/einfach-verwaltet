@@ -52,10 +52,9 @@ export default function Datenschutz() {
       <p>
         RVLT Ventures GmbH<br />
         handelnd unter der Marke „einfach verwaltet."<br />
-        Am Sandtorkai 27<br />
+        Singapurstr. 19<br />
         20457 Hamburg<br />
         <br />
-        Telefon: +49 (0)40 — folgt<br />
         E-Mail: datenschutz@einfach-verwaltet.de
       </p>
       <p>

@@ -47,12 +47,17 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-white/50 text-sm">
-            © {new Date().getFullYear()} einfach verwaltet. Hausverwaltung Hamburg GmbH (in Gründung). Alle Rechte vorbehalten.
+        <div className="border-t border-white/10 pt-8">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-4">
+            <div className="text-white/50 text-sm">
+              © {new Date().getFullYear()} RVLT Ventures GmbH. Alle Rechte vorbehalten.
+            </div>
+            <div className="flex items-center gap-2 text-white/50 text-xs">
+              <span>Made in Hamburg 🏴‍☠️</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-white/50 text-xs">
-            <span>Made in Hamburg 🏴‍☠️</span>
+          <div className="text-white/35 text-xs text-center sm:text-left leading-relaxed">
+            RVLT Ventures GmbH · Singapurstr. 19, 20457 Hamburg · AG Hamburg HRB 193395 · GF: Lukas Schmitz
           </div>
         </div>
       </div>

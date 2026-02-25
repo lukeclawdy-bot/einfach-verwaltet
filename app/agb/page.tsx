@@ -10,7 +10,7 @@ export default function AGB() {
   return (
     <LegalLayout title="Allgemeine Geschäftsbedingungen">
       <p>
-        der RVLT Ventures GmbH, handelnd unter der Marke „einfach verwaltet.", Am Sandtorkai 27,
+        der RVLT Ventures GmbH, handelnd unter der Marke „einfach verwaltet.", Singapurstr. 19,
         20457 Hamburg (nachfolgend „Verwalter") für die Erbringung von Hausverwaltungsleistungen.
       </p>
 

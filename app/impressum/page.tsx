@@ -14,7 +14,7 @@ export default function Impressum() {
         RVLT Ventures GmbH<br />
         handelnd unter der Marke „einfach verwaltet."<br />
         <br />
-        Am Sandtorkai 27<br />
+        Singapurstr. 19<br />
         20457 Hamburg
       </p>
 
@@ -23,7 +23,6 @@ export default function Impressum() {
 
       <h2>Kontakt</h2>
       <p>
-        Telefon: +49 (0)40 — folgt<br />
         E-Mail: kontakt@einfach-verwaltet.de
       </p>
 
@@ -31,7 +30,7 @@ export default function Impressum() {
       <p>
         Eintragung im Handelsregister.<br />
         Registergericht: Amtsgericht Hamburg<br />
-        Registernummer: folgt
+        Registernummer: HRB 193395
       </p>
 
       <h2>Umsatzsteuer-Identifikationsnummer</h2>
@@ -59,7 +58,7 @@ export default function Impressum() {
       <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
       <p>
         Lukas Schmitz<br />
-        Am Sandtorkai 27<br />
+        Singapurstr. 19<br />
         20457 Hamburg
       </p>
 
