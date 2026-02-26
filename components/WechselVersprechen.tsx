@@ -34,10 +34,10 @@ export function WechselVersprechen() {
         </div>
 
         <a
-          href="#kontakt"
+          href="/anfrage"
           className="inline-flex items-center justify-center gap-2 bg-white text-navy px-8 py-4 rounded-xl font-semibold text-base hover:bg-white/90 transition-all hover:shadow-lg"
         >
-          Jetzt wechseln — kostenlos anfragen
+          Jetzt wechseln — Angebot in 2 Min
         </a>
         <p className="text-white/40 text-xs mt-4">
           Kostenlos und unverbindlich. Wir melden uns noch am selben Tag.

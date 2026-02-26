@@ -5,24 +5,46 @@ import { useState, FormEvent } from "react";
 
 export function Kontakt() {
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     const form = e.currentTarget;
     const data = new FormData(form);
-    const name = data.get("name") as string;
-    const email = data.get("email") as string;
-    const telefon = data.get("telefon") as string;
-    const einheiten = data.get("einheiten") as string;
-    const typ = data.get("typ") as string;
-    const nachricht = data.get("nachricht") as string;
 
-    const subject = encodeURIComponent(`Anfrage von ${name} — einfach verwaltet.`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nE-Mail: ${email}\nTelefon: ${telefon || "—"}\nEinheiten: ${einheiten || "—"}\nTyp: ${typ || "—"}\n\nNachricht:\n${nachricht || "—"}`
-    );
-    window.location.href = `mailto:kontakt@einfach-verwaltet.de?subject=${subject}&body=${body}`;
-    setSubmitted(true);
+    const payload = {
+      name: data.get("name") as string,
+      email: data.get("email") as string,
+      telefon: data.get("telefon") as string,
+      einheiten: data.get("einheiten") as string,
+      typ: data.get("typ") as string,
+      nachricht: data.get("nachricht") as string,
+      website: data.get("website") as string, // honeypot
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        const json = await res.json().catch(() => ({}));
+        setError(json.error || "Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.");
+      }
+    } catch {
+      setError("Verbindungsfehler. Bitte versuchen Sie es erneut.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -86,6 +108,11 @@ export function Kontakt() {
           {/* Right — Form */}
           <div className="bg-warm-white rounded-2xl p-8 border border-gray-100 shadow-sm">
             <form className="space-y-5" onSubmit={handleSubmit}>
+              {/* Honeypot — hidden from humans, filled by bots */}
+              <div style={{ display: "none" }} aria-hidden="true">
+                <label htmlFor="website">Website (nicht ausfüllen)</label>
+                <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
               <div>
                 <h3 className="text-lg font-bold text-navy mb-1">Kostenloses Erstgespräch anfragen</h3>
                 <p className="text-sm text-text-light">Alle Felder mit * sind Pflichtfelder.</p>
@@ -142,14 +169,22 @@ export function Kontakt() {
                 </label>
               </div>
 
-              <button type="submit" className="w-full bg-navy text-white py-4 px-6 rounded-xl font-semibold text-base hover:bg-navy/85 disabled:opacity-60 transition-all hover:shadow-md">
-                Kostenlos anfragen →
+              <button
+                type="submit"
+                disabled={loading || submitted}
+                className="w-full bg-navy text-white py-4 px-6 rounded-xl font-semibold text-base hover:bg-navy/85 disabled:opacity-60 transition-all hover:shadow-md"
+              >
+                {loading ? "Wird gesendet…" : "Kostenlos anfragen →"}
               </button>
 
               {submitted && (
                 <p className="text-teal font-semibold text-center text-sm">
                   ✓ Vielen Dank! Wir melden uns noch heute bei Ihnen.
                 </p>
+              )}
+
+              {error && (
+                <p className="text-red-500 text-sm text-center">{error}</p>
               )}
 
               <p className="text-xs text-text-light text-center">Kostenlos &amp; unverbindlich. Keine Kaltakquise.</p>

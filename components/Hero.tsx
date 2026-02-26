@@ -60,10 +60,10 @@ export function Hero() {
 
             <div className="flex flex-col sm:flex-row gap-4">
               <a
-                href="#kontakt"
+                href="/anfrage"
                 className="inline-flex items-center justify-center gap-2 bg-navy text-white px-8 py-4 rounded-xl font-semibold text-base hover:bg-navy/85 transition-all hover:shadow-lg hover:-translate-y-0.5"
               >
-                Kostenloses Erstgespräch
+                Angebot in 2 Minuten
                 <ArrowRightIcon className="w-4 h-4" />
               </a>
               <a
@@ -95,15 +95,12 @@ export function Hero() {
                   </div>
                 </div>
               ))}
-              <div className="pt-2 border-t border-gray-100 text-xs text-text-light">
-                Basierend auf Google-Rezensionen Hamburger Hausverwaltungen [Analyse, 2026]
-              </div>
             </div>
 
-            {/* Price badge — top right */}
-            <div className="absolute -top-4 -right-4 bg-amber text-white rounded-xl px-4 py-2.5 shadow-lg">
-              <div className="text-xs font-medium">Ab sofort in Hamburg</div>
-              <div className="text-lg font-bold">ab €24/Einheit</div>
+            {/* Price badge — below card */}
+            <div className="mt-4 inline-flex items-center gap-3 bg-amber text-white rounded-xl px-5 py-3 shadow-lg">
+              <div className="text-xs font-medium leading-tight">Ab sofort<br />in Hamburg</div>
+              <div className="text-xl font-bold">ab €24<span className="text-sm font-normal opacity-80">/Einheit</span></div>
             </div>
           </div>
         </div>
