@@ -108,3 +108,140 @@ export function getDemoTickets() {
     },
   ];
 }
+
+// Rent collection demo data
+export function getDemoRentCollectionData() {
+  const today = new Date();
+  const dueDate = new Date(today.getFullYear(), today.getMonth(), 3);
+  
+  return {
+    items: [
+      {
+        tenantId: "demo-t1",
+        tenantName: "Maria Schmidt",
+        propertyAddress: "Musterstraße 12",
+        unitDesignation: "Whg. 2",
+        coldRentCents: 120000, // €1,200
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "paid" as const,
+        daysOverdue: 0,
+        mahnungLevel: 0,
+        mahnungCount: 0,
+      },
+      {
+        tenantId: "demo-t2",
+        tenantName: "Hans Müller",
+        propertyAddress: "Musterstraße 12",
+        unitDesignation: "Whg. 3",
+        coldRentCents: 98000, // €980
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "overdue" as const,
+        daysOverdue: 12,
+        mahnungLevel: 2,
+        mahnungCount: 1,
+      },
+      {
+        tenantId: "demo-t3",
+        tenantName: "Lisa Weber",
+        propertyAddress: "Alsterblick 5",
+        unitDesignation: "Whg. 1",
+        coldRentCents: 145000, // €1,450
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "paid" as const,
+        daysOverdue: 0,
+        mahnungLevel: 0,
+        mahnungCount: 0,
+      },
+      {
+        tenantId: "demo-t4",
+        tenantName: "Thomas Klein",
+        propertyAddress: "Alsterblick 5",
+        unitDesignation: "Whg. 2",
+        coldRentCents: 110000, // €1,100
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "pending" as const,
+        daysOverdue: 0,
+        mahnungLevel: 0,
+        mahnungCount: 0,
+      },
+      {
+        tenantId: "demo-t5",
+        tenantName: "Sarah Fischer",
+        propertyAddress: "Musterstraße 12",
+        unitDesignation: "Whg. 5",
+        coldRentCents: 87500, // €875
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "overdue" as const,
+        daysOverdue: 25,
+        mahnungLevel: 2,
+        mahnungCount: 2,
+      },
+      {
+        tenantId: "demo-t6",
+        tenantName: "Michael Bauer",
+        propertyAddress: "Alsterblick 5",
+        unitDesignation: "Whg. 4",
+        coldRentCents: 132000, // €1,320
+        dueDate: dueDate.toISOString(),
+        paymentStatus: "overdue" as const,
+        daysOverdue: 5,
+        mahnungLevel: 1,
+        mahnungCount: 0,
+      },
+    ],
+    stats: {
+      totalRentRollCents: 692500, // €6,925 total monthly rent
+      collectedThisMonthCents: 365000, // €3,650 collected (52.7%)
+      outstandingCents: 327500, // €3,275 outstanding
+      collectionRate: 53,
+      overdueCount: 3,
+    },
+  };
+}
+
+// Mahnung management demo data
+export function getDemoMahnungData() {
+  const today = new Date();
+  const dueDate = new Date(today.getFullYear(), today.getMonth(), 3);
+  
+  return {
+    items: [
+      {
+        tenantId: "demo-t2",
+        tenantName: "Hans Müller",
+        propertyAddress: "Musterstraße 12",
+        unitDesignation: "Whg. 3",
+        coldRentCents: 98000,
+        dueDate: dueDate.toISOString(),
+        daysOverdue: 12,
+        mahnungLevel: 2,
+        lastMahnungDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        mahnungCount: 1,
+      },
+      {
+        tenantId: "demo-t5",
+        tenantName: "Sarah Fischer",
+        propertyAddress: "Musterstraße 12",
+        unitDesignation: "Whg. 5",
+        coldRentCents: 87500,
+        dueDate: dueDate.toISOString(),
+        daysOverdue: 25,
+        mahnungLevel: 2,
+        lastMahnungDate: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+        mahnungCount: 2,
+      },
+      {
+        tenantId: "demo-t6",
+        tenantName: "Michael Bauer",
+        propertyAddress: "Alsterblick 5",
+        unitDesignation: "Whg. 4",
+        coldRentCents: 132000,
+        dueDate: dueDate.toISOString(),
+        daysOverdue: 5,
+        mahnungLevel: 1,
+        lastMahnungDate: undefined,
+        mahnungCount: 0,
+      },
+    ],
+  };
+}

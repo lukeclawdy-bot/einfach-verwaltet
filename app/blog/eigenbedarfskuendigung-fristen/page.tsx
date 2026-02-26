@@ -54,7 +54,7 @@ const faqJsonLd = {
       name: "Wer gilt als berechtigter Angehöriger für Eigenbedarfskündigung?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Als berechtigte Angehörige gelten nach §573 Abs. 2 Satz 1 BGB: Ehegatten oder Lebenspartner, Eltern und Kinder, Enkelkinder, Geschwister, Schwiegereltern und Schwiegerkinder. Der Angehörige muss den Bedarf tatsächlich haben — eine bloße "Vorsorgekündigung" für später ist unwirksam.",
+        text: "Als berechtigte Angehörige gelten nach §573 Abs. 2 Satz 1 BGB: Ehegatten oder Lebenspartner, Eltern und Kinder, Enkelkinder, Geschwister, Schwiegereltern und Schwiegerkinder. Der Angehörige muss den Bedarf tatsächlich haben — eine bloße 'Vorsorgekündigung' für später ist unwirksam.",
       },
     },
     {
