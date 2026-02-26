@@ -6,13 +6,36 @@ export const tenantMessage = inngest.createFunction(
   async ({ event, step }) => {
     const { message, tenantId, propertyId, landlordEmail } = event.data;
 
-    // Step 1: Classify message via OpenAI
+    // Step 1: Classify message via OpenRouter
     const classification = await step.run("classify-message", async () => {
-      if (!process.env.OPENAI_API_KEY) {
+      if (!process.env.OPENROUTER_API_KEY) {
         return { category: "general", urgency: 2, summary: message.substring(0, 100) };
       }
-      // OpenAI classification would go here
-      return { category: "maintenance", urgency: 3, summary: message.substring(0, 100) };
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://einfach-verwaltet.de",
+          "X-Title": "einfach verwaltet. — Tenant Message Classifier",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash", // Fast + cheap for classification
+          messages: [
+            {
+              role: "system",
+              content: `Du bist ein Assistent für eine deutsche Hausverwaltung. Klassifiziere Mieteranfragen.
+Antworte NUR mit JSON: {"category": "maintenance|payment|complaint|general", "urgency": 1-5, "summary": "max 100 Zeichen"}
+Urgency-Skala: 1=unwichtig, 3=normal, 5=Notfall (Wasser/Feuer/Heizung im Winter)`
+            },
+            { role: "user", content: message }
+          ],
+          response_format: { type: "json_object" },
+        }),
+      });
+      const data = await res.json();
+      const content = data.choices?.[0]?.message?.content;
+      return content ? JSON.parse(content) : { category: "general", urgency: 2, summary: message.substring(0, 100) };
     });
 
     // Step 2: Create ticket if maintenance or urgent
