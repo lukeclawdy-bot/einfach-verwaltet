@@ -12,16 +12,31 @@
  *   POST   /api/auth/login              — JWT login
  *   GET    /api/auth/me                 — current user
  *   POST   /api/auth/logout             — invalidate session
- *   POST   /api/properties              — create property
+ *   
  *   GET    /api/properties              — list properties
+ *   POST   /api/properties              — create property
  *   GET    /api/properties/:id          — property detail + units
+ *   PATCH  /api/properties/:id          — update property
+ *   DELETE /api/properties/:id          — soft delete property
  *   GET    /api/properties/:id/units    — list units
- *   POST   /api/tickets                 — create ticket
+ *   
+ *   GET    /api/tenants                 — list tenants
+ *   POST   /api/tenants                 — create tenant
+ *   GET    /api/tenants/:id             — tenant detail + history
+ *   PATCH  /api/tenants/:id             — update tenant
+ *   
  *   GET    /api/tickets                 — list tickets (filterable)
+ *   POST   /api/tickets                 — create ticket
  *   GET    /api/tickets/:id             — ticket detail
  *   PATCH  /api/tickets/:id             — update ticket
+ *   GET    /api/tickets/:id/messages    — conversation thread
+ *   
+ *   POST   /api/conversations          — new message
+ *   GET    /api/conversations/:tenantId — message history
+ *   
  *   GET    /api/dashboard/summary       — portfolio KPIs
  *   GET    /api/dashboard/properties    — property summary list
+ *   
  *   POST   /api/ai/chat                 — AI tenant response (Claude)
  *   GET    /api/ai/intents              — available intent types
  *   GET    /api/health                  — health check
@@ -37,8 +52,10 @@ import { serve } from '@hono/node-server';
 
 // Route handlers
 import authRoutes from './routes/auth/auth.routes.js';
-import propertiesRoutes from './routes/properties/properties.routes.js';
-import ticketsRoutes from './routes/tickets/tickets.routes.js';
+import propertiesRoutes from './routes/properties.js';
+import tenantsRoutes from './routes/tenants.js';
+import ticketsRoutes from './routes/tickets.js';
+import conversationsRoutes from './routes/conversations.js';
 import dashboardRoutes from './routes/dashboard/dashboard.routes.js';
 import aiRoutes from './routes/ai/ai.routes.js';
 
@@ -79,7 +96,9 @@ app.get('/api/health', (c) => {
     endpoints: {
       auth: '/api/auth',
       properties: '/api/properties',
+      tenants: '/api/tenants',
       tickets: '/api/tickets',
+      conversations: '/api/conversations',
       dashboard: '/api/dashboard',
       ai: '/api/ai',
     },
@@ -90,7 +109,9 @@ app.get('/api/health', (c) => {
 
 app.route('/api/auth', authRoutes);
 app.route('/api/properties', propertiesRoutes);
+app.route('/api/tenants', tenantsRoutes);
 app.route('/api/tickets', ticketsRoutes);
+app.route('/api/conversations', conversationsRoutes);
 app.route('/api/dashboard', dashboardRoutes);
 app.route('/api/ai', aiRoutes);
 
@@ -102,15 +123,27 @@ app.notFound((c) => {
     code: 'NOT_FOUND',
     path: c.req.path,
     availableRoutes: [
-      'GET  /api/health',
-      'POST /api/auth/login',
-      'GET  /api/auth/me',
-      'POST /api/properties',
-      'GET  /api/properties',
-      'POST /api/tickets',
-      'GET  /api/tickets',
-      'GET  /api/dashboard/summary',
-      'POST /api/ai/chat',
+      'GET    /api/health',
+      'POST   /api/auth/login',
+      'GET    /api/auth/me',
+      'GET    /api/properties',
+      'POST   /api/properties',
+      'GET    /api/properties/:id',
+      'PATCH  /api/properties/:id',
+      'DELETE /api/properties/:id',
+      'GET    /api/tenants',
+      'POST   /api/tenants',
+      'GET    /api/tenants/:id',
+      'PATCH  /api/tenants/:id',
+      'GET    /api/tickets',
+      'POST   /api/tickets',
+      'GET    /api/tickets/:id',
+      'PATCH  /api/tickets/:id',
+      'GET    /api/tickets/:id/messages',
+      'POST   /api/conversations',
+      'GET    /api/conversations/:tenantId',
+      'GET    /api/dashboard/summary',
+      'POST   /api/ai/chat',
     ],
   }, 404);
 });

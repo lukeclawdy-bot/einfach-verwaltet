@@ -146,6 +146,24 @@ export interface RefreshToken {
   createdAt: Date;
 }
 
+export interface Message {
+  id: string;
+  ticketId: string;
+  senderId: string;
+  senderType: 'tenant' | 'agent' | 'system' | 'partner';
+  recipientId?: string;
+  content: string;
+  channel: 'email' | 'whatsapp' | 'portal' | 'sms' | 'phone';
+  isInternal: boolean;
+  attachments?: Array<{
+    name: string;
+    url: string;
+    mimeType: string;
+  }>;
+  metadata?: Record<string, unknown>;
+  createdAt: Date;
+}
+
 // ─── Seed Data ───────────────────────────────────────────────────────────────
 
 const ORG_ID = 'org_demo001';
@@ -286,6 +304,13 @@ export const mockDB = {
   ]),
 
   refreshTokens: new Map<string, RefreshToken>(),
+
+  messages: new Map<string, Message>([
+    ['msg_001', { id: 'msg_001', ticketId: 'tkt_001', senderId: 'usr_tenant001', senderType: 'tenant', content: 'Meine Heizung funktioniert nicht mehr seit gestern Abend. Es ist sehr kalt!', channel: 'portal', isInternal: false, createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000) }],
+    ['msg_002', { id: 'msg_002', ticketId: 'tkt_001', senderId: 'system', senderType: 'system', content: 'Ticket #TKT-1001 erstellt. Priorität: Notfall (2h SLA)', channel: 'portal', isInternal: true, createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000 + 1000) }],
+    ['msg_003', { id: 'msg_003', ticketId: 'tkt_001', senderId: 'usr_admin001', senderType: 'agent', content: 'Wir haben einen Techniker beauftragt. Er wird sich innerhalb der nächsten 2 Stunden bei Ihnen melden.', channel: 'email', isInternal: false, createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000) }],
+    ['msg_004', { id: 'msg_004', ticketId: 'tkt_002', senderId: 'usr_tenant001', senderType: 'tenant', content: 'Der Wasserhahn im Badezimmer tropft seit einigen Tagen. Können Sie das bitte reparieren lassen?', channel: 'portal', isInternal: false, createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000) }],
+  ]),
 };
 
 // ─── Helper: generate simple IDs ─────────────────────────────────────────────
@@ -476,5 +501,80 @@ export const MockDB = {
         mockDB.refreshTokens.set(id, { ...rt, revokedAt: new Date() });
       }
     }
+  },
+
+  // Tenancies (Tenants)
+  async listTenanciesByOrg(organizationId: string): Promise<Tenancy[]> {
+    const result: Tenancy[] = [];
+    for (const t of mockDB.tenancies.values()) {
+      if (t.organizationId === organizationId && !t.deletedAt) result.push(t);
+    }
+    return result.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  },
+
+  async findTenancyById(id: string, organizationId: string): Promise<Tenancy | undefined> {
+    const t = mockDB.tenancies.get(id);
+    return t && t.organizationId === organizationId && !t.deletedAt ? t : undefined;
+  },
+
+  async createTenancy(data: Omit<Tenancy, 'id' | 'createdAt' | 'updatedAt'>): Promise<Tenancy> {
+    const tenancy: Tenancy = {
+      ...data,
+      id: generateId('ten'),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    mockDB.tenancies.set(tenancy.id, tenancy);
+    return tenancy;
+  },
+
+  // Units
+  async findUnitById(id: string): Promise<Unit | undefined> {
+    const u = mockDB.units.get(id);
+    return u && !u.deletedAt ? u : undefined;
+  },
+
+  // Tickets by tenancy
+  async listTicketsByTenancy(tenancyId: string, organizationId: string): Promise<Ticket[]> {
+    const result: Ticket[] = [];
+    for (const t of mockDB.tickets.values()) {
+      if (t.tenancyId === tenancyId && t.organizationId === organizationId && !t.deletedAt) {
+        result.push(t);
+      }
+    }
+    return result.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  },
+
+  // Messages
+  async listMessagesByTicket(ticketId: string): Promise<Message[]> {
+    const result: Message[] = [];
+    for (const m of mockDB.messages.values()) {
+      if (m.ticketId === ticketId) result.push(m);
+    }
+    return result.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+  },
+
+  async listMessagesByTenant(tenantId: string, organizationId: string): Promise<Message[]> {
+    const result: Message[] = [];
+    // Get tickets for this tenant
+    const tenantTickets = await MockDB.listTicketsByTenancy(tenantId, organizationId);
+    const ticketIds = new Set(tenantTickets.map(t => t.id));
+    
+    for (const m of mockDB.messages.values()) {
+      if (ticketIds.has(m.ticketId) || m.senderId === tenantId || m.recipientId === tenantId) {
+        result.push(m);
+      }
+    }
+    return result;
+  },
+
+  async createMessage(data: Omit<Message, 'id' | 'createdAt'>): Promise<Message> {
+    const message: Message = {
+      ...data,
+      id: generateId('msg'),
+      createdAt: new Date(),
+    };
+    mockDB.messages.set(message.id, message);
+    return message;
   },
 };
