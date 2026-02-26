@@ -67,7 +67,6 @@ const posts = [
     date: "Februar 2026",
   },
   {
-  {
     slug: "weg-hamburg",
     title: "WEG Hamburg: Was Wohnungseigentümer über die Verwaltung wissen müssen",
     description:

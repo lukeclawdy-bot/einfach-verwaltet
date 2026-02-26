@@ -177,7 +177,7 @@ export default function Post() {
             <ol className="list-decimal pl-6 space-y-2">
               <li>Kündigungsfrist des bestehenden Vertrages prüfen (6-12 Monate üblich)</li>
               <li>Termin für Eigentümerversammlung setzen (Einladung 2 Wochen im Voraus)</li>
-              <li>Mehrheitsrechnung: >25% MEA für Abberufung + Neuwahl erforderlich</li>
+              <li>Mehrheitsrechnung: &gt;25% MEA für Abberufung + Neuwahl erforderlich</li>
               <li>Neue Verwalteroptionen evaluieren (mindestens 3 Angebote einholen)</li>
               <li>Beschlussfassung in der ETV protokollieren</li>
               <li>Übergabeprotokoll zwischen altem und neuem Verwalter erstellen</li>

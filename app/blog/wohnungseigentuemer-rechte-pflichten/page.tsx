@@ -180,7 +180,7 @@ export default function Post() {
             </p>
             <ul className="list-disc pl-6 space-y-2">
               <li>100/1000 MEA = 10% der Stimmen</li>
-              <li>Mehrheitserfordernisse: >50% der abgegebenen Stimmen (einfach) oder >25% der MEA (für Verwalterwahl)</li>
+              <li>Mehrheitserfordernisse: &gt;50% der abgegebenen Stimmen (einfach) oder &gt;25% der MEA (für Verwalterwahl)</li>
               <li>Ausnahme bei Sachentscheidungen (§25 Abs. 2 WEG): Jeder hat eine Stimme</li>
             </ul>
             <p className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded">
