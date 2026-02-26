@@ -245,35 +245,163 @@ export interface CostEntry {
   
   /** Supplier/vendor name */
   vendor?: string;
+  
+  /** Notes or remarks */
+  notes?: string;
+}
+
+/**
+ * Monthly advance payment made by a tenant (Vorauszahlung)
+ */
+export interface Vorauszahlung {
+  unitId: string;
+  amount: number;
+  monthsPaid: number;
 }
 
 /**
  * Full BKA calculation input
  */
 export interface BKAInput {
+  /** Property data including all units */
   property: Property;
-  costs: CostEntry[];
+  
   /** Accounting period start date */
   periodStart: Date;
+  
   /** Accounting period end date */
   periodEnd: Date;
+  
+  /** All cost entries for the period */
+  costs: CostEntry[];
+  
+  /** Advance payments made by each unit */
+  unit_vorauszahlungen: Record<string, number>; // unitId -> total paid
+  
+  /** Due date for the BKA (§556 Abs. 3 BGB: end of 12 months after period end) */
+  dueDate?: Date;
+}
+
+/**
+ * Cost breakdown per category for a unit
+ */
+export interface UnitCostBreakdown {
+  /** Cost category */
+  category: BKACostCategory;
+  
+  /** Amount allocated to this unit in EUR */
+  amount: number;
+  
+  /** Calculation basis used */
+  calculationBasis: string;
+  
+  /** Calculation factor applied */
+  factor: number;
 }
 
 /**
  * Per-unit BKA result
  */
 export interface UnitBKAResult {
+  /** Reference to the unit */
   unit: Unit;
+  
+  /** Total costs allocated to this unit */
   totalCost: number;
-  breakdown: { category: BKACostCategory; amount: number }[];
+  
+  /** Detailed breakdown by category */
+  breakdown: UnitCostBreakdown[];
+  
+  /** Total Vorauszahlungen paid */
+  vorauszahlungen: number;
+  
+  /** Final balance (positive = Nachzahlung, negative = Gutschrift) */
+  saldo: number;
+  
+  /** True if tenant is owed money (Gutschrift) */
+  isCredit: boolean;
+  
+  /** Share of costs in percentage */
+  costShare: number;
+  
+  /** Days occupied during the period (for pro-rata calculation) */
+  daysOccupied: number;
 }
 
 /**
  * Full BKA calculation result
  */
 export interface BKAResult {
+  /** Original input data */
   input: BKAInput;
+  
+  /** Total costs for the entire property */
   totalCosts: number;
+  
+  /** Cost per square meter (for information) */
   costPerSqm: number;
+  
+  /** Results for each unit */
   unitResults: UnitBKAResult[];
+  
+  /** Accounting period start */
+  periodStart: Date;
+  
+  /** Accounting period end */
+  periodEnd: Date;
+  
+  /** Calculation timestamp */
+  calculationDate: Date;
+  
+  /** Due date per §556 Abs. 3 BGB */
+  dueDate: Date;
+  
+  /** Days until due date (negative if overdue) */
+  daysUntilDue: number;
+  
+  /** Warning if deadline is approaching */
+  deadlineWarning: boolean;
+  
+  /** Interest on late payments (Verzugszinsen) in EUR */
+  verzugszinsen?: number;
+}
+
+/**
+ * Validation warning
+ */
+export interface ValidationWarning {
+  /** Warning type */
+  type: 'error' | 'warning' | 'info';
+  
+  /** Warning code */
+  code: string;
+  
+  /** Human-readable message */
+  message: string;
+  
+  /** Affected cost entry or field */
+  field?: string;
+  
+  /** Affected category if applicable */
+  category?: BKACostCategory;
+}
+
+/**
+ * Non-umlagefähige (non-allocable) cost categories per §2 BetrKV
+ * These costs CANNOT be passed to tenants
+ */
+export const NonUmlagefaehigeCategories: BKACostCategory[] = [
+  // Verwaltungskosten (management costs) are NOT umlagefähig
+  // These must be paid by the landlord
+];
+
+/**
+ * Check if a cost category is umlagefähig (allocable to tenants)
+ * All §2 BetrKV categories are generally umlagefähig
+ * unless specifically excluded by law
+ */
+export function isUmlagefaehig(category: BKACostCategory): boolean {
+  // Management/Verwaltungskosten are NOT in BetrKV §2
+  // If they were they'd be flagged here
+  return !NonUmlagefaehigeCategories.includes(category);
 }
