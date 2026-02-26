@@ -100,7 +100,22 @@ Urgency-Skala: 1=unwichtig, 3=normal, 5=Notfall (Wasser/Feuer/Heizung im Winter)
       return null;
     });
 
-    // Step 4: Notify landlord if urgent
+    // Step 4: Send WhatsApp confirmation if channel is whatsapp
+    await step.run("send-whatsapp-confirmation", async () => {
+      if (event.data.channel === "whatsapp" && event.data.phoneNumber && ticketResult?.ticketId) {
+        try {
+          const { sendWhatsAppMessage } = await import("@/lib/whatsapp");
+          const confirmationMessage = `Ihre Anfrage wurde aufgenommen (Ticket #${ticketResult.ticketId}). Wir melden uns innerhalb von 15 Minuten.`;
+          await sendWhatsAppMessage(event.data.phoneNumber, confirmationMessage);
+          console.log(`[tenant-message] WhatsApp confirmation sent for ticket ${ticketResult.ticketId}`);
+        } catch (err) {
+          console.error("[tenant-message] Failed to send WhatsApp confirmation:", err);
+          // Don't throw — this is non-critical
+        }
+      }
+    });
+
+    // Step 5: Notify landlord if urgent
     await step.run("notify-landlord", async () => {
       if (classification.urgency >= 4 && landlordEmail && process.env.RESEND_API_KEY) {
         const { Resend } = await import("resend");
@@ -114,7 +129,7 @@ Urgency-Skala: 1=unwichtig, 3=normal, 5=Notfall (Wasser/Feuer/Heizung im Winter)
       }
     });
 
-    // Step 5: Wait up to 15 min for human response, then escalate
+    // Step 6: Wait up to 15 min for human response, then escalate
     await step.sleep("sla-wait", "15m");
 
     return { 

@@ -21,6 +21,7 @@ const standorte = [
   { href: "/mietverwaltung-hamburg", label: "Mietverwaltung Hamburg", sub: "Mieteinzug, NKA, Kommunikation" },
   { href: "/weg-verwaltung", label: "WEG-Verwaltung Hamburg", sub: "Eigentümergemeinschaft ab €22/Einheit" },
   { href: "/hausverwaltung-berlin", label: "Hausverwaltung Berlin", sub: "Miet- & WEG-Verwaltung in Berlin" },
+  { href: "/hausverwaltung-muenchen", label: "Hausverwaltung München", sub: "WEG & Mietverwaltung in München" },
   { href: "/hausverwaltung-wechseln", label: "Hausverwaltung wechseln", sub: "Schritt-für-Schritt-Guide" },
   { href: "/hausverwaltung-hamburg-vergleich", label: "Vergleich 2026", sub: "einfach verwaltet. vs. Markt" },
   { href: "/nachfolge", label: "Nachfolge", sub: "Für Verwalter im Ruhestand" },
