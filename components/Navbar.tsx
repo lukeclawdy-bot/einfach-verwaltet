@@ -15,10 +15,19 @@ const werkzeuge = [
   { href: "/mieterhohung-rechner", label: "Mieterhöhungsrechner", sub: "§ 558 BGB berechnen" },
 ];
 
+const standorte = [
+  { href: "/hausverwaltung-hamburg", label: "Hausverwaltung Hamburg", sub: "Vollservice für Hamburg" },
+  { href: "/mietverwaltung-hamburg", label: "Mietverwaltung Hamburg", sub: "Mieteinzug, NKA, Kommunikation" },
+  { href: "/hausverwaltung-wechseln", label: "Hausverwaltung wechseln", sub: "Schritt-für-Schritt-Guide" },
+  { href: "/hausverwaltung-hamburg-vergleich", label: "Vergleich 2026", sub: "einfach verwaltet. vs. Markt" },
+];
+
 export function Navbar() {
   const [toolsOpen, setToolsOpen] = useState(false);
+  const [standorteOpen, setStandorteOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
+  const [mobileStandorteOpen, setMobileStandorteOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-warm-white/95 backdrop-blur-sm border-b border-navy/8">
@@ -41,6 +50,30 @@ export function Navbar() {
               {l.label}
             </a>
           ))}
+
+          {/* Standorte & Service dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setStandorteOpen(!standorteOpen)}
+              onBlur={() => setTimeout(() => setStandorteOpen(false), 150)}
+              className="text-text-light hover:text-navy text-sm font-medium transition-colors flex items-center gap-1"
+            >
+              Standorte
+              <svg className={`w-4 h-4 transition-transform ${standorteOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {standorteOpen && (
+              <div className="absolute top-full left-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 py-2 z-50">
+                {standorte.map((s) => (
+                  <a key={s.href} href={s.href} className="block px-4 py-2.5 text-sm text-navy hover:bg-teal/5 hover:text-teal transition-colors">
+                    <span className="font-medium">{s.label}</span>
+                    <span className="block text-xs text-text-light">{s.sub}</span>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
 
           {/* Werkzeuge dropdown */}
           <div className="relative">
@@ -106,6 +139,32 @@ export function Navbar() {
                 {l.label}
               </a>
             ))}
+
+            {/* Standorte accordion */}
+            <button
+              onClick={() => setMobileStandorteOpen(!mobileStandorteOpen)}
+              className="w-full flex justify-between items-center py-3 text-navy font-medium border-b border-gray-100 hover:text-teal transition-colors"
+            >
+              Standorte
+              <svg className={`w-4 h-4 transition-transform ${mobileStandorteOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {mobileStandorteOpen && (
+              <div className="pl-4 space-y-1 pb-1">
+                {standorte.map((s) => (
+                  <a
+                    key={s.href}
+                    href={s.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="block py-2.5 text-sm text-navy hover:text-teal transition-colors"
+                  >
+                    <span className="font-medium">{s.label}</span>
+                    <span className="block text-xs text-text-light">{s.sub}</span>
+                  </a>
+                ))}
+              </div>
+            )}
 
             {/* Werkzeuge accordion */}
             <button

@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
 import { documents, aiActions, units, financialTransactions } from "@/lib/db/schema";
-import { eq, and, lt, gte, sql } from "drizzle-orm";
+import { eq, and, lt, gte, sql, isNull } from "drizzle-orm";
 
 export const complianceChecks = inngest.createFunction(
   { id: "compliance-checks", name: "Weekly Compliance Monitor" },
@@ -86,8 +86,9 @@ export const complianceChecks = inngest.createFunction(
 
         // Create AI actions for eligible units
         for (const eligible of eligibleUnits.slice(0, 20)) { // Limit to 20 to avoid spam
-          // TODO: Look up landlordId from property
+          // TODO: Look up landlordId from property — using placeholder for now
           await db.insert(aiActions).values({
+            landlordId: (eligible as any).landlordId || "unknown",
             propertyId: eligible.propertyId,
             unitId: eligible.unitId,
             type: "mieterhoehung",

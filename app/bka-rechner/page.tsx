@@ -4,6 +4,54 @@ import { Footer } from "@/components/Footer";
 import { BKACalculator } from "@/components/BKACalculator";
 import { ArrowRightIcon, CheckIcon } from "@/components/Icons";
 
+// Schema.org structured data for FAQ
+const faqStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Was sind Betriebskosten nach §2 BetrKV?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Die Betriebskostenverordnung (BetrKV) regelt, welche Kosten eines Gebäudes als Betriebskosten auf die Mieter umgelegt werden dürfen. § 2 BetrKV listet die umlagefähigen Kostenarten auf: Grundsteuer, Wasser/Abwasser, Heizung/Warmwasser, Müllabfuhr, Gebäudereinigung, Gartenpflege, Beleuchtung, Aufzug, Versicherungen und Hausmeisterleistungen.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Wie hoch sind Betriebskosten in Hamburg?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In Hamburg liegen die durchschnittlichen Betriebskosten bei etwa 2,80 € pro Quadratmeter und Monat. Dieser Wert variiert je nach Altersbau, Ausstattung und Lage. Moderne Neubauten haben oft niedrigere Heizkosten, während Altbauten in zentraler Lage höhere Nebenkosten verursachen können.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Wann muss die Nebenkostenabrechnung erfolgen?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nach § 556 Abs. 3 BGB muss der Vermieter die Nebenkostenabrechnung innerhalb von 12 Monaten nach Ende des Abrechnungsjahres vorlegen. Bei späterer Abrechnung verfällt der Anspruch auf Nachzahlung. Die Frist gilt für Wohnraummietverhältnisse, bei Gewerbe kann davon abweichend vereinbart werden.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Welche Kosten sind nicht umlagefähig?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Nicht umlagefähig sind: Instandhaltungs- und Instandsetzungskosten (§ 1 Abs. 2 BetrKV), Kapitalkosten (Zinsen, Tilgung), Verwaltungskosten der Eigentümer, Kosten für eigene Arbeit des Vermieters, sowie Kosten für Mietervereinbarungen und individuelle Leistungen für einzelne Mieter.",
+      },
+    },
+    {
+      "@type": "Question",
+      "name": "Wie werden Betriebskosten auf die Mieter verteilt?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Die Verteilung erfolgt nach dem im Mietvertrag vereinbarten Umlageschlüssel. Standard ist die Verteilung nach Wohnfläche. Bei Heizung und Warmwasser erfolgt die Aufteilung nach Verbrauch (Heizkostenverordnung). Der Mietvertrag muss den Verteilungsmaßstab für jede Kostenart festlegen.",
+      },
+    },
+  ],
+};
+
 export const metadata: Metadata = {
   title: "Betriebskostenrechner — kostenlos | einfach verwaltet.",
   description: "Berechnen Sie Ihre Betriebskosten nach §2 BetrKV — kostenlos und ohne Anmeldung. Verwenden Sie unseren BKA/NKA Rechner für Nebenkostenabrechnungen in Hamburg.",
@@ -23,6 +71,11 @@ export default function BKACalculatorPage() {
   return (
     <>
       <Navbar />
+      {/* Schema.org Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
       <main className="pt-24">
         {/* Hero Section */}
         <section className="py-12 lg:py-20 bg-navy text-white">
@@ -163,6 +216,63 @@ export default function BKACalculatorPage() {
                 vergleichen. Für eine präzise und rechtssichere Nebenkostenabrechnung empfehlen wir 
                 eine professionelle Hausverwaltung, die alle relevanten Fristen und Vorschriften einhält.
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-16 lg:py-20 bg-warm-white">
+          <div className="max-w-[800px] mx-auto px-6">
+            <h2 className="text-3xl font-bold text-navy mb-8 text-center font-serif">
+              Häufige Fragen zu Betriebskosten
+            </h2>
+            
+            <div className="space-y-4">
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <h3 className="font-bold text-navy mb-2">Was sind Betriebskosten nach §2 BetrKV?</h3>
+                <p className="text-text-light text-sm leading-relaxed">
+                  Die Betriebskostenverordnung (BetrKV) regelt, welche Kosten eines Gebäudes als Betriebskosten 
+                  auf die Mieter umgelegt werden dürfen. § 2 BetrKV listet die umlagefähigen Kostenarten auf: 
+                  Grundsteuer, Wasser/Abwasser, Heizung/Warmwasser, Müllabfuhr, Gebäudereinigung, Gartenpflege, 
+                  Beleuchtung, Aufzug, Versicherungen und Hausmeisterleistungen.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <h3 className="font-bold text-navy mb-2">Wie hoch sind Betriebskosten in Hamburg?</h3>
+                <p className="text-text-light text-sm leading-relaxed">
+                  In Hamburg liegen die durchschnittlichen Betriebskosten bei etwa 2,80 € pro Quadratmeter und Monat. 
+                  Dieser Wert variiert je nach Altersbau, Ausstattung und Lage. Moderne Neubauten haben oft niedrigere 
+                  Heizkosten, während Altbauten in zentraler Lage höhere Nebenkosten verursachen können.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <h3 className="font-bold text-navy mb-2">Wann muss die Nebenkostenabrechnung erfolgen?</h3>
+                <p className="text-text-light text-sm leading-relaxed">
+                  Nach § 556 Abs. 3 BGB muss der Vermieter die Nebenkostenabrechnung innerhalb von 12 Monaten nach 
+                  Ende des Abrechnungsjahres vorlegen. Bei späterer Abrechnung verfällt der Anspruch auf Nachzahlung. 
+                  Die Frist gilt für Wohnraummietverhältnisse, bei Gewerbe kann davon abweichend vereinbart werden.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <h3 className="font-bold text-navy mb-2">Welche Kosten sind nicht umlagefähig?</h3>
+                <p className="text-text-light text-sm leading-relaxed">
+                  Nicht umlagefähig sind: Instandhaltungs- und Instandsetzungskosten (§ 1 Abs. 2 BetrKV), 
+                  Kapitalkosten (Zinsen, Tilgung), Verwaltungskosten der Eigentümer, Kosten für eigene Arbeit 
+                  des Vermieters, sowie Kosten für Mietervereinbarungen und individuelle Leistungen für einzelne Mieter.
+                </p>
+              </div>
+
+              <div className="bg-white rounded-xl p-6 border border-gray-100">
+                <h3 className="font-bold text-navy mb-2">Wie werden Betriebskosten auf die Mieter verteilt?</h3>
+                <p className="text-text-light text-sm leading-relaxed">
+                  Die Verteilung erfolgt nach dem im Mietvertrag vereinbarten Umlageschlüssel. Standard ist die 
+                  Verteilung nach Wohnfläche. Bei Heizung und Warmwasser erfolgt die Aufteilung nach Verbrauch 
+                  (Heizkostenverordnung). Der Mietvertrag muss den Verteilungsmaßstab für jede Kostenart festlegen.
+                </p>
+              </div>
             </div>
           </div>
         </section>
