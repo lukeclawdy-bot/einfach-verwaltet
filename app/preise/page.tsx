@@ -213,6 +213,7 @@ export default function PreisePage() {
           </div>
         </section>
       </main>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Gibt es versteckte Kosten?","acceptedAnswer":{"@type":"Answer","text":"Nein. Unsere Preise sind vollständig transparent: ab 20ac24/Einheit/Monat für Mietverwaltung, ab 20ac28/Einheit/Monat für WEG. Keine Einrichtungsgebühren, keine versteckten Zusatzkosten."}},{"@type":"Question","name":"Was ist im Preis enthalten?","acceptedAnswer":{"@type":"Answer","text":"Enthalten sind: 24/7 Mieterkorrespondenz, Betriebskostenabrechnung, Reparaturkoordination, digitales Dashboard, Dokumentenmanagement und Compliance-Monitoring."}},{"@type":"Question","name":"Kann ich kündigen?","acceptedAnswer":{"@type":"Answer","text":"Ja. Nach der Mindestlaufzeit von 12 Monaten können Sie monatlich kündigen. Kein Lock-in, keine Stornogebühren."}},{"@type":"Question","name":"Gibt es Preisunterschiede zwischen WEG und Mietverwaltung?","acceptedAnswer":{"@type":"Answer","text":"Ja. Mietverwaltung ab 20ac24/Einheit/Monat. WEG-Verwaltung ab 20ac28/Einheit/Monat (höherer Aufwand durch Eigentümerversammlungen, Jahresabrechnung, Beschluss-Sammlung)."}},{"@type":"Question","name":"Wann beginnt die Abrechnung?","acceptedAnswer":{"@type":"Answer","text":"Die Abrechnung beginnt mit dem vereinbarten Starttermin. Keine Kosten vor offiziellem Verwaltungsbeginn."}}]}) }} />
       <Footer />
     </>
   );
