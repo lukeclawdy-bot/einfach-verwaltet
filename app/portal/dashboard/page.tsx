@@ -4,13 +4,10 @@ import { getTokenFromCookie } from "@/lib/auth/jwt";
 import { StatsCard } from "./components/StatsCard";
 import { ActionButtons } from "./components/ActionButtons";
 
-const URGENCY_ICON: Record<number, string> = {
-  5: "🔴",
-  4: "🔴",
-  3: "🟡",
-  2: "🟢",
-  1: "⚪",
-};
+const URGENCY_COLOR: Record<number, string> = { 5: "bg-red-500", 4: "bg-red-400", 3: "bg-amber-400", 2: "bg-green-500", 1: "bg-gray-300" };
+const UrgencyDot = ({ urgency }: { urgency: number }) => (
+  <span className={`inline-block w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${URGENCY_COLOR[urgency] || "bg-gray-300"}`} />
+);
 
 async function getLandlordId(): Promise<string> {
   // Prefer header injected by middleware (fastest — no JWT verify)
@@ -252,7 +249,7 @@ export default async function DashboardPage() {
                       className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0"
                     >
                       <span className="text-lg flex-shrink-0 mt-0.5">
-                        {URGENCY_ICON[a.urgency] || "⚪"}
+                        <UrgencyDot urgency={a.urgency} />
                       </span>
                       <p className="text-sm text-text-main flex-1">{a.title}</p>
                       <ActionButtons
@@ -315,7 +312,7 @@ export default async function DashboardPage() {
                               href={`/portal/tickets/${t.id}`}
                               className="flex items-center gap-2"
                             >
-                              <span>{URGENCY_ICON[t.urgency] || "⚪"}</span>
+                              <span><UrgencyDot urgency={t.urgency} /></span>
                               <span className="text-navy font-medium">
                                 {t.title}
                               </span>

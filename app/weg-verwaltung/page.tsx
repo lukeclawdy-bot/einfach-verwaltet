@@ -117,39 +117,72 @@ const faqSchema = {
   ],
 };
 
+const leistungenIcons: Record<string, React.ReactNode> = {
+  versammlung: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  abrechnung: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  ),
+  ruecklage: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  ),
+  instandhaltung: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
+  wirtschaftsplan: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+    </svg>
+  ),
+  portal: (
+    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  ),
+};
+
 const leistungen = [
   {
-    icon: "🏛️",
+    iconKey: "versammlung",
     title: "Eigentümerversammlung",
     para: "§ 24 WEG",
     desc: "Einberufung, Vorbereitung und Durchführung der jährlichen Eigentümerversammlung. Tagesordnung, Stimmrechtslisten, Protokoll und Beschlussumsetzung — alles aus einer Hand. Auf Wunsch auch digital (hybride ETV).",
   },
   {
-    icon: "📊",
+    iconKey: "abrechnung",
     title: "Jahresabrechnung",
     para: "§ 28 Abs. 2 WEG",
     desc: "Klare, prüffähige Jahresabrechnung mit Einzelabrechnungen je Eigentümer, Gesamtabrechnung und Belegsatz. Fristgerecht, korrekt und vollständig — kein Ärger mit Einwendungen.",
   },
   {
-    icon: "💰",
+    iconKey: "ruecklage",
     title: "Instandhaltungsrücklage",
     para: "§ 19 Abs. 2 Nr. 4 WEG",
     desc: "Aufbau, Verwaltung und Anlage der Instandhaltungsrücklage. Wir empfehlen Rücklagehöhen nach dem Peters'schen Formel und passen den Wirtschaftsplan an Ihren Bestand an.",
   },
   {
-    icon: "🔧",
+    iconKey: "instandhaltung",
     title: "Instandhaltung & Reparatur",
     para: "§ 27 Abs. 1 WEG",
     desc: "Beauftragung und Koordination von Handwerkern für Gemeinschaftseigentum. Angebote einholen, Aufträge vergeben, Arbeiten abnehmen. Mit lokalen Handwerkern, die wir kennen und denen wir vertrauen.",
   },
   {
-    icon: "📋",
+    iconKey: "wirtschaftsplan",
     title: "Wirtschaftsplan",
     para: "§ 28 Abs. 1 WEG",
     desc: "Jährlicher Wirtschaftsplan mit Kostenprognose und Hausgeldberechnung. Grundlage der monatlichen Vorauszahlungen aller Eigentümer — transparent und nachvollziehbar.",
   },
   {
-    icon: "📱",
+    iconKey: "portal",
     title: "Digitales Eigentümerportal",
     para: "Echtzeit-Einblick",
     desc: "Alle Dokumente, Beschlüsse, Abrechnungen und Handwerkeraufträge — online, jederzeit abrufbar. Kein Warten auf Briefpost, kein Aktenordner-Chaos.",
@@ -275,7 +308,9 @@ export default function WEGVerwaltungPage() {
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {leistungen.map((l) => (
                 <div key={l.title} className="bg-white rounded-2xl p-6 border border-gray-100 hover:border-teal/30 hover:shadow-sm transition-all">
-                  <div className="text-3xl mb-3">{l.icon}</div>
+                  <div className="w-12 h-12 bg-teal/10 rounded-xl flex items-center justify-center text-teal mb-4">
+                    {leistungenIcons[l.iconKey]}
+                  </div>
                   <div className="text-xs font-bold text-teal mb-1">{l.para}</div>
                   <h3 className="font-bold text-navy text-lg mb-2">{l.title}</h3>
                   <p className="text-gray-600 text-sm leading-relaxed">{l.desc}</p>

@@ -1,7 +1,10 @@
 import Link from "next/link";
 
 const DEMO_LANDLORD_ID = process.env.DEMO_LANDLORD_ID || "";
-const URGENCY_ICON: Record<number, string> = { 5: "🔴", 4: "🔴", 3: "🟡", 2: "🟢", 1: "⚪" };
+const URGENCY_COLOR: Record<number, string> = { 5: "bg-red-500", 4: "bg-red-400", 3: "bg-amber-400", 2: "bg-green-500", 1: "bg-gray-300" };
+const UrgencyDot = ({ urgency }: { urgency: number }) => (
+  <span className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${URGENCY_COLOR[urgency] || "bg-gray-300"}`} />
+);
 
 const MOCK_TICKETS = [
   { id: "t-1", urgency: 4, title: "Heizung ausgefallen", tenantName: "M. Richter", unitDesignation: "Whg. 3", status: "open", createdAt: new Date().toISOString() },
@@ -100,7 +103,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
                     <tr key={t.id} className="border-t border-gray-50 hover:bg-gray-50/50 transition-colors">
                       <td className="px-6 py-4">
                         <Link href={`/portal/tickets/${t.id}`} className="flex items-center gap-2 text-sm">
-                          <span>{URGENCY_ICON[t.urgency] || "⚪"}</span>
+                          <span><UrgencyDot urgency={t.urgency} /></span>
                           <span className="text-navy font-medium hover:text-teal">{t.title}</span>
                         </Link>
                       </td>
