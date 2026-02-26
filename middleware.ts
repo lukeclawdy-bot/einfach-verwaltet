@@ -10,6 +10,12 @@ const PUBLIC_PORTAL_PATHS = [
   "/api/portal/auth/logout",
 ];
 
+// Public demo routes — no auth required
+const PUBLIC_DEMO_PATHS = [
+  "/demo",
+  "/api/demo/start",
+];
+
 // Public tenant routes — no auth required
 const PUBLIC_TENANT_PATHS = [
   "/tenant/login",
@@ -20,6 +26,12 @@ const PUBLIC_TENANT_PATHS = [
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  // ─── DEMO ROUTES — always public ─────────────────────────────────────────
+  const isDemoRoute = PUBLIC_DEMO_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
+  if (isDemoRoute) return NextResponse.next();
 
   // ─── PORTAL ROUTES ───────────────────────────────────────────────────────
   if (pathname.startsWith("/portal") || pathname.startsWith("/api/portal")) {
@@ -34,8 +46,9 @@ export async function middleware(request: NextRequest) {
       return NextResponse.next();
     }
 
-    // Read session cookie
-    const token = request.cookies.get("portal_session")?.value;
+    // Read session cookie — accept demo session or regular portal session
+    const demoToken = request.cookies.get("ev-demo-session")?.value;
+    const token = demoToken || request.cookies.get("portal_session")?.value;
     if (!token) {
       return NextResponse.redirect(new URL("/portal/login", request.url));
     }
@@ -47,18 +60,23 @@ export async function middleware(request: NextRequest) {
       if (!payload?.landlordId) {
         const res = NextResponse.redirect(new URL("/portal/login", request.url));
         res.cookies.set("portal_session", "", { maxAge: 0, path: "/" });
+        res.cookies.set("ev-demo-session", "", { maxAge: 0, path: "/" });
         return res;
       }
 
-      // Inject landlordId as a request header so server components can read it
+      // Inject landlordId and isDemo as request headers so server components can read them
       const requestHeaders = new Headers(request.headers);
       requestHeaders.set("x-landlord-id", payload.landlordId);
       requestHeaders.set("x-landlord-email", payload.email ?? "");
+      if (payload.isDemo) {
+        requestHeaders.set("x-is-demo", "true");
+      }
       return NextResponse.next({ request: { headers: requestHeaders } });
     } catch {
       // Token invalid or JWT_SECRET missing — redirect to login
       const res = NextResponse.redirect(new URL("/portal/login", request.url));
       res.cookies.set("portal_session", "", { maxAge: 0, path: "/" });
+      res.cookies.set("ev-demo-session", "", { maxAge: 0, path: "/" });
       return res;
     }
   }

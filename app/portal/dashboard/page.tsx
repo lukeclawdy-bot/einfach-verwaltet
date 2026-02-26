@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { cookies, headers } from "next/headers";
 import { getTokenFromCookie } from "@/lib/auth/jwt";
+import { getDemoDashboardData, getDemoTickets } from "@/lib/demo-data";
+import { DemoBanner } from "@/components/DemoBanner";
 import { StatsCard } from "./components/StatsCard";
 import { ActionButtons } from "./components/ActionButtons";
 
@@ -9,22 +11,29 @@ const UrgencyDot = ({ urgency }: { urgency: number }) => (
   <span className={`inline-block w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0 ${URGENCY_COLOR[urgency] || "bg-gray-300"}`} />
 );
 
-async function getLandlordId(): Promise<string> {
-  // Prefer header injected by middleware (fastest — no JWT verify)
+async function getSessionInfo(): Promise<{ landlordId: string; isDemo: boolean }> {
+  // Prefer headers injected by middleware (fastest — no JWT verify)
   const hdrs = await headers();
   const fromHeader = hdrs.get("x-landlord-id");
-  if (fromHeader) return fromHeader;
+  const isDemoHeader = hdrs.get("x-is-demo") === "true";
+  if (fromHeader) return { landlordId: fromHeader, isDemo: isDemoHeader };
 
   // Fallback: parse cookie directly (e.g., during static rendering or direct access)
   const cookieStore = await cookies();
+  // Check demo cookie first
+  const demoToken = cookieStore.get("ev-demo-session")?.value;
+  if (demoToken) {
+    const payload = await getTokenFromCookie(demoToken);
+    if (payload?.landlordId) return { landlordId: payload.landlordId, isDemo: true };
+  }
   const token = cookieStore.get("portal_session")?.value;
   if (token) {
     const payload = await getTokenFromCookie(token);
-    if (payload?.landlordId) return payload.landlordId;
+    if (payload?.landlordId) return { landlordId: payload.landlordId, isDemo: !!payload.isDemo };
   }
 
   // Final fallback for local dev without auth
-  return process.env.DEMO_LANDLORD_ID || "";
+  return { landlordId: process.env.DEMO_LANDLORD_ID || "", isDemo: false };
 }
 
 async function getDashboardData(landlordId: string) {
@@ -119,10 +128,20 @@ const MOCK_TICKETS = [
 ];
 
 export default async function DashboardPage() {
-  const landlordId = await getLandlordId();
+  const { landlordId, isDemo } = await getSessionInfo();
 
-  const data = landlordId ? await getDashboardData(landlordId) : MOCK;
-  const ticketList = landlordId ? await getTickets(landlordId) : MOCK_TICKETS;
+  // Use demo data when in demo mode — no DB calls
+  const data = isDemo
+    ? getDemoDashboardData()
+    : landlordId
+    ? await getDashboardData(landlordId)
+    : MOCK;
+
+  const ticketList = isDemo
+    ? getDemoTickets()
+    : landlordId
+    ? await getTickets(landlordId)
+    : MOCK_TICKETS;
 
   const d = data || MOCK;
   const tl = ticketList.length > 0 ? ticketList : MOCK_TICKETS;
@@ -132,7 +151,11 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="min-h-screen bg-light-gray flex">
+    <div className="min-h-screen bg-light-gray flex flex-col">
+      {/* Demo Banner — shown only in demo mode */}
+      {isDemo && <DemoBanner />}
+
+      <div className="flex flex-1">
       {/* Sidebar */}
       <aside className="w-56 bg-navy min-h-screen flex flex-col fixed left-0 top-0 bottom-0">
         <div className="px-5 py-5 border-b border-white/10">
@@ -350,6 +373,7 @@ export default async function DashboardPage() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
