@@ -7,6 +7,7 @@ import { rentMonitoring } from "@/lib/inngest/functions/rent.monitoring";
 import { rentDunning } from "@/lib/inngest/functions/dunning";
 import { complianceChecks } from "@/lib/inngest/functions/compliance.checks";
 import { billingInvoicePaid, billingDunningSequence } from "@/lib/inngest/functions/billing";
+import { documentProcessor } from "@/lib/inngest/functions/document.processor";
 
 export const { GET, POST, PUT } = serve({
   client: inngest,
@@ -20,5 +21,6 @@ export const { GET, POST, PUT } = serve({
     complianceChecks,
     billingInvoicePaid,
     billingDunningSequence,
+    documentProcessor,     // AI document OCR & intelligence
   ],
 });

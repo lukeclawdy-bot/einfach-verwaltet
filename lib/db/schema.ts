@@ -159,7 +159,16 @@ export const documents = pgTable('documents', {
   sizeBytes: integer('size_bytes'),
   expiresAt: timestamp('expires_at'),
   metadata: jsonb('metadata').default({}),
+  // AI document intelligence fields
+  ocrStatus: text('ocr_status').default('pending'), // pending | processing | done | failed
+  ocrText: text('ocr_text'), // raw extracted text
+  extractedData: jsonb('extracted_data').default({}), // structured extraction
+  documentClassification: text('document_classification'), // invoice | mietvertrag | mahnung | nebenkostenabrechnung | protokoll | behoerdenpost | sonstiges
+  confidence: decimal('confidence', { precision: 5, scale: 2 }), // AI confidence 0-100
+  linkedTicketId: uuid('linked_ticket_id'), // auto-linked ticket
+  processingError: text('processing_error'),
   createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
 });
 
 // Financial transactions — rent, expenses, Mahnungen

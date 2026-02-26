@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { db } from '@/lib/db';
 import { documents } from '@/lib/db/schema';
+import { inngest } from '@/lib/inngest/client';
 
 // Lazy initialization check for Vercel Blob
 function getBlobToken(): string | null {
@@ -104,17 +105,34 @@ export async function POST(req: NextRequest) {
       url: blob.url,
       mimeType: file.type,
       sizeBytes: file.size,
+      ocrStatus: 'pending',
       metadata: {
         originalName: file.name,
         blobPath,
       },
     }).returning();
 
+    // Fire Inngest event for AI processing
+    await inngest.send({
+      name: "document/uploaded",
+      data: {
+        documentId: document.id,
+        landlordId,
+        propertyId: propertyId || null,
+        unitId: unitId || null,
+        tenantId: tenantId || null,
+        url: blob.url,
+        mimeType: file.type,
+        name: name || file.name,
+      },
+    });
+
     return NextResponse.json({
       documentId: document.id,
       url: blob.url,
       name: document.name,
       type: document.type,
+      status: 'processing',
     }, { status: 201 });
 
   } catch (error) {
