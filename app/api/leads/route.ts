@@ -103,6 +103,30 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
+    // Persist to database (fail gracefully if DATABASE_URL not set)
+    let dbLeadId: string | undefined;
+    try {
+      // Dynamic import to avoid build-time database connection
+      const { db } = await import("@/lib/db");
+      const { leads } = await import("@/lib/db/schema");
+      
+      const result = await db.insert(leads).values({
+        verwaltungstyp: body.verwaltungstyp,
+        einheiten: body.einheiten,
+        standort: body.standort,
+        situation: body.situation,
+        prioritaet: body.prioritaet,
+        name: body.name,
+        email: body.email,
+        telefon: body.telefon,
+        status: "new",
+      }).returning({ id: leads.id });
+      dbLeadId = result[0]?.id;
+    } catch (dbErr) {
+      // Log error but don't fail the request — email is the critical path
+      console.error("Database insert failed:", dbErr);
+    }
+
     // Send email via Resend
     const resend = getResendClient();
     const { data, error } = await resend.emails.send({
@@ -121,7 +145,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, id: data?.id });
+    return NextResponse.json({ 
+      success: true, 
+      emailId: data?.id,
+      leadId: dbLeadId,
+    });
     
   } catch (error) {
     console.error("API error:", error);
