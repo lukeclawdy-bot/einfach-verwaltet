@@ -1,4 +1,7 @@
 import { inngest } from "../client";
+import { db } from "@/lib/db";
+import { leads, landlords, aiActions } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 
 export const leadIntake = inngest.createFunction(
   { id: "lead-intake", name: "Lead Intake & Qualification" },
@@ -42,6 +45,88 @@ export const leadIntake = inngest.createFunction(
           subject: `🔥 High-quality lead: ${lead.name} — ${score.units} Einheiten (${lead.standort})`,
           html: `<p><strong>Score: ${score.score}/70</strong></p><pre>${JSON.stringify(lead, null, 2)}</pre>`,
         });
+      }
+    });
+
+    // Step 4: Persist to database
+    await step.run("persist-lead", async () => {
+      try {
+        // Check if lead already exists by email
+        const existingLead = await db
+          .select()
+          .from(leads)
+          .where(eq(leads.email, lead.email))
+          .limit(1);
+
+        if (existingLead.length > 0) {
+          return { 
+            leadId: existingLead[0].id, 
+            landlordId: null,
+            actionId: null,
+            skipped: "Lead already exists" 
+          };
+        }
+
+        // Insert lead
+        const [newLead] = await db
+          .insert(leads)
+          .values({
+            verwaltungstyp: lead.verwaltungstyp,
+            einheiten: lead.einheiten,
+            standort: lead.standort,
+            situation: lead.situation,
+            prioritaet: lead.prioritaet,
+            name: lead.name,
+            email: lead.email,
+            telefon: lead.telefon,
+            status: score.score >= 50 ? "qualified" : "new",
+          })
+          .returning();
+
+        // Create landlord record
+        const [newLandlord] = await db
+          .insert(landlords)
+          .values({
+            email: lead.email,
+            name: lead.name,
+            phone: lead.telefon,
+            type: "private",
+            communicationChannel: "email",
+            aiAutonomyLevel: "supervised",
+            onboardingCompleted: false,
+          })
+          .returning();
+
+        // Create onboarding action for landlord
+        const [newAction] = await db
+          .insert(aiActions)
+          .values({
+            landlordId: newLandlord.id,
+            type: "onboarding",
+            title: "Onboarding abschließen",
+            body: "Willkommen bei einfach verwaltet.! Bitte schließen Sie Ihr Onboarding ab, um alle Funktionen nutzen zu können.",
+            actionLabel: "Jetzt starten",
+            dismissLabel: "Später",
+            urgency: 3,
+            status: "pending",
+          })
+          .returning();
+
+        return { 
+          leadId: newLead.id, 
+          landlordId: newLandlord.id,
+          actionId: newAction.id,
+          skipped: null
+        };
+      } catch (error) {
+        // Inngest functions should not crash if DB is unreachable
+        console.error("Database error in lead intake:", error);
+        return { 
+          leadId: null, 
+          landlordId: null,
+          actionId: null,
+          error: error instanceof Error ? error.message : "Unknown DB error"
+        };
       }
     });
 
