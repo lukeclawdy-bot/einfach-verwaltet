@@ -1,4 +1,4 @@
-import { db, hasDatabase } from "../../db/index";
+import { db, hasDatabase } from "../../db";
 import { leads } from "../../db/schema";
 import { desc } from "drizzle-orm";
 import { redirect } from "next/navigation";

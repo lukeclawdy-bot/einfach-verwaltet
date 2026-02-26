@@ -49,6 +49,13 @@ export default function RootLayout({
   return (
     <html lang="de" className="scroll-smooth">
       <head>
+        {/* CCM19 Cookie Consent Manager */}
+        <Script
+          src="https://cloud.ccm19.de/app.js?apiKey=c75b6eb939ad7fc38760982ca16bb63de89eb5300c5d27d0&domain=699ffde12fae5cd20c008f02"
+          referrerPolicy="origin"
+          strategy="afterInteractive"
+        />
+
         {/* Google Analytics 4 + Google Ads gtag.js */}
         {GA_ID && (
           <>
