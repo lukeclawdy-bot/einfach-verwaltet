@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { BoltIcon, MapPinIcon, LockOpenIcon, ScaleIcon, LockIcon, HomeIcon, ShieldIcon, StarIcon } from "./Icons";
 
 const stats = [
@@ -59,10 +60,21 @@ export function WarumWir() {
           ))}
         </div>
 
-        {/* Testimonials */}
-        <div className="text-center mb-10">
-          <h3 className="text-2xl font-bold text-navy font-serif mb-2">Was Eigentümer sagen</h3>
-          <p className="text-text-light text-sm">Echte Stimmen von Immobilieneigentümern aus Hamburg, die zu uns gewechselt haben.</p>
+        {/* Testimonials with person cutout */}
+        <div className="flex flex-col lg:flex-row items-center gap-10 mb-10">
+          <div className="hidden lg:block flex-shrink-0 w-[180px]">
+            <Image
+              src="/person-tablet.png"
+              alt="Ihre Hausverwaltung — immer erreichbar"
+              width={896}
+              height={1280}
+              className="w-full h-auto drop-shadow-xl"
+            />
+          </div>
+          <div className="text-center lg:text-left">
+            <h3 className="text-2xl font-bold text-navy font-serif mb-2">Was Eigentümer sagen</h3>
+            <p className="text-text-light text-sm max-w-lg">Echte Stimmen von Immobilieneigentümern aus Hamburg, die zu uns gewechselt haben.</p>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-6">
