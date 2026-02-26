@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { trackAnfrageConversion } from "@/lib/gtag";
 import { CheckIcon, ArrowRightIcon, HouseLogoIcon, HomeIcon, ScaleIcon, ClipboardIcon, ChatIcon, MapPinIcon, BoltIcon, LockOpenIcon, WrenchIcon, StarIcon, ShieldIcon, BuildingIcon, QuestionIcon, CurrencyIcon, UsersIcon } from "./Icons";
 
@@ -117,11 +118,21 @@ const steps: Step[] = [
 
 // --- Component ---
 export function AnfrageQuiz() {
+  const searchParams = useSearchParams();
+  const isBetaProgram = searchParams.get("beta_program") === "true";
+  
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // Add beta_program flag to answers if present
+  useEffect(() => {
+    if (isBetaProgram) {
+      setAnswers(prev => ({ ...prev, beta_program: "true" }));
+    }
+  }, [isBetaProgram]);
 
   const step = steps[current];
   const totalSteps = steps.length;
@@ -185,6 +196,7 @@ export function AnfrageQuiz() {
     const isLarge = ["31-100", "100+"].includes(einheiten);
     const verwaltungstyp = answers.verwaltungstyp;
     const priceRange = verwaltungstyp === "weg" ? "€28–34" : verwaltungstyp === "beides" ? "€26–34" : "€24–28";
+    const betaPriceRange = verwaltungstyp === "weg" ? "€14–17" : verwaltungstyp === "beides" ? "€13–17" : "€12–14";
 
     return (
       <div className="max-w-xl mx-auto px-6 py-20 text-center">
@@ -192,12 +204,28 @@ export function AnfrageQuiz() {
           <CheckIcon className="w-8 h-8 text-teal" />
         </div>
         <h2 className="text-3xl font-bold text-navy mb-4 font-serif">Ihre Anfrage ist bei uns.</h2>
-        <p className="text-text-light text-lg mb-8">
-          {isLarge
-            ? "Bei Ihrem Portfolioumfang erstellen wir ein maßgeschneidertes Angebot. Wir melden uns noch heute."
-            : `Basierend auf Ihren Angaben liegt Ihr geschätzter Preis bei ${priceRange}/Einheit/Monat. Das endgültige Angebot erhalten Sie am nächsten Werktag.`
-          }
-        </p>
+        
+        {isBetaProgram ? (
+          <>
+            <div className="bg-amber/10 border border-amber/30 rounded-xl p-4 mb-6">
+              <p className="text-amber font-semibold mb-1">🎯 Beta-Programm-Anfrage</p>
+              <p className="text-navy text-sm">Sie sind auf der Liste für eines der 5 Beta-Plätze!</p>
+            </div>
+            <p className="text-text-light text-lg mb-8">
+              {isLarge
+                ? "Bei Ihrem Portfolioumfang prüfen wir die Beta-Teilnahme individuell. Wir melden uns noch heute."
+                : `Ihr geschätzter Preis im Beta-Programm: ${betaPriceRange}/Einheit/Monat (statt ${priceRange}). Das endgültige Angebot erhalten Sie am nächsten Werktag.`
+              }
+            </p>
+          </>
+        ) : (
+          <p className="text-text-light text-lg mb-8">
+            {isLarge
+              ? "Bei Ihrem Portfolioumfang erstellen wir ein maßgeschneidertes Angebot. Wir melden uns noch heute."
+              : `Basierend auf Ihren Angaben liegt Ihr geschätzter Preis bei ${priceRange}/Einheit/Monat. Das endgültige Angebot erhalten Sie am nächsten Werktag.`
+            }
+          </p>
+        )}
 
         <div className="bg-white rounded-2xl border border-gray-100 p-6 text-left space-y-3 mb-8">
           <div className="text-xs font-semibold text-text-light uppercase tracking-wide mb-4">Ihre Angaben</div>
@@ -206,10 +234,14 @@ export function AnfrageQuiz() {
           {answers.standort && <SummaryRow label="Standort" value={answers.standort} />}
           {answers.situation && <SummaryRow label="Situation" value={answers.situation} />}
           {answers.prioritaet && <SummaryRow label="Priorität" value={answers.prioritaet} />}
+          {isBetaProgram && <SummaryRow label="Beta-Programm" value="Ja" />}
         </div>
 
         <div className="bg-navy/5 rounded-xl p-4 text-sm text-navy">
-          <strong>Was jetzt passiert:</strong> Wir prüfen Ihre Angaben und melden uns noch am selben Werktag mit einem konkreten Angebot — per E-Mail oder Telefon.
+          <strong>Was jetzt passiert:</strong> {isBetaProgram 
+            ? "Wir prüfen Ihre Angaben und melden uns noch am selben Werktag — priorisiert als Beta-Interessent."
+            : "Wir prüfen Ihre Angaben und melden uns noch am selben Werktag mit einem konkreten Angebot — per E-Mail oder Telefon."
+          }
         </div>
 
         <a href="/" className="inline-block mt-8 text-teal text-sm font-medium hover:underline">← Zurück zur Startseite</a>

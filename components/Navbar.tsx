@@ -66,6 +66,10 @@ export function Navbar() {
             )}
           </div>
 
+          <a href="/beta" className="text-amber text-sm font-semibold hover:text-amber/80 transition-colors flex items-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse" />
+            Beta
+          </a>
           <a href="/anfrage" className="bg-teal text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy transition-colors">
             Angebot anfragen
           </a>

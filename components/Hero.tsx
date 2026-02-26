@@ -78,6 +78,18 @@ export function Hero() {
                 Preise ansehen
               </a>
             </div>
+
+            {/* Beta Program Badge */}
+            <a 
+              href="/beta" 
+              className="inline-flex items-center gap-2 mt-6 group"
+            >
+              <span className="inline-flex items-center gap-2 bg-teal/10 hover:bg-teal/15 border border-teal/30 rounded-full px-4 py-2 text-sm font-medium text-teal transition-all group-hover:-translate-y-0.5">
+                <span>🎯</span>
+                <span>Beta-Programm: Noch 3 Plätze verfügbar</span>
+                <ArrowRightIcon className="w-3.5 h-3.5 opacity-70 group-hover:translate-x-0.5 transition-transform" />
+              </span>
+            </a>
           </div>
 
           {/* Right — Pain point card */}
