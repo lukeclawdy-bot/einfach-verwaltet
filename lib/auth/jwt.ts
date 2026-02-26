@@ -10,6 +10,7 @@ function getSecretKey(): Uint8Array {
 export interface PortalSession {
   landlordId: string;
   email: string;
+  isDemo?: boolean;
   iat?: number;
   exp?: number;
 }
@@ -22,6 +23,19 @@ export async function createToken(payload: {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("7d")
+    .sign(getSecretKey());
+}
+
+export async function createDemoToken(): Promise<string> {
+  const payload = {
+    landlordId: "demo",
+    email: "demo@einfach-verwaltet.de",
+    isDemo: true,
+  };
+  return new SignJWT(payload as Record<string, unknown>)
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("1h") // Demo tokens expire after 1 hour
     .sign(getSecretKey());
 }
 

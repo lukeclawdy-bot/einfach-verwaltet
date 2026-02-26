@@ -1,15 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import type { Metadata } from "next";
 
-// --- Icons ---
 function DocumentIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
     </svg>
   );
 }
@@ -17,32 +15,31 @@ function DocumentIcon({ className }: { className?: string }) {
 function PlusIcon({ className }: { className?: string }) {
   return (
     <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
     </svg>
   );
 }
 
 function TrashIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
     </svg>
   );
 }
 
-function ArrowDownIcon({ className }: { className?: string }) {
+function PrinterIcon({ className }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0 1 10.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0 .229 2.523a1.125 1.125 0 0 1-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0 0 21 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 0 0-1.913-.247M6.34 18H5.25A2.25 2.25 0 0 1 3 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 0 1 1.913-.247m10.5 0a48.536 48.536 0 0 0-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5Zm-3 0h.008v.008H15V10.5Z" />
     </svg>
   );
 }
 
-function SpinnerIcon({ className }: { className?: string }) {
+function SparklesIcon({ className }: { className?: string }) {
   return (
-    <svg className={`animate-spin ${className}`} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 0 0-2.455 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
     </svg>
   );
 }
@@ -51,83 +48,71 @@ interface BeschlussItem {
   id: string;
   tagesordnungspunkt: string;
   beschluss: string;
-  abstimmung: { ja: number; nein: number; enthaltung: number };
-  ergebnis: "angenommen" | "abgelehnt";
+  ja: number;
+  nein: number;
+  enthaltung: number;
 }
 
-const defaultTOPs: BeschlussItem[] = [
-  {
-    id: "1",
-    tagesordnungspunkt: "Genehmigung des Protokolls der letzten Eigentümerversammlung",
-    beschluss: "Das Protokoll der Eigentümerversammlung vom Vorjahr wird genehmigt.",
-    abstimmung: { ja: 8, nein: 0, enthaltung: 1 },
-    ergebnis: "angenommen",
-  },
-  {
-    id: "2",
-    tagesordnungspunkt: "Jahresabrechnung und Entlastung des Verwalters",
-    beschluss: "Die Jahresabrechnung wird genehmigt. Der Verwalter wird entlastet.",
-    abstimmung: { ja: 7, nein: 1, enthaltung: 1 },
-    ergebnis: "angenommen",
-  },
-];
+const EMPTY_BESCHLUSS: () => BeschlussItem = () => ({
+  id: crypto.randomUUID(),
+  tagesordnungspunkt: "",
+  beschluss: "",
+  ja: 0,
+  nein: 0,
+  enthaltung: 0,
+});
 
 export default function BeschlussprotokollPage() {
-  const [gemeinschaft, setGemeinschaft] = useState("WEG Musterstraße 12");
-  const [adresse, setAdresse] = useState("Musterstraße 12, 20255 Hamburg");
-  const [datum, setDatum] = useState(new Date().toLocaleDateString("de-DE"));
-  const [uhrzeit, setUhrzeit] = useState("18:00");
-  const [ort, setOrt] = useState("Gemeinschaftsraum, Musterstraße 12, 20255 Hamburg");
-  const [verwalter, setVerwalter] = useState("einfach verwaltet., Hamburg");
+  // Versammlungsdaten
+  const [gemeinschaft, setGemeinschaft] = useState("");
+  const [adresse, setAdresse] = useState("");
+  const [datum, setDatum] = useState("");
+  const [uhrzeit, setUhrzeit] = useState("19:00");
+  const [ort, setOrt] = useState("");
+  const [verwalter, setVerwalter] = useState("einfach verwaltet. GmbH");
   const [vorsitzender, setVorsitzender] = useState("");
   const [anwesende, setAnwesende] = useState("");
-  const [gesamtMiteigentuemer, setGesamtMiteigentuemer] = useState(10);
-  const [vertreteneAnteile, setVertreteneAnteile] = useState(750);
+  const [gesamtmiteigentuemer, setGesamtmiteigentuemer] = useState(10);
+  const [vertreteneAnteile, setVertreteneAnteile] = useState(600);
   const [gesamtanteile, setGesamtanteile] = useState(1000);
   const [sonstiges, setSonstiges] = useState("");
-  const [tops, setTops] = useState<BeschlussItem[]>(defaultTOPs);
+
+  // Beschlüsse
+  const [beschluesse, setBeschluesse] = useState<BeschlussItem[]>([
+    { ...EMPTY_BESCHLUSS(), tagesordnungspunkt: "Genehmigung der Jahresabrechnung", beschluss: "" },
+    { ...EMPTY_BESCHLUSS(), tagesordnungspunkt: "Entlastung des Verwalters", beschluss: "" },
+    { ...EMPTY_BESCHLUSS(), tagesordnungspunkt: "Wirtschaftsplan", beschluss: "" },
+  ]);
+
+  // Output
   const [protokoll, setProtokoll] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState("");
+  const resultRef = useRef<HTMLDivElement>(null);
 
-  const beschlussfaehigkeit = ((vertreteneAnteile / gesamtanteile) * 100).toFixed(1);
+  const addBeschluss = useCallback(() => {
+    setBeschluesse((prev) => [...prev, EMPTY_BESCHLUSS()]);
+  }, []);
 
-  function addTOP() {
-    setTops([
-      ...tops,
-      {
-        id: Date.now().toString(),
-        tagesordnungspunkt: "",
-        beschluss: "",
-        abstimmung: { ja: 0, nein: 0, enthaltung: 0 },
-        ergebnis: "angenommen",
-      },
-    ]);
-  }
+  const removeBeschluss = useCallback((id: string) => {
+    setBeschluesse((prev) => prev.filter((b) => b.id !== id));
+  }, []);
 
-  function removeTOP(id: string) {
-    setTops(tops.filter((t) => t.id !== id));
-  }
+  const updateBeschluss = useCallback(
+    (id: string, field: keyof BeschlussItem, value: string | number) => {
+      setBeschluesse((prev) =>
+        prev.map((b) => (b.id === id ? { ...b, [field]: value } : b))
+      );
+    },
+    []
+  );
 
-  function updateTOP(id: string, field: string, value: string | number | { ja: number; nein: number; enthaltung: number }) {
-    setTops(
-      tops.map((t) =>
-        t.id === id ? { ...t, [field]: value } : t
-      )
-    );
-  }
+  async function handleGenerate() {
+    if (!gemeinschaft || !adresse || !datum) {
+      setError("Bitte füllen Sie mindestens Gemeinschaft, Adresse und Datum aus.");
+      return;
+    }
 
-  function updateAbstimmung(id: string, field: "ja" | "nein" | "enthaltung", value: number) {
-    setTops(
-      tops.map((t) =>
-        t.id === id
-          ? { ...t, abstimmung: { ...t.abstimmung, [field]: value } }
-          : t
-      )
-    );
-  }
-
-  async function generateProtokoll() {
     setIsGenerating(true);
     setError("");
     setProtokoll("");
@@ -141,300 +126,407 @@ export default function BeschlussprotokollPage() {
           adresse,
           datum,
           uhrzeit,
-          ort,
+          ort: ort || "Gemeinschaftsraum",
           verwalter,
-          vorsitzender,
-          anwesende,
-          gesamtmiteigentuemer: gesamtMiteigentuemer,
+          vorsitzender: vorsitzender || "wird in der Versammlung gewählt",
+          anwesende: anwesende || "siehe Anwesenheitsliste",
+          gesamtmiteigentuemer,
           vertreteneAnteile,
           gesamtanteile,
-          tagesordnung: tops,
+          tagesordnung: beschluesse.map((b) => ({
+            tagesordnungspunkt: b.tagesordnungspunkt,
+            beschluss: b.beschluss || `Der Antrag zu "${b.tagesordnungspunkt}" wird zur Abstimmung gestellt.`,
+            abstimmung: {
+              ja: b.ja,
+              nein: b.nein,
+              enthaltung: b.enthaltung,
+            },
+            ergebnis:
+              b.ja > b.nein ? "angenommen" : "abgelehnt",
+          })),
           sonstiges,
         }),
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Fehler beim Generieren");
+
+      if (data.error) throw new Error(data.error);
+
       setProtokoll(data.protokoll);
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Unbekannter Fehler");
+      setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth" }), 200);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Ein Fehler ist aufgetreten.");
     } finally {
       setIsGenerating(false);
     }
   }
 
-  function downloadProtokoll() {
-    const blob = new Blob([protokoll], { type: "text/plain;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `Beschlussprotokoll-${gemeinschaft.replace(/\s+/g, "-")}-${datum.replace(/\./g, "-")}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
+  function handlePrint() {
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html lang="de">
+      <head>
+        <meta charset="utf-8" />
+        <title>Beschlussprotokoll — ${gemeinschaft}</title>
+        <style>
+          body { font-family: "Times New Roman", serif; max-width: 700px; margin: 40px auto; line-height: 1.6; font-size: 12pt; color: #1a1a1a; }
+          h1 { font-size: 16pt; text-align: center; margin-bottom: 24px; }
+          h2 { font-size: 13pt; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+          pre { white-space: pre-wrap; font-family: inherit; }
+          .footer { margin-top: 60px; font-size: 10pt; color: #666; text-align: center; border-top: 1px solid #ccc; padding-top: 12px; }
+          @media print { .footer { display: none; } body { margin: 20px; } }
+        </style>
+      </head>
+      <body>
+        <pre>${protokoll.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</pre>
+        <div class="footer">Erstellt mit einfach-verwaltet.de/beschlussprotokoll</div>
+      </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.print();
   }
+
+  function handleCopy() {
+    navigator.clipboard.writeText(protokoll);
+  }
+
+  const beschlussfaehigkeit =
+    gesamtanteile > 0 ? ((vertreteneAnteile / gesamtanteile) * 100).toFixed(1) : "0.0";
 
   return (
     <>
       <Navbar />
       <main className="pt-20 min-h-screen bg-warm-white">
         {/* Hero */}
-        <section className="bg-navy text-white py-16 px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
-              <DocumentIcon className="w-4 h-4" />
-              Kostenlos & KI-gestützt
+        <section className="bg-gradient-to-b from-navy to-navy/90 text-white py-16">
+          <div className="max-w-3xl mx-auto px-6 text-center">
+            <div className="inline-flex items-center gap-2 bg-teal/20 text-teal border border-teal/30 rounded-full px-4 py-1.5 text-sm font-medium mb-6">
+              <SparklesIcon className="w-4 h-4" />
+              WEG-Tool
             </div>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              WEG Beschlussprotokoll<br />Generator
+              Beschlussprotokoll Generator
             </h1>
-            <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Rechtssichere Beschlussprotokolle nach § 24 WEG in Sekunden. Eingaben machen — KI schreibt das Protokoll.
+            <p className="text-lg text-white/80 max-w-xl mx-auto">
+              Erstellen Sie rechtssichere Beschlussprotokolle für Ihre
+              Eigentümerversammlung — in Minuten statt Stunden.
             </p>
           </div>
         </section>
 
-        {/* Main content */}
-        <div className="max-w-4xl mx-auto px-6 py-12 space-y-8">
-
+        <div className="max-w-3xl mx-auto px-6 py-12 space-y-10">
           {/* Versammlungsdaten */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-navy mb-6">Versammlungsdaten</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">WEG-Bezeichnung</label>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+            <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
+              <DocumentIcon className="w-5 h-5 text-teal" />
+              Versammlungsdaten
+            </h2>
+            <div className="grid md:grid-cols-2 gap-5">
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  WEG / Gemeinschaft *
+                </label>
                 <input
                   type="text"
                   value={gemeinschaft}
                   onChange={(e) => setGemeinschaft(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Anschrift der WEG</label>
-                <input
-                  type="text"
-                  value={adresse}
-                  onChange={(e) => setAdresse(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Datum der Versammlung</label>
-                <input
-                  type="text"
-                  value={datum}
-                  onChange={(e) => setDatum(e.target.value)}
-                  placeholder="z.B. 26.02.2026"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Uhrzeit (Beginn)</label>
-                <input
-                  type="text"
-                  value={uhrzeit}
-                  onChange={(e) => setUhrzeit(e.target.value)}
-                  placeholder="z.B. 18:00"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-navy mb-1.5">Versammlungsort</label>
-                <input
-                  type="text"
-                  value={ort}
-                  onChange={(e) => setOrt(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Versammlungsleiter / Vorsitzender</label>
-                <input
-                  type="text"
-                  value={vorsitzender}
-                  onChange={(e) => setVorsitzender(e.target.value)}
-                  placeholder="Name des Versammlungsleiters"
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Verwalter</label>
-                <input
-                  type="text"
-                  value={verwalter}
-                  onChange={(e) => setVerwalter(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                  placeholder="z.B. WEG Alsterstraße 42, 20354 Hamburg"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
                 />
               </div>
               <div className="md:col-span-2">
                 <label className="block text-sm font-medium text-navy mb-1.5">
-                  Anwesende Eigentümer (Namen / Wohneinheiten)
+                  Adresse der Liegenschaft *
                 </label>
-                <textarea
+                <input
+                  type="text"
+                  value={adresse}
+                  onChange={(e) => setAdresse(e.target.value)}
+                  placeholder="Alsterstraße 42, 20354 Hamburg"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Datum der Versammlung *
+                </label>
+                <input
+                  type="date"
+                  value={datum}
+                  onChange={(e) => setDatum(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Uhrzeit
+                </label>
+                <input
+                  type="time"
+                  value={uhrzeit}
+                  onChange={(e) => setUhrzeit(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Versammlungsort
+                </label>
+                <input
+                  type="text"
+                  value={ort}
+                  onChange={(e) => setOrt(e.target.value)}
+                  placeholder="Gemeinschaftsraum / Videokonferenz"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Verwalter
+                </label>
+                <input
+                  type="text"
+                  value={verwalter}
+                  onChange={(e) => setVerwalter(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Versammlungsleiter
+                </label>
+                <input
+                  type="text"
+                  value={vorsitzender}
+                  onChange={(e) => setVorsitzender(e.target.value)}
+                  placeholder="Name des Vorsitzenden"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-navy mb-1.5">
+                  Anwesende Eigentümer
+                </label>
+                <input
+                  type="text"
                   value={anwesende}
                   onChange={(e) => setAnwesende(e.target.value)}
-                  rows={3}
-                  placeholder="z.B. Müller (WE 1), Schmidt (WE 2, 3), Meier-Hoffmann (WE 4) — in Vertretung für Weber (WE 5)..."
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                  placeholder="Namen oder 'siehe Anwesenheitsliste'"
+                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
                 />
               </div>
             </div>
-          </div>
 
-          {/* Beschlussfähigkeit */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-navy mb-6">Beschlussfähigkeit</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Gesamtzahl Miteigentümer</label>
-                <input
-                  type="number"
-                  value={gesamtMiteigentuemer}
-                  onChange={(e) => setGesamtMiteigentuemer(parseInt(e.target.value) || 0)}
-                  min={1}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
+            {/* Beschlussfähigkeit */}
+            <div className="mt-6 pt-6 border-t border-gray-100">
+              <h3 className="text-sm font-semibold text-navy mb-4">
+                Beschlussfähigkeit (§ 25 WEG)
+              </h3>
+              <div className="grid grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-text-light mb-1">
+                    Miteigentümer gesamt
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={gesamtmiteigentuemer}
+                    onChange={(e) => setGesamtmiteigentuemer(Number(e.target.value))}
+                    className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-text-light mb-1">
+                    Vertretene Anteile
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={vertreteneAnteile}
+                    onChange={(e) => setVertreteneAnteile(Number(e.target.value))}
+                    className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-text-light mb-1">
+                    Gesamtanteile (MEA)
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    value={gesamtanteile}
+                    onChange={(e) => setGesamtanteile(Number(e.target.value))}
+                    className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal"
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Vertretene Anteile</label>
-                <input
-                  type="number"
-                  value={vertreteneAnteile}
-                  onChange={(e) => setVertreteneAnteile(parseInt(e.target.value) || 0)}
-                  min={0}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-navy mb-1.5">Gesamte Anteile (MEA)</label>
-                <input
-                  type="number"
-                  value={gesamtanteile}
-                  onChange={(e) => setGesamtanteile(parseInt(e.target.value) || 1)}
-                  min={1}
-                  className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
-                />
+              <div className="mt-3 text-sm">
+                <span className="text-text-light">Beschlussfähigkeit: </span>
+                <span
+                  className={`font-semibold ${
+                    Number(beschlussfaehigkeit) > 50
+                      ? "text-green-600"
+                      : "text-amber-600"
+                  }`}
+                >
+                  {beschlussfaehigkeit}%
+                </span>
+                <span className="text-text-light text-xs ml-2">
+                  {Number(beschlussfaehigkeit) > 50
+                    ? "(Mehrheit der MEA vertreten)"
+                    : "(§ 25 Abs. 4 WEG n.F.: auch ohne Mehrheit beschlussfähig)"}
+                </span>
               </div>
             </div>
-            <div className={`mt-5 p-4 rounded-xl text-sm font-medium ${parseFloat(beschlussfaehigkeit) > 50 ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-amber-50 text-amber-700 border border-amber-200'}`}>
-              {parseFloat(beschlussfaehigkeit) > 50
-                ? `✓ Beschlussfähig — ${beschlussfaehigkeit}% der Anteile vertreten (> 50%)`
-                : `⚠ ${beschlussfaehigkeit}% vertreten — nach § 25 Abs. 4 WEG n.F. trotzdem beschlussfähig (Quorum abgeschafft)`}
-            </div>
-            <p className="mt-3 text-xs text-gray-500">
-              Hinweis: Nach der WEG-Reform 2020 (§ 25 Abs. 4 WEG n.F.) gibt es kein Mindestquorum mehr. Jede Versammlung ist beschlussfähig, sofern sie ordnungsgemäß einberufen wurde.
-            </p>
-          </div>
+          </section>
 
-          {/* Tagesordnungspunkte */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-navy">Tagesordnung & Beschlüsse</h2>
-              <button
-                onClick={addTOP}
-                className="flex items-center gap-2 text-sm font-medium text-teal bg-teal/10 hover:bg-teal/20 px-4 py-2 rounded-xl transition-all"
-              >
-                <PlusIcon className="w-4 h-4" />
-                TOP hinzufügen
-              </button>
-            </div>
+          {/* Tagesordnung & Beschlüsse */}
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+            <h2 className="text-xl font-bold text-navy mb-6 flex items-center gap-2">
+              <DocumentIcon className="w-5 h-5 text-teal" />
+              Tagesordnungspunkte & Beschlüsse
+            </h2>
+
             <div className="space-y-6">
-              {tops.map((top, index) => (
-                <div key={top.id} className="border-2 border-gray-100 rounded-xl p-5">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-sm font-bold text-navy bg-navy/10 px-3 py-1 rounded-full">
-                      TOP {index + 1}
+              {beschluesse.map((b, i) => (
+                <div
+                  key={b.id}
+                  className="border border-gray-100 rounded-xl p-5 bg-gray-50/50"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-navy text-white text-xs font-bold">
+                      {i + 1}
                     </span>
-                    <button
-                      onClick={() => removeTOP(top.id)}
-                      className="text-gray-400 hover:text-red-500 transition-colors"
-                    >
-                      <TrashIcon className="w-4 h-4" />
-                    </button>
+                    {beschluesse.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeBeschluss(b.id)}
+                        className="text-gray-400 hover:text-red-500 transition-colors p-1"
+                        title="Entfernen"
+                      >
+                        <TrashIcon className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
-                  <div className="space-y-4">
+
+                  <div className="space-y-3">
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Tagesordnungspunkt</label>
+                      <label className="block text-xs font-medium text-navy mb-1">
+                        Tagesordnungspunkt
+                      </label>
                       <input
                         type="text"
-                        value={top.tagesordnungspunkt}
-                        onChange={(e) => updateTOP(top.id, "tagesordnungspunkt", e.target.value)}
-                        placeholder="z.B. Instandsetzung Tiefgarage — Auftragsvergabe"
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                        value={b.tagesordnungspunkt}
+                        onChange={(e) =>
+                          updateBeschluss(b.id, "tagesordnungspunkt", e.target.value)
+                        }
+                        placeholder="z.B. Genehmigung der Jahresabrechnung 2025"
+                        className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Beschlusswortlaut</label>
+                      <label className="block text-xs font-medium text-navy mb-1">
+                        Beschlusstext (optional — wird automatisch formuliert)
+                      </label>
                       <textarea
-                        value={top.beschluss}
-                        onChange={(e) => updateTOP(top.id, "beschluss", e.target.value)}
+                        value={b.beschluss}
+                        onChange={(e) =>
+                          updateBeschluss(b.id, "beschluss", e.target.value)
+                        }
                         rows={2}
-                        placeholder="z.B. Die WEG beauftragt Firma XY mit der Instandsetzung der Tiefgarage zu einem Preis von maximal 25.000 € inkl. MwSt."
-                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+                        placeholder="Exakter Beschlusstext, oder leer lassen für automatische Formulierung"
+                        className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal resize-none"
                       />
                     </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <div className="grid grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-xs font-medium text-green-700 mb-1">Ja-Stimmen</label>
+                        <label className="block text-xs text-green-700 font-medium mb-1">
+                          Ja-Stimmen
+                        </label>
                         <input
                           type="number"
-                          value={top.abstimmung.ja}
-                          onChange={(e) => updateAbstimmung(top.id, "ja", parseInt(e.target.value) || 0)}
                           min={0}
-                          className="w-full px-3 py-2.5 rounded-xl border-2 border-green-200 text-navy text-sm focus:outline-none focus:border-green-500 transition-all"
+                          value={b.ja}
+                          onChange={(e) =>
+                            updateBeschluss(b.id, "ja", Number(e.target.value))
+                          }
+                          className="w-full px-3 py-2 rounded-lg border-2 border-green-200 bg-green-50 text-navy text-sm text-center focus:outline-none focus:border-green-400"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-red-600 mb-1">Nein-Stimmen</label>
+                        <label className="block text-xs text-red-700 font-medium mb-1">
+                          Nein-Stimmen
+                        </label>
                         <input
                           type="number"
-                          value={top.abstimmung.nein}
-                          onChange={(e) => updateAbstimmung(top.id, "nein", parseInt(e.target.value) || 0)}
                           min={0}
-                          className="w-full px-3 py-2.5 rounded-xl border-2 border-red-200 text-navy text-sm focus:outline-none focus:border-red-500 transition-all"
+                          value={b.nein}
+                          onChange={(e) =>
+                            updateBeschluss(b.id, "nein", Number(e.target.value))
+                          }
+                          className="w-full px-3 py-2 rounded-lg border-2 border-red-200 bg-red-50 text-navy text-sm text-center focus:outline-none focus:border-red-400"
                         />
                       </div>
                       <div>
-                        <label className="block text-xs font-medium text-gray-600 mb-1">Enthaltungen</label>
+                        <label className="block text-xs text-gray-600 font-medium mb-1">
+                          Enthaltungen
+                        </label>
                         <input
                           type="number"
-                          value={top.abstimmung.enthaltung}
-                          onChange={(e) => updateAbstimmung(top.id, "enthaltung", parseInt(e.target.value) || 0)}
                           min={0}
-                          className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal transition-all"
+                          value={b.enthaltung}
+                          onChange={(e) =>
+                            updateBeschluss(b.id, "enthaltung", Number(e.target.value))
+                          }
+                          className="w-full px-3 py-2 rounded-lg border-2 border-gray-200 bg-gray-50 text-navy text-sm text-center focus:outline-none focus:border-gray-400"
                         />
                       </div>
-                      <div>
-                        <label className="block text-xs font-medium text-navy mb-1">Ergebnis</label>
-                        <select
-                          value={top.ergebnis}
-                          onChange={(e) => updateTOP(top.id, "ergebnis", e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal transition-all"
-                        >
-                          <option value="angenommen">✓ Angenommen</option>
-                          <option value="abgelehnt">✗ Abgelehnt</option>
-                        </select>
-                      </div>
+                    </div>
+                    <div className="text-xs text-text-light">
+                      Ergebnis:{" "}
+                      <span
+                        className={`font-semibold ${
+                          b.ja > b.nein ? "text-green-600" : b.ja === b.nein && b.ja === 0 ? "text-gray-400" : "text-red-600"
+                        }`}
+                      >
+                        {b.ja > b.nein
+                          ? "ANGENOMMEN"
+                          : b.ja === b.nein && b.ja === 0
+                          ? "—"
+                          : "ABGELEHNT"}
+                      </span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-          </div>
+
+            <button
+              type="button"
+              onClick={addBeschluss}
+              className="mt-4 flex items-center gap-2 text-teal text-sm font-medium hover:text-teal/80 transition-colors"
+            >
+              <PlusIcon className="w-4 h-4" />
+              Tagesordnungspunkt hinzufügen
+            </button>
+          </section>
 
           {/* Sonstiges */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-lg font-bold text-navy mb-4">Sonstiges / Verschiedenes</h2>
+          <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+            <h2 className="text-lg font-bold text-navy mb-4">Sonstiges / Anmerkungen</h2>
             <textarea
               value={sonstiges}
               onChange={(e) => setSonstiges(e.target.value)}
               rows={3}
-              placeholder="Weitere Punkte, Wortmeldungen, nächste Versammlung..."
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all"
+              placeholder="Zusätzliche Anmerkungen, die im Protokoll erwähnt werden sollen..."
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-navy text-sm focus:outline-none focus:border-teal focus:ring-2 focus:ring-teal/20 transition-all resize-none"
             />
-          </div>
+          </section>
 
-          {/* Generate button */}
+          {/* Generate Button */}
           {error && (
             <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
               {error}
@@ -442,84 +534,120 @@ export default function BeschlussprotokollPage() {
           )}
 
           <button
-            onClick={generateProtokoll}
-            disabled={isGenerating || tops.length === 0}
-            className="w-full flex items-center justify-center gap-3 bg-teal text-white py-4 px-6 rounded-xl font-semibold text-base hover:bg-teal/90 transition-all hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+            className="w-full flex items-center justify-center gap-3 bg-navy text-white py-4 px-6 rounded-xl font-semibold text-lg hover:bg-navy/85 transition-all hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isGenerating ? (
               <>
-                <SpinnerIcon className="w-5 h-5" />
+                <svg
+                  className="animate-spin h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
+                </svg>
                 Protokoll wird erstellt...
               </>
             ) : (
               <>
-                <DocumentIcon className="w-5 h-5" />
-                Beschlussprotokoll generieren
+                <SparklesIcon className="w-5 h-5" />
+                Beschlussprotokoll erstellen
               </>
             )}
           </button>
 
           {/* Result */}
           {protokoll && (
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
-              <div className="flex items-center justify-between mb-5">
-                <h2 className="text-lg font-bold text-navy">Ihr Beschlussprotokoll</h2>
-                <button
-                  onClick={downloadProtokoll}
-                  className="flex items-center gap-2 text-sm font-medium text-teal bg-teal/10 hover:bg-teal/20 px-4 py-2 rounded-xl transition-all"
-                >
-                  <ArrowDownIcon className="w-4 h-4" />
-                  Herunterladen
-                </button>
+            <div ref={resultRef} className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold text-navy">
+                  Ihr Beschlussprotokoll
+                </h2>
+                <div className="flex gap-2">
+                  <button
+                    onClick={handleCopy}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-navy hover:bg-gray-50 transition-colors"
+                  >
+                    <DocumentIcon className="w-4 h-4" />
+                    Kopieren
+                  </button>
+                  <button
+                    onClick={handlePrint}
+                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-teal text-white text-sm font-medium hover:bg-teal/90 transition-colors"
+                  >
+                    <PrinterIcon className="w-4 h-4" />
+                    Drucken / PDF
+                  </button>
+                </div>
               </div>
-              <div className="bg-gray-50 rounded-xl p-6 font-mono text-sm text-gray-800 whitespace-pre-wrap leading-relaxed border border-gray-200">
-                {protokoll}
-              </div>
-              <div className="mt-5 p-4 bg-amber-50 border border-amber-200 rounded-xl text-sm text-amber-800">
-                <strong>Hinweis:</strong> Dieses Protokoll wurde automatisch erstellt. Bitte prüfen Sie es vor der Verwendung auf Vollständigkeit und Richtigkeit. Für rechtssichere Protokollierung empfehlen wir die Begleitung durch einen erfahrenen WEG-Verwalter.
-              </div>
-              <div className="mt-4 p-4 bg-navy/5 rounded-xl text-sm text-navy">
-                <strong>Als Eigentümer oder Verwalter Hilfe benötigt?</strong>{" "}
-                <a href="/anfrage" className="underline text-teal hover:text-teal/80 font-medium">
-                  Jetzt einfach verwaltet. anfragen
-                </a>{" "}
-                — wir übernehmen WEG-Verwaltung inkl. Eigentümerversammlung, Jahresabrechnung und Beschlussprotokoll.
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+                <pre className="whitespace-pre-wrap text-sm text-navy leading-relaxed font-[system-ui]">
+                  {protokoll}
+                </pre>
               </div>
             </div>
           )}
 
-          {/* SEO content block */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
-            <h2 className="text-xl font-bold text-navy mb-4">
-              Beschlussprotokoll WEG — Was muss rein?
-            </h2>
-            <div className="prose prose-sm text-gray-700 space-y-4">
+          {/* SEO Content */}
+          <section className="mt-16 space-y-8 text-sm text-text-light leading-relaxed">
+            <div>
+              <h2 className="text-lg font-bold text-navy mb-3">
+                Was ist ein Beschlussprotokoll?
+              </h2>
               <p>
-                Das Beschlussprotokoll der Eigentümerversammlung ist ein zentrales Dokument im WEG-Recht. Nach <strong>§ 24 Abs. 6 WEG</strong> muss der Verwalter das Protokoll führen und unterzeichnen. Seit der WEG-Reform 2020 gelten neue Anforderungen.
-              </p>
-              <h3 className="text-base font-bold text-navy">Pflichtangaben nach § 24 WEG:</h3>
-              <ul className="space-y-1 list-none pl-0">
-                {[
-                  "Ort, Datum und Uhrzeit der Versammlung",
-                  "Namen der anwesenden und vertretenen Eigentümer",
-                  "Feststellung der Beschlussfähigkeit (kein Quorum mehr nötig!)",
-                  "Tagesordnungspunkte mit Abstimmungsergebnissen",
-                  "Wortlaut jedes Beschlusses",
-                  "Stimmverhältnis (Ja/Nein/Enthaltung)",
-                  "Unterschrift des Versammlungsleiters und Protokollführers",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    <span className="text-teal font-bold mt-0.5">✓</span>
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-              <h3 className="text-base font-bold text-navy mt-6">WEG-Reform 2020: Was hat sich geändert?</h3>
-              <p className="text-sm">
-                Die WEG-Reform von 2020 hat das Quorum abgeschafft: Jede ordnungsgemäß einberufene Versammlung ist beschlussfähig, unabhängig davon, wie viele Miteigentumsanteile vertreten sind. Das vereinfacht die Praxis erheblich.
+                Ein Beschlussprotokoll (auch Ergebnisprotokoll) dokumentiert die
+                gefassten Beschlüsse einer Eigentümerversammlung nach dem
+                Wohnungseigentumsgesetz (WEG). Es ist die Mindestanforderung
+                nach § 24 Abs. 6 WEG und dient als rechtliche Grundlage für alle
+                Beschlüsse der Wohnungseigentümergemeinschaft. Im Gegensatz zum
+                Verlaufsprotokoll werden nur die Ergebnisse der Abstimmungen
+                festgehalten — nicht der Diskussionsverlauf.
               </p>
             </div>
-          </div>
+            <div>
+              <h2 className="text-lg font-bold text-navy mb-3">
+                Was muss ein Beschlussprotokoll enthalten?
+              </h2>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Ort, Datum und Uhrzeit der Versammlung</li>
+                <li>Name des Versammlungsleiters und des Protokollführers</li>
+                <li>Feststellung der Beschlussfähigkeit (§ 25 WEG)</li>
+                <li>Vollständige Tagesordnung</li>
+                <li>Exakter Wortlaut jedes Beschlusses</li>
+                <li>Abstimmungsergebnis (Ja / Nein / Enthaltung)</li>
+                <li>Unterschrift des Versammlungsleiters (§ 24 Abs. 6 WEG)</li>
+                <li>Gegenzeichnung durch einen anwesenden Eigentümer</li>
+              </ul>
+            </div>
+            <div>
+              <h2 className="text-lg font-bold text-navy mb-3">
+                Beschlussfähigkeit nach WEG-Reform 2020
+              </h2>
+              <p>
+                Seit der WEG-Reform 2020 ist die Eigentümerversammlung
+                grundsätzlich immer beschlussfähig, unabhängig von der Anzahl der
+                anwesenden oder vertretenen Miteigentumsanteile (§ 25 Abs. 1 WEG
+                n.F.). Die alte Regelung, wonach mehr als die Hälfte der MEA
+                vertreten sein mussten, wurde abgeschafft. Dies erleichtert die
+                Beschlussfassung erheblich — besonders bei WEGs mit vielen
+                Eigentümern, die häufig unter geringer Beteiligung litten.
+              </p>
+            </div>
+          </section>
         </div>
       </main>
       <Footer />

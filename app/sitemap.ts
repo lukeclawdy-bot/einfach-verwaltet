@@ -14,6 +14,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/mieterhohung-rechner`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${baseUrl}/bka-rechner`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${baseUrl}/beschlussprotokoll`, priority: 0.8, changeFrequency: "monthly" as const },
+    { url: `${baseUrl}/nachfolge`, priority: 0.9, changeFrequency: "monthly" as const },
+    { url: `${baseUrl}/demo`, priority: 0.7, changeFrequency: "monthly" as const },
     { url: `${baseUrl}/hausverwaltung-hamburg-vergleich`, priority: 0.8, changeFrequency: "monthly" as const },
     { url: `${baseUrl}/hausverwaltung-berlin`, priority: 0.9, changeFrequency: "monthly" as const },
     { url: `${baseUrl}/hausverwaltung-hamburg`, priority: 0.9, changeFrequency: "monthly" as const },
@@ -48,12 +50,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "nebenkostenabrechnung-pruefen",
     "hausverwalter-wechseln-hamburg",
     "weg-verwaltung-hamburg",
-    "beschlussprotokoll-eigentuemerversammlung",
+    "eigentuemerversammlung-online",
+    "hausverwaltung-berlin-wechseln",
+    "mietpreisbremse-berlin-2026",
+    "wohnungseigentuemer-rechte-pflichten",
   ].map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,
     changeFrequency: "monthly" as const,
-    lastModified: new Date("2026-02-01"),
+    lastModified: new Date("2026-02-26"),
   }));
 
   return [
