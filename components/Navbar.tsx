@@ -14,6 +14,7 @@ export function Navbar() {
         </a>
         <div className="hidden md:flex items-center gap-8">
           <a href="/leistungen" className="text-text-light hover:text-navy text-sm font-medium transition-colors">Leistungen</a>
+          <a href="/bka-rechner" className="text-teal hover:text-navy text-sm font-medium transition-colors">BKA-Rechner</a>
           <a href="/preise" className="text-text-light hover:text-navy text-sm font-medium transition-colors">Preise</a>
           <a href="/blog" className="text-text-light hover:text-navy text-sm font-medium transition-colors">Ratgeber</a>
           <a href="/#nachfolge" className="text-text-light hover:text-navy text-sm font-medium transition-colors">Nachfolge</a>
