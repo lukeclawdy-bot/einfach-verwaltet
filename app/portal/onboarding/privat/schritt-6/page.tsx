@@ -18,9 +18,19 @@ export default function Schritt6() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    // In production: create account + trigger lead/submitted Inngest event
-    await new Promise((r) => setTimeout(r, 800));
-    router.push("/portal/onboarding/privat/schritt-7");
+    try {
+      const kommunikation = typeof window !== "undefined"
+        ? sessionStorage.getItem("onboarding_kommunikation") || "email"
+        : "email";
+      await fetch("/api/portal/onboarding/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, type: "privat", kommunikation }),
+      });
+    } catch (err) {
+      console.error("Onboarding complete error:", err);
+    }
+    router.push(`/portal/onboarding/erfolg?email=${encodeURIComponent(email)}`);
   };
 
   return (

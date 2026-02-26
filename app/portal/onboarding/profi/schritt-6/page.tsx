@@ -13,8 +13,19 @@ export default function ProfiSchritt6() {
     e.preventDefault();
     if (!email) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 800));
-    router.push("/portal/onboarding/privat/schritt-7"); // reuse success screen
+    try {
+      const firma = typeof window !== "undefined"
+        ? sessionStorage.getItem("onboarding_firma") || undefined
+        : undefined;
+      await fetch("/api/portal/onboarding/complete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, type: "profi", firma }),
+      });
+    } catch (err) {
+      console.error("Onboarding complete error:", err);
+    }
+    router.push(`/portal/onboarding/erfolg?email=${encodeURIComponent(email)}`);
   };
 
   return (
