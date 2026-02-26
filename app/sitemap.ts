@@ -54,6 +54,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "hausverwaltung-berlin-wechseln",
     "mietpreisbremse-berlin-2026",
     "wohnungseigentuemer-rechte-pflichten",
+    "beschlussprotokoll-eigentuemerversammlung",
+    "mieterhohung-hamburg-2026",
+    "mietpreisbremse-berlin-2026",
+    "mietspiegel-hamburg-2025",
+    "moderne-hausverwaltung-2026",
+    "schoenheitsreparaturen-bgh-2026",
   ].map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,
