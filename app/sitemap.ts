@@ -47,6 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "nebenkostenabrechnung-pruefen",
     "hausverwalter-wechseln-hamburg",
     "weg-verwaltung-hamburg",
+    "beschlussprotokoll-eigentuemerversammlung",
   ].map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,
