@@ -22,6 +22,51 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "indexmiete-vs-staffelmiete",
+    title: "Indexmiete vs. Staffelmiete: Was ist besser für Vermieter?",
+    description:
+      "Vergleich von Indexmiete und Staffelmiete: Vor- und Nachteile für Vermieter, rechtliche Grundlagen §557b BGB, automatische Anpassung vs. Planungssicherheit.",
+    keyword: "Indexmiete Staffelmiete Vergleich",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "kautionsrueckgabe-frist",
+    title: "Kautionsrückgabe: Wann und wie viel muss der Vermieter zurückzahlen?",
+    description:
+      "Kautionsrückgabe nach §551 BGB: Rückgabefrist, Verzinsung, Abzüge für Schäden — der komplette Leitfaden für Vermieter und Mieter.",
+    keyword: "Kautionsrückgabe Frist",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "abmahnung-mieter-muster",
+    title: "Abmahnung Mieter: Wann ist sie berechtigt und wie muss sie formuliert werden?",
+    description:
+      "Rechtssichere Abmahnung von Mietern: Voraussetzungen nach BGB, Formvorschriften, Fristen und was eine wirksame Abmahnung enthalten muss.",
+    keyword: "Abmahnung Mieter Muster",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "vermieter-steuern-optimieren",
+    title: "Vermieter Steuern optimieren: Abschreibungen, Werbungskosten und Steuervorteile 2026",
+    description:
+      "Steuerliche Optimierung für Immobilienvermieter: AfA-Abschreibung, Werbungskosten, Hausverwaltungsgebühren absetzen und alle Steuervorteile nutzen.",
+    keyword: "Vermieter Steuern",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "nebenkostenabrechnung-frist-verpasst",
+    title: "Nebenkostenabrechnung Frist verpasst: Was passiert nach §556 Abs. 3 BGB?",
+    description:
+      "12-Monats-Frist für Nebenkostenabrechnung erklärt: Rechtsfolgen bei verspäteter Abrechnung, Ausschlussfrist §556 BGB, was Vermieter beachten müssen.",
+    keyword: "Nebenkostenabrechnung Frist",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
     slug: "eigenbedarfskuendigung-fristen",
     title: "Eigenbedarfskündigung: Voraussetzungen und Fristen nach §573 BGB",
     description:
