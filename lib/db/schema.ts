@@ -1,53 +1,52 @@
 // Database Schema for einfach verwaltet.
-// Tables: leads, properties, units, tenants, tickets, landlords, onboardingSessions, aiActions, conversations, documents, financialTransactions
+// v2: Added landlords, onboarding_sessions, ai_actions, conversations, documents, financial_transactions
 // Using Neon PostgreSQL + Drizzle ORM
 
-import { pgTable, text, timestamp, integer, boolean, decimal, uuid, varchar, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, boolean, decimal, uuid, jsonb } from 'drizzle-orm/pg-core';
 
-// Leads from /anfrage quiz
+// ─── EXISTING TABLES ────────────────────────────────────────────────────────
+
 export const leads = pgTable('leads', {
   id: uuid('id').defaultRandom().primaryKey(),
   createdAt: timestamp('created_at').defaultNow(),
-  verwaltungstyp: text('verwaltungstyp'), // miet | weg | beides | unsicher
-  einheiten: text('einheiten'),            // 1-3 | 4-10 | 11-30 | 31-100 | 100+
-  standort: text('standort'),              // hamburg | hamburg-umland | berlin | andere
+  verwaltungstyp: text('verwaltungstyp'),
+  einheiten: text('einheiten'),
+  standort: text('standort'),
   situation: text('situation'),
   prioritaet: text('prioritaet'),
   name: text('name').notNull(),
   email: text('email').notNull(),
   telefon: text('telefon'),
-  status: text('status').default('new'),   // new | contacted | qualified | rejected
+  status: text('status').default('new'),
   notes: text('notes'),
 });
 
-// Real estate properties under management
 export const properties = pgTable('properties', {
   id: uuid('id').defaultRandom().primaryKey(),
   createdAt: timestamp('created_at').defaultNow(),
+  landlordId: uuid('landlord_id'), // FK to landlords
   address: text('address').notNull(),
   postalCode: text('postal_code').notNull(),
   city: text('city').notNull().default('Hamburg'),
   unitCount: integer('unit_count').notNull(),
-  verwaltungstyp: text('verwaltungstyp').notNull(), // miet | weg
+  verwaltungstyp: text('verwaltungstyp').notNull(), // miet | weg | sev
   ownerName: text('owner_name'),
   ownerEmail: text('owner_email'),
   ownerPhone: text('owner_phone'),
   active: boolean('active').default(true),
 });
 
-// Individual units (apartments) within properties
 export const units = pgTable('units', {
   id: uuid('id').defaultRandom().primaryKey(),
   propertyId: uuid('property_id').notNull(),
-  designation: text('designation').notNull(), // e.g. "WE 1", "EG links"
+  designation: text('designation').notNull(),
   areaM2: decimal('area_m2', { precision: 8, scale: 2 }),
   floor: integer('floor'),
   rooms: decimal('rooms', { precision: 4, scale: 1 }),
-  coldRentCents: integer('cold_rent_cents'), // store in cents for precision
+  coldRentCents: integer('cold_rent_cents'),
   occupied: boolean('occupied').default(true),
 });
 
-// Tenant records
 export const tenants = pgTable('tenants', {
   id: uuid('id').defaultRandom().primaryKey(),
   unitId: uuid('unit_id').notNull(),
@@ -60,22 +59,6 @@ export const tenants = pgTable('tenants', {
   active: boolean('active').default(true),
 });
 
-// Landlords — property owners using einfach verwaltet.
-export const landlords = pgTable('landlords', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  name: varchar('name', { length: 255 }),
-  phone: varchar('phone', { length: 50 }),
-  companyName: varchar('company_name', { length: 255 }),
-  type: varchar('type', { length: 20 }).notNull().default('private'), // 'private' | 'professional'
-  communicationChannel: varchar('communication_channel', { length: 20 }).default('email'),
-  aiAutonomyLevel: varchar('ai_autonomy_level', { length: 20 }).default('supervised'), // supervised | semi-auto | full-auto
-  onboardingCompleted: boolean('onboarding_completed').default(false),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow(),
-});
-
-// Maintenance and service tickets
 export const tickets = pgTable('tickets', {
   id: uuid('id').defaultRandom().primaryKey(),
   createdAt: timestamp('created_at').defaultNow(),
@@ -83,25 +66,43 @@ export const tickets = pgTable('tickets', {
   propertyId: uuid('property_id').notNull(),
   unitId: uuid('unit_id'),
   tenantId: uuid('tenant_id'),
-  landlordId: uuid('landlord_id').references(() => landlords.id),
+  landlordId: uuid('landlord_id'), // FK to landlords
   title: text('title').notNull(),
   description: text('description'),
   category: text('category'), // maintenance | billing | complaint | other
   status: text('status').default('open'), // open | inprogress | resolved | closed
   priority: text('priority').default('normal'), // low | normal | high | urgent
-  assignee: text('assignee'), // viktor | lukas | external
-  aiTriage: jsonb('ai_triage').default({}),
+  urgency: integer('urgency').default(2), // 1-5
+  assignee: text('assignee'),
+  aiTriage: jsonb('ai_triage'), // { category, urgency, summary }
   slaDeadline: timestamp('sla_deadline'),
   resolvedAt: timestamp('resolved_at'),
 });
 
-// Onboarding sessions — save progress, resume later
+// ─── NEW TABLES v2 ───────────────────────────────────────────────────────────
+
+// Landlords — property owners using einfach verwaltet.
+export const landlords = pgTable('landlords', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  email: text('email').notNull().unique(),
+  name: text('name'),
+  phone: text('phone'),
+  companyName: text('company_name'),
+  type: text('type').notNull().default('private'), // private | professional
+  communicationChannel: text('communication_channel').default('email'), // email | whatsapp | portal
+  aiAutonomyLevel: text('ai_autonomy_level').default('supervised'), // supervised | semi-auto | full-auto
+  onboardingCompleted: boolean('onboarding_completed').default(false),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+// Onboarding sessions — save & resume progress
 export const onboardingSessions = pgTable('onboarding_sessions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  landlordId: uuid('landlord_id').references(() => landlords.id),
+  landlordId: uuid('landlord_id').notNull(),
   currentStep: integer('current_step').default(1),
   totalSteps: integer('total_steps').default(7),
-  type: varchar('type', { length: 20 }), // 'private' | 'professional'
+  type: text('type'), // private | professional
   data: jsonb('data').default({}), // accumulated form data
   completedAt: timestamp('completed_at'),
   createdAt: timestamp('created_at').defaultNow(),
@@ -111,17 +112,17 @@ export const onboardingSessions = pgTable('onboarding_sessions', {
 // AI Actions — action items generated by AI for landlord review
 export const aiActions = pgTable('ai_actions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  landlordId: uuid('landlord_id').references(() => landlords.id).notNull(),
-  propertyId: uuid('property_id').references(() => properties.id),
-  unitId: uuid('unit_id').references(() => units.id),
-  tenantId: uuid('tenant_id').references(() => tenants.id),
-  type: varchar('type', { length: 50 }).notNull(), // 'mieterhoehung' | 'mahnung' | 'energieausweis' | 'ticket' | 'custom'
+  landlordId: uuid('landlord_id').notNull(),
+  propertyId: uuid('property_id'),
+  unitId: uuid('unit_id'),
+  tenantId: uuid('tenant_id'),
+  type: text('type').notNull(), // mieterhoehung | mahnung | energieausweis | ticket | onboarding | custom
   urgency: integer('urgency').default(2), // 1-5
-  title: varchar('title', { length: 500 }).notNull(),
+  title: text('title').notNull(),
   body: text('body'),
-  actionLabel: varchar('action_label', { length: 100 }),
-  dismissLabel: varchar('dismiss_label', { length: 100 }).default('Ignorieren'),
-  status: varchar('status', { length: 20 }).default('pending'), // pending | actioned | dismissed
+  actionLabel: text('action_label').default('Handeln'),
+  dismissLabel: text('dismiss_label').default('Ignorieren'),
+  status: text('status').default('pending'), // pending | actioned | dismissed
   metadata: jsonb('metadata').default({}),
   expiresAt: timestamp('expires_at'),
   createdAt: timestamp('created_at').defaultNow(),
@@ -130,14 +131,14 @@ export const aiActions = pgTable('ai_actions', {
 // Conversations — all messages between tenants and verwaltung
 export const conversations = pgTable('conversations', {
   id: uuid('id').defaultRandom().primaryKey(),
-  tenantId: uuid('tenant_id').references(() => tenants.id).notNull(),
-  landlordId: uuid('landlord_id').references(() => landlords.id).notNull(),
-  ticketId: uuid('ticket_id').references(() => tickets.id),
-  channel: varchar('channel', { length: 20 }).default('portal'), // portal | email | whatsapp | sms
-  direction: varchar('direction', { length: 10 }).notNull(), // inbound | outbound
+  tenantId: uuid('tenant_id'),
+  landlordId: uuid('landlord_id').notNull(),
+  ticketId: uuid('ticket_id'),
+  channel: text('channel').default('portal'), // portal | email | whatsapp | sms
+  direction: text('direction').notNull(), // inbound | outbound
   body: text('body').notNull(),
   aiGenerated: boolean('ai_generated').default(false),
-  aiClassification: varchar('ai_classification', { length: 50 }), // maintenance | payment | complaint | general
+  aiClassification: text('ai_classification'), // maintenance | payment | complaint | general
   aiUrgency: integer('ai_urgency'), // 1-5
   readAt: timestamp('read_at'),
   createdAt: timestamp('created_at').defaultNow(),
@@ -146,33 +147,33 @@ export const conversations = pgTable('conversations', {
 // Documents — document vault
 export const documents = pgTable('documents', {
   id: uuid('id').defaultRandom().primaryKey(),
-  landlordId: uuid('landlord_id').references(() => landlords.id).notNull(),
-  propertyId: uuid('property_id').references(() => properties.id),
-  unitId: uuid('unit_id').references(() => units.id),
-  tenantId: uuid('tenant_id').references(() => tenants.id),
-  type: varchar('type', { length: 50 }).notNull(), // mietvertrag | energieausweis | protokoll | abrechnung | sonstiges
-  name: varchar('name', { length: 255 }).notNull(),
-  url: varchar('url', { length: 1000 }).notNull(), // Vercel Blob URL
-  mimeType: varchar('mime_type', { length: 100 }),
+  landlordId: uuid('landlord_id').notNull(),
+  propertyId: uuid('property_id'),
+  unitId: uuid('unit_id'),
+  tenantId: uuid('tenant_id'),
+  type: text('type').notNull(), // mietvertrag | energieausweis | protokoll | abrechnung | sonstiges
+  name: text('name').notNull(),
+  url: text('url').notNull(), // Vercel Blob URL
+  mimeType: text('mime_type'),
   sizeBytes: integer('size_bytes'),
-  expiresAt: timestamp('expires_at'), // for Energieausweis (10yr)
+  expiresAt: timestamp('expires_at'),
   metadata: jsonb('metadata').default({}),
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-// Financial transactions — rent payments, expenses
+// Financial transactions — rent, expenses, Mahnungen
 export const financialTransactions = pgTable('financial_transactions', {
   id: uuid('id').defaultRandom().primaryKey(),
-  landlordId: uuid('landlord_id').references(() => landlords.id).notNull(),
-  propertyId: uuid('property_id').references(() => properties.id),
-  unitId: uuid('unit_id').references(() => units.id),
-  tenantId: uuid('tenant_id').references(() => tenants.id),
-  type: varchar('type', { length: 30 }).notNull(), // rent_received | expense | deposit | refund | mahnung
-  amount: integer('amount').notNull(), // in cents (€1 = 100)
-  currency: varchar('currency', { length: 3 }).default('EUR'),
-  status: varchar('status', { length: 20 }).default('pending'), // pending | confirmed | failed
-  bkvCategory: varchar('bkv_category', { length: 50 }), // §2 BetrKV category for BKA
-  description: varchar('description', { length: 500 }),
+  landlordId: uuid('landlord_id').notNull(),
+  propertyId: uuid('property_id'),
+  unitId: uuid('unit_id'),
+  tenantId: uuid('tenant_id'),
+  type: text('type').notNull(), // rent_received | expense | deposit | refund | mahnung
+  amountCents: integer('amount_cents').notNull(), // €1 = 100 cents
+  currency: text('currency').default('EUR'),
+  status: text('status').default('pending'), // pending | confirmed | failed
+  bkvCategory: text('bkv_category'), // §2 BetrKV category for BKA
+  description: text('description'),
   dueDate: timestamp('due_date'),
   paidAt: timestamp('paid_at'),
   metadata: jsonb('metadata').default({}),

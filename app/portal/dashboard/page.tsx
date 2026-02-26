@@ -1,38 +1,62 @@
 import Link from "next/link";
+import { StatsCard } from "./components/StatsCard";
+import { ActionButtons } from "./components/ActionButtons";
 
-const aiActions = [
-  {
-    urgency: "red",
-    icon: "🔴",
-    text: "Mieter Wohnung 2 hat seit 3 Tagen nicht auf die Nebenkostenabrechnung reagiert.",
-    action: "Erinnerung senden",
-    dismiss: "Ignorieren",
-  },
-  {
-    urgency: "yellow",
-    icon: "🟡",
-    text: "Mieterhöhung für Wohnung 1 ist seit 18 Monaten nicht angepasst — §558 BGB erlaubt +4,2%.",
-    action: "Berechnen",
-    dismiss: "Später",
-  },
-  {
-    urgency: "green",
-    icon: "🟢",
-    text: "Heizungswartung Wohnung 3 — Angebot von Müller Heizung: €340. Beauftragen?",
-    action: "Beauftragen",
-    dismiss: "Ablehnen",
-  },
+// TODO: replace with session-based landlordId after auth is implemented
+const DEMO_LANDLORD_ID = process.env.DEMO_LANDLORD_ID || "";
+
+const URGENCY_ICON: Record<number, string> = { 5: "🔴", 4: "🔴", 3: "🟡", 2: "🟢", 1: "⚪" };
+
+async function getDashboardData(landlordId: string) {
+  if (!landlordId) return null;
+  try {
+    const base = process.env.NEXT_PUBLIC_APP_URL || "https://einfach-verwaltet.de";
+    const res = await fetch(`${base}/api/portal/dashboard?landlordId=${landlordId}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const { data } = await res.json();
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+async function getTickets(landlordId: string) {
+  if (!landlordId) return [];
+  try {
+    const base = process.env.NEXT_PUBLIC_APP_URL || "https://einfach-verwaltet.de";
+    const res = await fetch(`${base}/api/portal/tickets?landlordId=${landlordId}&status=open`, { cache: "no-store" });
+    if (!res.ok) return [];
+    const { data } = await res.json();
+    return data || [];
+  } catch {
+    return [];
+  }
+}
+
+// Mock data for demo mode (no landlord configured)
+const MOCK = {
+  propertiesCount: 2, totalUnits: 8, occupancyRate: 87, openTicketsCount: 2,
+  pendingActionsCount: 3, rentThisMonthCents: 560000,
+  topAiActions: [
+    { id: "mock-1", urgency: 4, title: "Mieter Wohnung 3 hat seit 5 Tagen nicht auf Nebenkostenabrechnung reagiert.", actionLabel: "Erinnerung senden", dismissLabel: "Ignorieren" },
+    { id: "mock-2", urgency: 3, title: "Mieterhöhung Wohnung 1 möglich — §558 BGB, letzte Erhöhung vor 19 Monaten (+4,2% möglich).", actionLabel: "Berechnen", dismissLabel: "Später" },
+    { id: "mock-3", urgency: 2, title: "Heizungswartung Wohnung 2 — Angebot Müller Heizung: €340. Beauftragen?", actionLabel: "Beauftragen", dismissLabel: "Ablehnen" },
+  ],
+};
+
+const MOCK_TICKETS = [
+  { id: "t-1", urgency: 4, title: "Heizung ausgefallen", tenantName: "M. Richter", unitDesignation: "Whg. 3", status: "open", createdAt: new Date().toISOString() },
+  { id: "t-2", urgency: 2, title: "Briefkasten defekt", tenantName: "S. Müller", unitDesignation: "Whg. 1", status: "open", createdAt: new Date().toISOString() },
 ];
 
-const tickets = [
-  { id: "T-001", title: "Heizung ausgefallen", tenant: "M. Richter", unit: "Whg. 3", status: "offen", urgency: "🔴" },
-  { id: "T-002", title: "Briefkasten defekt", tenant: "S. Müller", unit: "Whg. 1", status: "in Bearbeitung", urgency: "🟡" },
-  { id: "T-003", title: "Nebenkostenabrechnung Frage", tenant: "A. Schmidt", unit: "Whg. 2", status: "gelöst", urgency: "🟢" },
-];
+export default async function DashboardPage() {
+  const data = DEMO_LANDLORD_ID ? await getDashboardData(DEMO_LANDLORD_ID) : MOCK;
+  const ticketList = DEMO_LANDLORD_ID ? await getTickets(DEMO_LANDLORD_ID) : MOCK_TICKETS;
 
-export default function Dashboard() {
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? "Guten Morgen" : hour < 18 ? "Guten Tag" : "Guten Abend";
+  const d = data || MOCK;
+  const rentEuro = (d.rentThisMonthCents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
 
   return (
     <div className="min-h-screen bg-light-gray flex">
@@ -57,105 +81,103 @@ export default function Dashboard() {
             { label: "Dokumente", href: "/portal/dokumente", active: false },
             { label: "Finanzen", href: "/portal/finanzen", active: false },
           ].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
+            <Link key={item.href} href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
-                ${item.active ? "bg-teal/20 text-teal font-medium" : "text-white/60 hover:bg-white/5 hover:text-white"}`}
-            >
+                ${item.active ? "bg-teal/20 text-teal font-medium" : "text-white/60 hover:bg-white/5 hover:text-white"}`}>
               {item.label}
             </Link>
           ))}
         </nav>
         <div className="px-4 py-4 border-t border-white/10">
-          <p className="text-white/50 text-xs">einfach verwaltet. v1</p>
+          <p className="text-white/40 text-xs">einfach verwaltet. v1</p>
         </div>
       </aside>
 
       {/* Main */}
       <div className="flex-1 ml-56">
         <div className="max-w-4xl mx-auto px-8 py-8">
-          {/* Header */}
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-navy">{greeting}, Lukas.</h1>
-            <p className="text-text-light text-sm">Hier ist Ihr Überblick für heute.</p>
+            <h1 className="text-2xl font-bold text-navy">Guten Morgen.</h1>
+            <p className="text-text-light text-sm mt-0.5">Hier ist Ihr Überblick für heute.</p>
           </div>
 
           {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-8">
-            {[
-              { label: "Einheiten", value: "3", sub: "Hamburg" },
-              { label: "Offene Tickets", value: "1", sub: "1 dringend" },
-              { label: "Miete diesen Monat", value: "€3.200", sub: "vollständig ✅" },
-            ].map((s) => (
-              <div key={s.label} className="bg-white rounded-2xl border border-gray-100 p-5">
-                <p className="text-text-light text-xs font-medium uppercase tracking-wide mb-1">{s.label}</p>
-                <p className="text-3xl font-bold text-navy">{s.value}</p>
-                <p className="text-xs text-text-light mt-1">{s.sub}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <StatsCard label="Einheiten" value={d.totalUnits} sub={`${d.propertiesCount} Objekte`} />
+            <StatsCard label="Belegung" value={`${d.occupancyRate}%`} sub="aktuell vermietet" highlight />
+            <StatsCard label="Offene Tickets" value={d.openTicketsCount} sub="offen" />
+            <StatsCard label="Miete (diesen Monat)" value={rentEuro} sub="eingegangen" />
           </div>
 
           {/* AI Action Feed */}
-          <div className="bg-white rounded-2xl border-l-4 border-teal border border-gray-100 p-6 mb-8">
-            <h2 className="font-bold text-navy mb-4 flex items-center gap-2">
-              <span>Ihre nächsten Schritte</span>
-              <span className="text-xs bg-teal/10 text-teal px-2 py-0.5 rounded-full font-normal">KI-generiert</span>
-            </h2>
-            <div className="space-y-4">
-              {aiActions.map((a, i) => (
-                <div key={i} className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0">
-                  <span className="text-lg flex-shrink-0 mt-0.5">{a.icon}</span>
-                  <p className="text-sm text-text-main flex-1">{a.text}</p>
-                  <div className="flex gap-2 flex-shrink-0">
-                    <button className="text-xs bg-navy text-white px-3 py-1.5 rounded-lg hover:bg-teal transition-colors">
-                      {a.action}
-                    </button>
-                    <button className="text-xs text-text-light hover:text-navy px-2 py-1.5 transition-colors">
-                      {a.dismiss}
-                    </button>
+          {d.topAiActions?.length > 0 && (
+            <div className="bg-white rounded-2xl border-l-4 border-teal border border-gray-100 p-6 mb-8">
+              <h2 className="font-bold text-navy mb-4 flex items-center gap-2">
+                Ihre nächsten Schritte
+                <span className="text-xs bg-teal/10 text-teal px-2 py-0.5 rounded-full font-normal">
+                  {d.pendingActionsCount} ausstehend
+                </span>
+              </h2>
+              <div className="space-y-4">
+                {d.topAiActions.map((a: { id: string; urgency: number; title: string; actionLabel: string; dismissLabel: string }) => (
+                  <div key={a.id} className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-0">
+                    <span className="text-lg flex-shrink-0 mt-0.5">{URGENCY_ICON[a.urgency] || "⚪"}</span>
+                    <p className="text-sm text-text-main flex-1">{a.title}</p>
+                    <ActionButtons
+                      actionId={a.id}
+                      actionLabel={a.actionLabel || "Handeln"}
+                      dismissLabel={a.dismissLabel || "Ignorieren"}
+                    />
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Tickets */}
           <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
             <div className="px-6 py-4 border-b border-gray-50 flex items-center justify-between">
-              <h2 className="font-bold text-navy">Aktive Tickets</h2>
-              <Link href="/portal/tickets" className="text-sm text-teal hover:underline">Alle anzeigen</Link>
+              <h2 className="font-bold text-navy">Offene Tickets</h2>
+              <Link href="/portal/tickets" className="text-sm text-teal hover:underline">Alle anzeigen →</Link>
             </div>
-            <table className="w-full">
-              <thead>
-                <tr className="text-xs text-text-light uppercase tracking-wide bg-gray-50">
-                  <th className="px-6 py-3 text-left">Ticket</th>
-                  <th className="px-6 py-3 text-left">Mieter</th>
-                  <th className="px-6 py-3 text-left">Einheit</th>
-                  <th className="px-6 py-3 text-left">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {tickets.map((t) => (
-                  <tr key={t.id} className="border-t border-gray-50 hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-4 text-sm">
-                      <span className="mr-2">{t.urgency}</span>
-                      <span className="text-navy font-medium">{t.title}</span>
-                    </td>
-                    <td className="px-6 py-4 text-sm text-text-light">{t.tenant}</td>
-                    <td className="px-6 py-4 text-sm text-text-light">{t.unit}</td>
-                    <td className="px-6 py-4 text-sm">
-                      <span className={`px-2.5 py-1 rounded-full text-xs font-medium
-                        ${t.status === "offen" ? "bg-red-50 text-red-600" :
-                          t.status === "in Bearbeitung" ? "bg-amber-50 text-amber-600" :
-                          "bg-green-50 text-green-600"}`}>
-                        {t.status}
-                      </span>
-                    </td>
+            {ticketList.length === 0 ? (
+              <div className="px-6 py-12 text-center text-text-light text-sm">
+                Keine offenen Tickets — alles unter Kontrolle ✅
+              </div>
+            ) : (
+              <table className="w-full">
+                <thead>
+                  <tr className="text-xs text-text-light uppercase tracking-wide bg-gray-50">
+                    <th className="px-6 py-3 text-left">Ticket</th>
+                    <th className="px-6 py-3 text-left">Mieter</th>
+                    <th className="px-6 py-3 text-left hidden md:table-cell">Einheit</th>
+                    <th className="px-6 py-3 text-left">Status</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {ticketList.slice(0, 5).map((t: { id: string; urgency: number; title: string; tenantName: string; unitDesignation: string; status: string }) => (
+                    <tr key={t.id} className="border-t border-gray-50 hover:bg-gray-50/50 transition-colors cursor-pointer">
+                      <td className="px-6 py-4 text-sm">
+                        <Link href={`/portal/tickets/${t.id}`} className="flex items-center gap-2">
+                          <span>{URGENCY_ICON[t.urgency] || "⚪"}</span>
+                          <span className="text-navy font-medium">{t.title}</span>
+                        </Link>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-text-light">{t.tenantName || "—"}</td>
+                      <td className="px-6 py-4 text-sm text-text-light hidden md:table-cell">{t.unitDesignation || "—"}</td>
+                      <td className="px-6 py-4">
+                        <span className={`px-2.5 py-1 rounded-full text-xs font-medium
+                          ${t.status === "open" ? "bg-red-50 text-red-600" :
+                            t.status === "inprogress" ? "bg-amber-50 text-amber-600" :
+                            "bg-green-50 text-green-600"}`}>
+                          {t.status === "open" ? "Offen" : t.status === "inprogress" ? "In Bearbeitung" : "Gelöst"}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>
