@@ -6,7 +6,6 @@ import { HouseLogoIcon } from "./Icons";
 const navLinks = [
   { href: "/leistungen", label: "Leistungen" },
   { href: "/preise", label: "Preise" },
-  { href: "/nachfolge", label: "Nachfolge" },
   { href: "/blog", label: "Ratgeber" },
   { href: "/kontakt", label: "Kontakt" },
 ];
@@ -24,6 +23,7 @@ const standorte = [
   { href: "/hausverwaltung-berlin", label: "Hausverwaltung Berlin", sub: "Miet- & WEG-Verwaltung in Berlin" },
   { href: "/hausverwaltung-wechseln", label: "Hausverwaltung wechseln", sub: "Schritt-für-Schritt-Guide" },
   { href: "/hausverwaltung-hamburg-vergleich", label: "Vergleich 2026", sub: "einfach verwaltet. vs. Markt" },
+  { href: "/nachfolge", label: "Nachfolge", sub: "Für Verwalter im Ruhestand" },
 ];
 
 export function Navbar() {
@@ -48,7 +48,7 @@ export function Navbar() {
         </a>
 
         {/* Desktop nav */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {navLinks.map((l) => (
             <a key={l.href} href={l.href} className="text-text-light hover:text-navy text-sm font-medium transition-colors">
               {l.label}
@@ -103,11 +103,7 @@ export function Navbar() {
             )}
           </div>
 
-          <a href="/beta" className="text-amber text-sm font-semibold hover:text-amber/80 transition-colors flex items-center gap-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse" />
-            Beta
-          </a>
-          <a href="/anfrage" className="bg-teal text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy transition-colors">
+          <a href="/anfrage" className="bg-teal text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy transition-colors whitespace-nowrap">
             Angebot anfragen
           </a>
         </div>
