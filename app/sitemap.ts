@@ -24,6 +24,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ];
 
   const blogPosts = [
+    "weg-hamburg",
+    "mietspiegel-hamburg-2025",
+    "hausordnung-mietwohnung",
+    "immobilien-vermieten-steuern",
+    "verwaltervertrag-hausverwaltung",
     "hausverwaltung-wechseln-hamburg",
     "nebenkostenabrechnung-fehler",
     "mieterhohung-hamburg-2026",

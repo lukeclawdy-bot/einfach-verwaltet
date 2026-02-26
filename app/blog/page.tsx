@@ -22,6 +22,51 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "weg-hamburg",
+    title: "WEG Hamburg: Was Wohnungseigentümer über die Verwaltung wissen müssen",
+    description:
+      "WEG-Verwaltung in Hamburg erklärt: §26 WEG Verwalterbestellung, Eigentümerversammlung, Jahresabrechnung, Rücklagen und wie Sie den richtigen WEG-Verwalter wählen.",
+    keyword: "WEG Hamburg",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "mietspiegel-hamburg-2025",
+    title: "Mietspiegel Hamburg 2025: Aktuelle Mietpreise und was Vermieter wissen müssen",
+    description:
+      "Hamburger Mietspiegel 2023/2025 erklärt: Aktuelle Mietpreise nach Stadtteilen, §558c BGB, Mieterhöhung mit Mietspiegel, ortsübliche Vergleichsmiete — der komplette Leitfaden.",
+    keyword: "Mietspiegel Hamburg 2025",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "hausordnung-mietwohnung",
+    title: "Hausordnung Mietwohnung: Was ist erlaubt und was nicht?",
+    description:
+      "Hausordnung in der Mietwohnung: Rechtsgrundlagen, was Vermieter vorschreiben dürfen (BVerfG), Ruhezeiten, Treppenhaus, Haustiere und Konsequenzen bei Verstößen.",
+    keyword: "Hausordnung Mietwohnung",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "immobilien-vermieten-steuern",
+    title: "Immobilien vermieten und Steuern: Was Vermieter 2025 wissen müssen",
+    description:
+      "Steuern für Vermieter 2025: §21 EStG, Werbungskosten, Hausverwaltungsgebühren steuerlich absetzbar, AfA, Verluste und Spekulationssteuer nach §23 EStG erklärt.",
+    keyword: "Immobilien vermieten Steuern",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "verwaltervertrag-hausverwaltung",
+    title: "Verwaltervertrag: Was muss ein guter Hausverwaltungsvertrag enthalten?",
+    description:
+      "Verwaltervertrag Checkliste: §34c GewO Pflichten, Leistungsumfang, Vergütung, Kündigung, Haftung. Red Flags erkennen und den richtigen Hausverwalter wählen.",
+    keyword: "Verwaltervertrag Hausverwaltung",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
     slug: "hausverwaltung-hamburg-altona",
     title: "Hausverwaltung Hamburg Altona: Was Eigentümer wissen müssen",
     description:
