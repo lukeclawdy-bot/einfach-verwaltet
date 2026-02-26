@@ -62,6 +62,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "eigentuemerversammlung-online",
     "wohnungseigentuemer-rechte-pflichten",
     "hausverwaltung-kuendigen-frist",
+    // Sprint 7 — AEO-optimized posts
+    "nebenkostenabrechnung-pruefen-checkliste",
+    "mietminderung-hamburg",
+    "wohnungsuebergabe-protokoll",
+    "grundsteuer-hamburg-2025",
+    "vermieter-pflichten-heizung",
   ].map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,

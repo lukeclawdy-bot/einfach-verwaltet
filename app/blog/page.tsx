@@ -22,6 +22,51 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "vermieter-pflichten-heizung",
+    title: "Vermieter Pflichten Heizung: Mindesttemperaturen und Heizperiode",
+    description:
+      "Welche Mindesttemperaturen muss ein Vermieter gewährleisten? Heizperiode 1. Oktober bis 30. April, 20°C tagsüber, 18°C nachts — Pflichten, Folgen und Tipps.",
+    keyword: "Vermieter Pflichten Heizung",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "grundsteuer-hamburg-2025",
+    title: "Grundsteuer Hamburg 2025: Was Vermieter jetzt wissen müssen",
+    description:
+      "Grundsteuerreform 2025 in Hamburg: Neue Messbeträge, Hebesatz 975%, korrekte Umlage auf Mieter und was Vermieter bei den neuen Bescheiden prüfen müssen.",
+    keyword: "Grundsteuer Hamburg 2025",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "wohnungsuebergabe-protokoll",
+    title: "Wohnungsübergabe Protokoll: Checkliste für die Übergabe",
+    description:
+      "Das Wohnungsübergabe Protokoll Schritt für Schritt: Räume, Zählerstände, Schlüssel, Fotos — und warum das Protokoll bei Streitigkeiten über die Kaution entscheidend ist.",
+    keyword: "Wohnungsübergabe Protokoll",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "mietminderung-hamburg",
+    title: "Mietminderung Hamburg: Wann und wie viel darf man kürzen?",
+    description:
+      "Mietminderung in Hamburg nach §536 BGB: Schimmel 20-100%, Heizungsausfall 10-50% — Tabelle mit typischen Mängeln, Verfahren und Musterschreiben.",
+    keyword: "Mietminderung Hamburg",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "nebenkostenabrechnung-pruefen-checkliste",
+    title: "Nebenkostenabrechnung prüfen: Checkliste für Mieter und Vermieter",
+    description:
+      "Die komplette Checkliste zur Nebenkostenabrechnung: Fristen nach §556 BGB, formale und inhaltliche Fehler erkennen, Widerspruch einlegen — für Mieter und Vermieter.",
+    keyword: "Nebenkostenabrechnung prüfen Checkliste",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
     slug: "rauchmelder-pflicht-hamburg",
     title: "Rauchmelder Pflicht Hamburg 2026: Welche Wohnungen sind betroffen?",
     description:
