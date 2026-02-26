@@ -32,6 +32,23 @@ export function Footer() {
           </div>
 
           <div>
+            <h4 className="font-semibold text-white text-sm mb-4 uppercase tracking-wide">Ratgeber</h4>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Hausverwaltung wechseln", href: "/blog/hausverwaltung-wechseln-hamburg" },
+                { label: "Nebenkostenabrechnung", href: "/blog/nebenkostenabrechnung-fehler" },
+                { label: "Mieterhöhung Hamburg", href: "/blog/mieterhohung-hamburg-2026" },
+                { label: "Kosten Hausverwaltung", href: "/blog/hausverwaltung-hamburg-kosten" },
+                { label: "Alle Artikel", href: "/blog" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <a href={item.href} className="text-white/60 text-sm hover:text-white transition-colors">{item.label}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
             <h4 className="font-semibold text-white text-sm mb-4 uppercase tracking-wide">Rechtliches</h4>
             <ul className="space-y-2.5">
               {[
