@@ -6,7 +6,12 @@ import { OnboardingShell } from "../../../components/OnboardingShell";
 
 export default function Schritt6() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("onboarding_email") || "";
+    }
+    return "";
+  });
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {

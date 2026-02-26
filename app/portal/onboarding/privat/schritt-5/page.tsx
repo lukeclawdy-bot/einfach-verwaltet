@@ -27,7 +27,13 @@ export default function Schritt5() {
   const canAdvance = selected && contact.length > 4;
 
   const handleContinue = () => {
-    if (canAdvance) router.push("/portal/onboarding/privat/schritt-6");
+    if (canAdvance) {
+      // Carry email forward to step 6 so user doesn't re-enter
+      if (selectedChannel?.type === "email") {
+        sessionStorage.setItem("onboarding_email", contact);
+      }
+      router.push("/portal/onboarding/privat/schritt-6");
+    }
   };
 
   const selectedChannel = channels.find((c) => c.value === selected);

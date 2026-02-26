@@ -46,7 +46,7 @@ const jsonLdFAQ = {
       name: "Ist eine rein digitale Eigentümerversammlung nach §23 WEG möglich?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ja, §23 Abs. 5 WEG seit der Reform 2020 sieht ausdrücklich die Möglichkeit vor, Eigentümerversammlungen „unter Ausschluss der persönlichen Anwesenheit" durchzuführen, wenn die Teilnahme auf elektronischem Wege ermöglicht wird.",
+        text: "Ja, §23 Abs. 5 WEG seit der Reform 2020 sieht ausdrücklich die Möglichkeit vor, Eigentümerversammlungen „unter Ausschluss der persönlichen Anwesenheit“ durchzuführen, wenn die Teilnahme auf elektronischem Wege ermöglicht wird.",
       },
     },
     {
@@ -109,7 +109,7 @@ export default function Post() {
               Die Rechtsgrundlage: §23 Abs. 5 WEG
             </h2>
             <p>
-              Seit der WEG-Reform 2020 regelt §23 Abs. 5 WEG ausdrücklich die digitale Eigentümerversammlung. Die Norm erlaubt es, Versammlungen „unter Ausschluss der persönlichen Anwesenheit" durchzuführen, sofern alle Eigentümer die Möglichkeit zur elektronischen Teilnahme erhalten.
+              Seit der WEG-Reform 2020 regelt §23 Abs. 5 WEG ausdrücklich die digitale Eigentümerversammlung. Die Norm erlaubt es, Versammlungen „unter Ausschluss der persönlichen Anwesenheit“ durchzuführen, sofern alle Eigentümer die Möglichkeit zur elektronischen Teilnahme erhalten.
             </p>
             <p className="bg-teal/10 border-l-4 border-teal p-4 rounded">
               <strong>Rechtswortlaut §23 Abs. 5 WEG:</strong> „Die Teilnehmer können sich auch ohne persönliche Anwesenheit untereinander sowie mit dem Verwalter verständigen, soweit die Teilgemeinschaftsordnung nichts anderes bestimmt."
