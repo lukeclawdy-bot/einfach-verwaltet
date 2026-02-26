@@ -190,6 +190,7 @@ export default async function DashboardPage() {
             { label: "Partner", href: "/portal/partner", active: false },
             { label: "Dokumente", href: "/portal/dokumente", active: false },
             { label: "Finanzen", href: "/portal/finanzen", active: false },
+            { label: "Mieterhöhung", href: "/portal/mieterhohung", active: false },
           ].map((item) => (
             <Link
               key={item.href}

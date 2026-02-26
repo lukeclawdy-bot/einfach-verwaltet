@@ -147,6 +147,7 @@ export default async function AbrechnungPage() {
             { label: 'Partner', href: '/portal/partner' },
             { label: 'Dokumente', href: '/portal/dokumente' },
             { label: 'Finanzen', href: '/portal/finanzen' },
+            { label: 'Mieterhöhung', href: '/portal/mieterhohung' },
             { label: 'Abrechnung', href: '/portal/abrechnung', active: true },
           ].map((item) => (
             <Link key={item.href} href={item.href}

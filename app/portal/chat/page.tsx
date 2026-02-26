@@ -239,6 +239,7 @@ export default async function ChatPage() {
             { label: "Partner", href: "/portal/partner" },
             { label: "Dokumente", href: "/portal/dokumente" },
             { label: "Finanzen", href: "/portal/finanzen" },
+            { label: "Mieterhöhung", href: "/portal/mieterhohung" },
           ].map((item) => (
             <Link key={item.href} href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors
