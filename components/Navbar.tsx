@@ -112,7 +112,7 @@ export function Navbar() {
             Portal
           </a>
           <a href="/portal/onboarding" className="bg-teal text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy transition-colors whitespace-nowrap">
-            Jetzt starten
+            Angebot anfragen
           </a>
         </div>
 
@@ -206,7 +206,7 @@ export function Navbar() {
                 onClick={() => setMobileOpen(false)}
                 className="block w-full text-center bg-teal text-white py-3.5 rounded-xl font-semibold hover:bg-navy transition-colors"
               >
-                Jetzt starten →
+                Angebot anfragen →
               </a>
               <a
                 href="/portal/login"
