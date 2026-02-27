@@ -16,6 +16,7 @@ const werkzeuge = [
   { href: "/mieterhohung-rechner", label: "Mieterhöhungsrechner", sub: "§ 558 BGB berechnen" },
   { href: "/beschlussprotokoll", label: "Beschlussprotokoll", sub: "WEG-Protokoll erstellen" },
   { href: "/wechseln", label: "Wechsel-Guide", sub: "Hausverwaltung wechseln — kostenlos" },
+  { href: "/eigentuemerversammlung-online", label: "ETV Online", sub: "Eigentümerversammlung §24 WEG" },
   { href: "/anfrage", label: "Anfrage-Quiz", sub: "Kostenlose Preis-Schätzung" },
 ];
 

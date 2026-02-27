@@ -18,6 +18,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/bka-rechner`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
     { url: `${baseUrl}/mieterhohung-rechner`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
     { url: `${baseUrl}/beschlussprotokoll`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/eigentuemerversammlung-online`, priority: 0.9, changeFrequency: "monthly", lastModified: today },
     { url: `${baseUrl}/wechseln`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
     // Blog & content hub
     { url: `${baseUrl}/blog`, priority: 0.8, changeFrequency: "weekly", lastModified: today },
