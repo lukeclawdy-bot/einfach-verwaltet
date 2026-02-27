@@ -2,66 +2,95 @@ import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://einfach-verwaltet.de";
+  const today = new Date("2026-02-27");
 
-  const staticPages = [
-    { url: baseUrl, priority: 1.0, changeFrequency: "weekly" as const },
-    { url: `${baseUrl}/leistungen`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/preise`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/anfrage`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/beta`, priority: 0.9, changeFrequency: "weekly" as const },
-    { url: `${baseUrl}/kontakt`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/blog`, priority: 0.8, changeFrequency: "weekly" as const },
-    { url: `${baseUrl}/mieterhohung-rechner`, priority: 0.7, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/bka-rechner`, priority: 0.7, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/beschlussprotokoll`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/nachfolge`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/demo`, priority: 0.7, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-hamburg-vergleich`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-berlin`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-muenchen`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-frankfurt`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-duesseldorf`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-hannover`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-leipzig`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-hamburg`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/mietverwaltung-hamburg`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-wechseln`, priority: 0.8, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/wechseln`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/weg-verwaltung`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-koeln`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/hausverwaltung-stuttgart`, priority: 0.9, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/pitch`, priority: 0.5, changeFrequency: "monthly" as const },
-    { url: `${baseUrl}/impressum`, priority: 0.3, changeFrequency: "yearly" as const },
-    { url: `${baseUrl}/datenschutz`, priority: 0.3, changeFrequency: "yearly" as const },
-    { url: `${baseUrl}/agb`, priority: 0.3, changeFrequency: "yearly" as const },
+  // ─── Static marketing pages ───────────────────────────────────────────────
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: baseUrl, priority: 1.0, changeFrequency: "weekly", lastModified: today },
+    // High-intent conversion pages
+    { url: `${baseUrl}/anfrage`, priority: 0.9, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/beta`, priority: 0.9, changeFrequency: "weekly", lastModified: today },
+    { url: `${baseUrl}/preise`, priority: 0.9, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/leistungen`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/kontakt`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    // Tools & utilities — high-value SEO
+    { url: `${baseUrl}/werkzeuge`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/bka-rechner`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/mieterhohung-rechner`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/beschlussprotokoll`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/wechseln`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
+    // Blog & content hub
+    { url: `${baseUrl}/blog`, priority: 0.8, changeFrequency: "weekly", lastModified: today },
+    // Demo
+    { url: `${baseUrl}/demo`, priority: 0.5, changeFrequency: "monthly", lastModified: today },
+    // Other marketing
+    { url: `${baseUrl}/nachfolge`, priority: 0.7, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/pitch`, priority: 0.5, changeFrequency: "monthly", lastModified: today },
+    // Legal pages (low priority)
+    { url: `${baseUrl}/impressum`, priority: 0.3, changeFrequency: "yearly", lastModified: today },
+    { url: `${baseUrl}/datenschutz`, priority: 0.3, changeFrequency: "yearly", lastModified: today },
+    { url: `${baseUrl}/agb`, priority: 0.3, changeFrequency: "yearly", lastModified: today },
   ];
 
-  const blogPosts = [
-    // Sprint 1
+  // ─── City pages (priority 0.8) ────────────────────────────────────────────
+  const cityPages: MetadataRoute.Sitemap = [
+    "hausverwaltung-hamburg",
+    "hausverwaltung-berlin",
+    "hausverwaltung-muenchen",
+    "hausverwaltung-frankfurt",
+    "hausverwaltung-duesseldorf",
+    "hausverwaltung-hannover",
+    "hausverwaltung-koeln",
+    "hausverwaltung-leipzig",
+    "hausverwaltung-stuttgart",
+  ].map((slug) => ({
+    url: `${baseUrl}/${slug}`,
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+    lastModified: today,
+  }));
+
+  // ─── Pillar / service pages (priority 0.8) ────────────────────────────────
+  const pillarPages: MetadataRoute.Sitemap = [
+    "mietverwaltung-hamburg",
+    "weg-verwaltung",
+    "hausverwaltung-wechseln",
+    "hausverwaltung-hamburg-vergleich",
+  ].map((slug) => ({
+    url: `${baseUrl}/${slug}`,
+    priority: 0.8,
+    changeFrequency: "monthly" as const,
+    lastModified: today,
+  }));
+
+  // ─── Blog posts (priority 0.7) ────────────────────────────────────────────
+  // All 74 blog posts discovered from app/blog/ directory
+  const blogSlugs = [
+    // Sprint 1 — Core Hamburg SEO
     "weg-hamburg",
     "mietspiegel-hamburg-2025",
     "hausordnung-mietwohnung",
     "immobilien-vermieten-steuern",
     "verwaltervertrag-hausverwaltung",
-    // Sprint 2
+    // Sprint 2 — Wechseln + NKA
     "hausverwaltung-wechseln-hamburg",
     "nebenkostenabrechnung-fehler",
     "mieterhohung-hamburg-2026",
     "hausverwaltung-hamburg-kosten",
     "moderne-hausverwaltung-2026",
-    // Sprint 3
+    // Sprint 3 — BKA + Eigentümer + Kündigen
     "betriebskostenabrechnung-hamburg",
     "eigentuemerversammlung-vorbereiten",
     "mietvertrag-kuendigen-hamburg",
     "hausverwaltung-selbst-machen",
     "schoenheitsreparaturen-bgh-2026",
-    // Sprint 4
+    // Sprint 4 — Hamburg districts + repairs
     "hausverwaltung-hamburg-altona",
     "wasserschaden-mietwohnung",
     "weg-vs-mietverwaltung",
     "hausverwaltung-kuendigen-muster",
     "nebenkostenabrechnung-pruefen",
-    // Additional
+    // Additional pillar blog posts
     "hausverwalter-wechseln-hamburg",
     "weg-verwaltung-hamburg",
     "beschlussprotokoll-eigentuemerversammlung",
@@ -77,7 +106,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "wohnungsuebergabe-protokoll",
     "grundsteuer-hamburg-2025",
     "vermieter-pflichten-heizung",
-    // Sprint 8 — More SEO posts
+    // Sprint 8 — City + legal posts
     "eigenbedarfskuendigung-fristen",
     "energieausweis-kosten-2026",
     "hausverwaltung-muenchen",
@@ -87,25 +116,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "treppenhausreinigung-pflicht",
     "vermieterrechte-mietrecht",
     "whatsapp-mieter-kommunikation",
-    // Sprint 9 — Additional high-volume posts
+    // Sprint 9 — NKA + Mahnung + Kaution
     "nebenkostenabrechnung-frist-verpasst",
     "vermieter-steuern-optimieren",
     "abmahnung-mieter-muster",
     "kautionsrueckgabe-frist",
     "indexmiete-vs-staffelmiete",
-    // Sprint 10 — New high-volume keywords
+    // Sprint 10 — Frankfurt + evergreen
     "hausverwaltung-frankfurt",
     "verwaltervertrag-kuendigen",
     "wohnungsuebergabeprotokoll",
     "hausmeisterservice-hamburg",
     "betriebskosten-senken",
-    // Sprint 11 — Frankfurt/Düsseldorf SEO + new blog posts
+    // Sprint 11 — Frankfurt/Düsseldorf SEO + evergreen
     "hausverwaltung-frankfurt-kosten",
     "mietverwaltung-oder-wohnungseigentumsverwaltung",
     "vermieter-pflichten-winter-heizung-schnee",
     "hausverwaltung-wechseln-checkliste",
     "betriebskosten-senken-tipps",
-    // Sprint 12 — Köln/Stuttgart + evergreen topics
+    // Sprint 12 — Köln/Stuttgart + evergreen
     "hausverwaltung-koeln-kosten",
     "hausverwaltung-stuttgart-kosten",
     "vermieter-pflichten-checkliste",
@@ -115,18 +144,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "mietkaution-zurueckhalten-vermieter",
     "nebenkostenabrechnung-mieter-pruefen",
     "hausverwaltung-kosten-sparen",
-  ].map((slug) => ({
+    // Additional discovered posts
+    "betriebskostenabrechnung-widerspruch-mieter",
+    "grundsteuer-reform-2025-vermieter",
+    "hausverwaltung-frankfurt-kosten-2026",
+    "mietminderung-voraussetzungen",
+    "vermieter-pflichten-keller-gemeinschaftsflaechen",
+    "verwaltervertrag-kuendigen-frist",
+    "wasserschaden-mietrecht-rechte-pflichten",
+    "weg-verwaltung-hamburg-kosten-vergleich",
+    "wohnungsmaengel-melden",
+  ];
+
+  const blogPosts: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,
     changeFrequency: "monthly" as const,
-    lastModified: new Date("2026-02-26"),
+    lastModified: today,
   }));
 
   return [
-    ...staticPages.map((page) => ({
-      ...page,
-      lastModified: new Date("2026-02-26"),
-    })),
+    ...staticPages,
+    ...cityPages,
+    ...pillarPages,
     ...blogPosts,
   ];
 }

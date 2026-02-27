@@ -11,10 +11,12 @@ const navLinks = [
 ];
 
 const werkzeuge = [
+  { href: "/werkzeuge", label: "Alle Werkzeuge", sub: "Übersicht aller kostenlosen Tools" },
   { href: "/bka-rechner", label: "BKA-Rechner", sub: "Betriebskosten nach §2 BetrKV" },
   { href: "/mieterhohung-rechner", label: "Mieterhöhungsrechner", sub: "§ 558 BGB berechnen" },
   { href: "/beschlussprotokoll", label: "Beschlussprotokoll", sub: "WEG-Protokoll erstellen" },
   { href: "/wechseln", label: "Wechsel-Guide", sub: "Hausverwaltung wechseln — kostenlos" },
+  { href: "/anfrage", label: "Anfrage-Quiz", sub: "Kostenlose Preis-Schätzung" },
 ];
 
 const standorte = [
