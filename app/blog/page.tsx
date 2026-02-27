@@ -561,6 +561,43 @@ const posts = [
     readTime: "8 min",
     date: "Februar 2026",
   },
+  // Sprint 12 — Köln/Stuttgart + high-value evergreen topics
+  {
+    slug: "hausverwaltung-koeln-kosten",
+    title: "Hausverwaltung Köln Kosten 2026: Was kostet eine Mietverwaltung?",
+    description:
+      "Hausverwaltung Köln Kosten 2026: Marktpreise €20–35/Einheit, Preisfaktoren, Leistungsumfang und ROI. Transparent erklärt.",
+    keyword: "Hausverwaltung Köln Kosten",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "hausverwaltung-stuttgart-kosten",
+    title: "Hausverwaltung Stuttgart Kosten 2026: Preise im Vergleich",
+    description:
+      "Hausverwaltung Stuttgart Kosten 2026: Marktpreise €24–38/Einheit, teuerster Markt Deutschlands, Preisfaktoren und ROI. Transparent erklärt.",
+    keyword: "Hausverwaltung Stuttgart Kosten",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "vermieter-pflichten-checkliste",
+    title: "Vermieter Pflichten 2026: Die vollständige Checkliste",
+    description:
+      "Alle gesetzlichen Pflichten für Vermieter 2026: Instandhaltung, Nebenkostenabrechnung, Heizung, Rauchmelder, DSGVO und mehr.",
+    keyword: "Vermieter Pflichten Checkliste",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "mietvertrag-befristet",
+    title: "Befristeter Mietvertrag nach §575 BGB: Voraussetzungen & Risiken",
+    description:
+      "Zeitmietvertrag 2026: Wann ist er nach §575 BGB zulässig? Eigenbedarfsbefristung, Risiken unwirksamer Befristung und BGH-Rechtsprechung.",
+    keyword: "Befristeter Mietvertrag §575 BGB",
+    readTime: "8 min",
+    date: "Februar 2026",
+  },
 ];
 
 export default function BlogIndex() {

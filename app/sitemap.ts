@@ -103,6 +103,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "vermieter-pflichten-winter-heizung-schnee",
     "hausverwaltung-wechseln-checkliste",
     "betriebskosten-senken-tipps",
+    // Sprint 12 — Köln/Stuttgart + evergreen topics
+    "hausverwaltung-koeln-kosten",
+    "hausverwaltung-stuttgart-kosten",
+    "vermieter-pflichten-checkliste",
+    "mietvertrag-befristet",
   ].map((slug) => ({
     url: `${baseUrl}/blog/${slug}`,
     priority: 0.7,
