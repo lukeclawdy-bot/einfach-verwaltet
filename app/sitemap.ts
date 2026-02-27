@@ -49,6 +49,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "hausverwaltung-nuernberg",
     "hausverwaltung-dortmund",
     "hausverwaltung-essen",
+    "hausverwaltung-bonn",
+    "hausverwaltung-bielefeld",
+    "hausverwaltung-karlsruhe",
     "checkliste",
   ].map((slug) => ({
     url: `${baseUrl}/${slug}`,
@@ -179,6 +182,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "betriebskosten-checkliste-vermieter",
     "mietvertrag-klauseln-unwirksam",
     "nebenkostenabrechnung-einspruch-fristen",
+    // Sprint 18 — Mietrecht FAQ, Software Vergleich, Kaution, BKA Fehler, Kündigen Vorlage
+    "mietrecht-faq",
+    "hausverwaltung-software-vergleich",
+    "mietkaution-rueckzahlung",
+    "betriebskostenabrechnung-fehler",
+    "hausverwaltung-kuendigen-vorlage",
   ];
 
   const blogPosts: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({

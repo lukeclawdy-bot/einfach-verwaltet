@@ -734,6 +734,52 @@ const posts = [
     readTime: "9 min",
     date: "Februar 2026",
   },
+  // Sprint 18
+  {
+    slug: "mietrecht-faq",
+    title: "Mietrecht FAQ 2026: Die 20 häufigsten Fragen beantwortet",
+    description:
+      "Kündigungsfristen, Mietkaution, Eigenbedarfskündigung, Nebenkostenabrechnung und mehr — alle wichtigen Mietrechtsfragen für Vermieter und Mieter kompakt beantwortet.",
+    keyword: "Mietrecht FAQ",
+    readTime: "12 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "hausverwaltung-software-vergleich",
+    title: "Hausverwaltungssoftware Vergleich 2026: Die besten Tools für Vermieter",
+    description:
+      "DOMUS, Immoware24, Casavi und einfach verwaltet. im direkten Vergleich — Kosten, Funktionen, Vor- und Nachteile. Wer braucht Software, wer Full-Service?",
+    keyword: "Hausverwaltungssoftware Vergleich",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "mietkaution-rueckzahlung",
+    title: "Mietkaution Rückzahlung: Fristen, Rechte und was Vermieter wissen müssen",
+    description:
+      "Wie lange darf der Vermieter warten? Was darf er einbehalten? §551 BGB, Zinspflicht, zulässige Einbehalte und häufige Fehler — der vollständige Leitfaden.",
+    keyword: "Mietkaution Rückzahlung",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "betriebskostenabrechnung-fehler",
+    title: "Betriebskostenabrechnung Fehler: Die 10 häufigsten Fehler und wie man sie vermeidet",
+    description:
+      "Fristversäumnis, falsche Umlageschlüssel, nicht umlagefähige Kosten — die 10 häufigsten Fehler in der Betriebskostenabrechnung und wie Vermieter sie rechtssicher vermeiden.",
+    keyword: "Betriebskostenabrechnung Fehler",
+    readTime: "11 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "hausverwaltung-kuendigen-vorlage",
+    title: "Hausverwaltung kündigen: Muster und Vorlage für die fristgerechte Kündigung",
+    description:
+      "§621 BGB und §26 WEG: Kündigungsfristen, korrekter Ablauf und kostenlose copy-paste Kündigungsvorlage — für Miet- und WEG-Hausverwaltungen.",
+    keyword: "Hausverwaltung kündigen Vorlage",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
 ];
 
 export default function BlogIndex() {
