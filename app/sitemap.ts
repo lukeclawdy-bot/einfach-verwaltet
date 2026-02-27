@@ -58,6 +58,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "hausverwaltung-mannheim",
     "hausverwaltung-magdeburg",
     "hausverwaltung-kiel",
+    "hausverwaltung-muenster",
+    "hausverwaltung-erfurt",
+    "hausverwaltung-rostock",
     "checkliste",
   ].map((slug) => ({
     url: `${baseUrl}/${slug}`,
