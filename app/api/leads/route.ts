@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
       to: process.env.ADMIN_EMAIL || "lukas.schmitz@years.co",
       subject: `Neue Anfrage: ${body.name} — ${einheitenDisplay} Einheiten (${standortDisplay})`,
       html: htmlContent,
-      replyTo: body.email,
+      replyTo: "kontakt@einfach-verwaltet.de",
     });
 
     if (error) {

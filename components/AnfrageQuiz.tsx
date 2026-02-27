@@ -440,7 +440,7 @@ export function AnfrageQuiz() {
             )}
           </button>
 
-          <p className="text-xs text-text-light text-center">Kostenlos &amp; unverbindlich. Keine Kaltakquise.</p>
+          <p className="text-xs text-text-light text-center">Kostenlos &amp; unverbindlich. Keine Kreditkarte erforderlich.</p>
         </form>
       )}
 
