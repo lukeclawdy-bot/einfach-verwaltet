@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
@@ -178,4 +179,20 @@ export default function HausverwaltungErfurtPage() {
               <span className="text-teal">professionell, transparent, zuverlässig.</span>
             </h1>
             <p className="text-lg text-white/75 max-w-2xl mx-auto">
-              Professionelle Hausverwaltung für Erfurt. Bundesweites Know-how für Thüringen, transparente
+              Professionelle Hausverwaltung für Erfurt. Bundesweites Know-how für Thüringen, transparente Preise, immer erreichbar.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+              <Link href="/anfrage" className="bg-teal text-white px-8 py-4 rounded-lg font-medium hover:bg-teal/90 transition-colors">
+                Jetzt unverbindlich anfragen
+              </Link>
+              <Link href="/preise" className="text-white/80 hover:text-white underline">
+                Preise ansehen
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
