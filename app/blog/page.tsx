@@ -22,6 +22,51 @@ export const metadata: Metadata = {
 
 const posts = [
   {
+    slug: "weg-verwaltung-hamburg-kosten-vergleich",
+    title: "WEG-Verwaltung Hamburg: Was kostet ein Hausverwalter für WEG?",
+    description:
+      "WEG Verwaltung Hamburg Kosten 2026: €22-32/Einheit, vollständiger Vergleich WEG vs. Mietverwaltung, Checkliste für die Verwalterwahl und Warnsignale bei Billigangeboten.",
+    keyword: "WEG Verwaltung Hamburg Kosten",
+    readTime: "10 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "betriebskostenabrechnung-widerspruch-mieter",
+    title: "Betriebskostenabrechnung Widerspruch: So gehen Mieter richtig vor",
+    description:
+      "Widerspruch gegen Betriebskostenabrechnung nach §556 BGB: 12-Monats-Frist, häufige Fehler, richtige Reaktion als Vermieter und wie widerspruchssichere Abrechnungen aussehen.",
+    keyword: "Betriebskostenabrechnung Widerspruch",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "wasserschaden-mietrecht-rechte-pflichten",
+    title: "Wasserschaden im Mietrecht: Rechte und Pflichten von Mieter und Vermieter",
+    description:
+      "Wasserschaden Mietrecht: Wer zahlt bei Rohrbruch, Dachschaden oder Mieterverschulden? Mietminderung nach §536 BGB, Reparaturfristen und Sofortmaßnahmen für Vermieter.",
+    keyword: "Wasserschaden Mietrecht",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "hausverwaltung-frankfurt-kosten-2026",
+    title: "Hausverwaltung Frankfurt: Was kostet die Mietverwaltung 2026?",
+    description:
+      "Hausverwaltung Frankfurt Kosten 2026: Mietverwaltung €25-38/Einheit, Frankfurter Mietspiegel €14,50/qm, Vergleich mit Hamburg und Tipps zur Verwalterwahl im Rhein-Main-Gebiet.",
+    keyword: "Hausverwaltung Frankfurt Kosten",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
+    slug: "vermieter-pflichten-keller-gemeinschaftsflaechen",
+    title: "Vermieter Pflichten Keller und Gemeinschaftsflächen: Was Sie wissen müssen",
+    description:
+      "Vermieter Pflichten bei Keller, Treppenhaus und Gemeinschaftsflächen: § 535 BGB, Instandhaltung, BetrKV-Umlagefähigkeit und Haftungsrisiken — der komplette Leitfaden.",
+    keyword: "Vermieter Pflichten Gemeinschaftsflächen",
+    readTime: "9 min",
+    date: "Februar 2026",
+  },
+  {
     slug: "hausverwaltung-frankfurt",
     title: "Hausverwaltung Frankfurt: Kosten und Anbieter im Vergleich 2026",
     description:
