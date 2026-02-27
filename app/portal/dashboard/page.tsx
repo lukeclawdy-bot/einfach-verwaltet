@@ -192,6 +192,7 @@ export default async function DashboardPage() {
             { label: "Finanzen", href: "/portal/finanzen", active: false },
             { label: "Mieterhöhung", href: "/portal/mieterhohung", active: false },
             { label: "Analysen", href: "/portal/analytics", active: false },
+            { label: "DATEV Export", href: "/portal/datev", active: false },
           ].map((item) => (
             <Link
               key={item.href}
