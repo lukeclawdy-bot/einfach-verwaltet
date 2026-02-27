@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { db, hasDatabase } from "@/lib/db";
 import { aiActions, leads } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
-import { AdminLayout } from "../components/AdminLayout";
 import { AgentsActivity } from "./AgentsActivity";
 
 interface AIAction {
@@ -36,7 +35,7 @@ async function getAgentsData() {
       actions,
       health: {
         leadsCount: leadsCount.length,
-        lastEmailSent: lastLead ? new Date(lastLead.createdAt) : null,
+        lastEmailSent: lastLead ? lastLead.createdAt : null,
       },
     };
   } catch (error) {
@@ -50,7 +49,7 @@ export default async function AdminAgentsPage() {
 
   if (!data) {
     return (
-      <AdminLayout>
+
         <div className="p-8">
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-navy">AI Agenten</h1>
@@ -65,12 +64,12 @@ export default async function AdminAgentsPage() {
             </p>
           </div>
         </div>
-      </AdminLayout>
+
     );
   }
 
   return (
-    <AdminLayout>
+
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
@@ -82,6 +81,6 @@ export default async function AdminAgentsPage() {
 
         <AgentsActivity actions={data.actions} health={data.health} />
       </div>
-    </AdminLayout>
+
   );
 }

@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { db, hasDatabase } from "@/lib/db";
 import { leads, properties, tenants, tickets, aiActions } from "@/lib/db/schema";
 import { desc, sql, eq, and, gte } from "drizzle-orm";
-import { AdminLayout } from "../components/AdminLayout";
 import { subDays, startOfWeek, format, formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
 
@@ -50,7 +49,7 @@ async function getDashboardData() {
 
     // Calculate completion rate (leads with all fields filled)
     const completedLeads = allLeads.filter(l => 
-      l.verwaltungstyp && l.einheiten && l.standort && l.situation
+      l.verwaltungstyp && l.einheiten && l.standort
     );
     const completionRate = allLeads.length > 0 
       ? Math.round((completedLeads.length / allLeads.length) * 100) 
@@ -178,7 +177,7 @@ export default async function AdminDashboardPage() {
 
   if (!data) {
     return (
-      <AdminLayout>
+
         <div className="p-8">
           <div className="bg-amber/10 border border-amber/30 rounded-xl p-6 text-center">
             <p className="text-amber font-medium">Keine Verbindung zur Datenbank</p>
@@ -187,7 +186,7 @@ export default async function AdminDashboardPage() {
             </p>
           </div>
         </div>
-      </AdminLayout>
+
     );
   }
 
@@ -201,7 +200,7 @@ export default async function AdminDashboardPage() {
   };
 
   return (
-    <AdminLayout>
+
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
@@ -328,6 +327,6 @@ export default async function AdminDashboardPage() {
           </div>
         </div>
       </div>
-    </AdminLayout>
+
   );
 }

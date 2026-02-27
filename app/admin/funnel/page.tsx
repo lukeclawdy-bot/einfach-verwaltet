@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { db, hasDatabase } from "@/lib/db";
 import { leads } from "@/lib/db/schema";
 import { desc, sql } from "drizzle-orm";
-import { AdminLayout } from "../components/AdminLayout";
 import { FunnelCharts } from "./FunnelCharts";
 import { subDays, format } from "date-fns";
 
@@ -52,7 +51,7 @@ export default async function AdminFunnelPage() {
 
   if (!data) {
     return (
-      <AdminLayout>
+
         <div className="p-8">
           <div className="mb-8">
             <h1 className="text-2xl font-bold text-navy">Funnel Analytics</h1>
@@ -67,12 +66,12 @@ export default async function AdminFunnelPage() {
             </p>
           </div>
         </div>
-      </AdminLayout>
+
     );
   }
 
   return (
-    <AdminLayout>
+
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
@@ -84,6 +83,6 @@ export default async function AdminFunnelPage() {
 
         <FunnelCharts data={data} />
       </div>
-    </AdminLayout>
+
   );
 }

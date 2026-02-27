@@ -24,3 +24,6 @@ export const db = new Proxy({} as ReturnType<typeof createDb>, {
 });
 
 export type DB = ReturnType<typeof createDb>;
+
+// Convenience flag — true when DATABASE_URL is set (used in admin pages to show empty state vs error)
+export const hasDatabase = !!process.env.DATABASE_URL;

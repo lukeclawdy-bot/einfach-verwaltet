@@ -3,7 +3,6 @@ export const dynamic = "force-dynamic";
 import { db, hasDatabase } from "@/lib/db";
 import { leads } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
-import { AdminLayout } from "../components/AdminLayout";
 import { LeadCRMTable } from "./LeadCRMTable";
 
 interface Lead {
@@ -41,7 +40,7 @@ export default async function AdminLeadsPage() {
   const leadsData = await getLeads();
 
   return (
-    <AdminLayout>
+
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
@@ -62,6 +61,6 @@ export default async function AdminLeadsPage() {
           <LeadCRMTable leads={leadsData} />
         )}
       </div>
-    </AdminLayout>
+
   );
 }
