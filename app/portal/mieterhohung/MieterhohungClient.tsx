@@ -100,6 +100,8 @@ export function MieterhohungClient({ initialProperties, initialUnits, isDemo }: 
   const [calculation, setCalculation] = useState<CalculationResult | null>(null);
   const [generatedLetter, setGeneratedLetter] = useState<string | null>(null);
   const [generatingLetter, setGeneratingLetter] = useState(false);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [pdfHtml, setPdfHtml] = useState<string | null>(null);
 
   // Filter units when property selected
   const filteredUnits = selectedPropertyId 
@@ -209,6 +211,60 @@ export function MieterhohungClient({ initialProperties, initialUnits, isDemo }: 
     const a = document.createElement('a');
     a.href = url;
     a.download = `Mieterhohungsverlangen_${selectedUnit?.tenantName || 'Mieter'}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  // Generate formal §558a PDF letter
+  const generatePdfLetter = async () => {
+    if (!calculation || !selectedUnit) return;
+    setGeneratingPdf(true);
+    try {
+      const property = properties.find(p => p.id === selectedPropertyId);
+      const res = await fetch('/api/portal/mieterhohung/generate-letter', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantName: selectedUnit.tenantName || 'Mieter',
+          tenantAddress: `${property?.address || ''}, ${property?.postalCode || ''} ${property?.city || ''}`,
+          propertyAddress: property?.address || '',
+          propertyCity: property?.city || 'Hamburg',
+          unitDesignation: selectedUnit.designation,
+          currentRentCents: calculation.currentRent,
+          newRentCents: calculation.maxNewRent,
+          increaseAmountCents: calculation.increaseAmount,
+          increasePercent: calculation.increasePercent,
+          referenzmiete: calculation.referenzmiete,
+          isMilieuSchutz: selectedUnit.isMilieuSchutz,
+          effectiveDate,
+        }),
+      });
+      if (!res.ok) throw new Error('Fehler bei der PDF-Generierung');
+      const data = await res.json();
+      setPdfHtml(data.html);
+      // Open in new tab for print-to-PDF
+      const win = window.open('', '_blank');
+      if (win) {
+        win.document.write(data.html);
+        win.document.close();
+      }
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Fehler beim Generieren des Briefes');
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
+
+  // Download PDF HTML file
+  const downloadPdfHtml = () => {
+    if (!pdfHtml) return;
+    const blob = new Blob([pdfHtml], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `558a-Mieterhoehungsverlangen_${selectedUnit?.tenantName || 'Mieter'}_${new Date().toISOString().split('T')[0]}.html`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -518,53 +574,97 @@ export function MieterhohungClient({ initialProperties, initialUnits, isDemo }: 
                 Mieterhöhungsverlangen erstellen
               </h2>
 
-              {!generatedLetter ? (
+              {/* PDF Letter (§558a formal) */}
+              <div className="mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs font-semibold text-teal uppercase tracking-wide">Empfohlen</span>
+                  <span className="text-xs text-text-light">— Formelles §558a BGB Schreiben als druckfertiges PDF</span>
+                </div>
                 <button
-                  onClick={generateLetter}
-                  disabled={generatingLetter}
+                  onClick={generatePdfLetter}
+                  disabled={generatingPdf}
                   className="w-full bg-teal text-white px-5 py-3 rounded-xl font-semibold hover:bg-navy transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
-                  {generatingLetter ? (
+                  {generatingPdf ? (
                     <>
                       <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                       </svg>
-                      Brief wird generiert...
+                      PDF wird erstellt…
                     </>
                   ) : (
                     <>
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                       </svg>
-                      KI-Brief generieren (§ 558a BGB)
+                      §558a Schreiben als PDF öffnen
                     </>
                   )}
                 </button>
-              ) : (
-                <div className="space-y-4">
-                  <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 max-h-96 overflow-y-auto">
-                    <pre className="text-sm text-navy whitespace-pre-wrap font-sans">{generatedLetter}</pre>
+                {pdfHtml && (
+                  <button
+                    onClick={downloadPdfHtml}
+                    className="mt-2 w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl border border-teal text-teal font-semibold hover:bg-teal/5 transition-colors"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    HTML-Datei herunterladen (für Druck)
+                  </button>
+                )}
+              </div>
+
+              <div className="border-t border-gray-100 pt-4">
+                <p className="text-xs text-text-light mb-3">Alternativ: KI-generierter Brieftext</p>
+                {!generatedLetter ? (
+                  <button
+                    onClick={generateLetter}
+                    disabled={generatingLetter}
+                    className="w-full bg-white border border-gray-200 text-navy px-5 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  >
+                    {generatingLetter ? (
+                      <>
+                        <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                        </svg>
+                        Brief wird generiert...
+                      </>
+                    ) : (
+                      <>
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        KI-Brieftext generieren
+                      </>
+                    )}
+                  </button>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-gray-50 rounded-xl border border-gray-200 max-h-96 overflow-y-auto">
+                      <pre className="text-sm text-navy whitespace-pre-wrap font-sans">{generatedLetter}</pre>
+                    </div>
+                    <div className="flex gap-3">
+                      <button
+                        onClick={downloadLetter}
+                        className="flex-1 bg-gray-100 text-navy px-5 py-3 rounded-xl font-semibold hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                        Als Text herunterladen
+                      </button>
+                      <button
+                        onClick={() => setGeneratedLetter(null)}
+                        className="px-5 py-3 rounded-xl border border-gray-200 text-navy font-medium hover:bg-gray-50 transition-colors"
+                      >
+                        Neu generieren
+                      </button>
+                    </div>
                   </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={downloadLetter}
-                      className="flex-1 bg-teal text-white px-5 py-3 rounded-xl font-semibold hover:bg-navy transition-colors flex items-center justify-center gap-2"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                      </svg>
-                      Als Text herunterladen
-                    </button>
-                    <button
-                      onClick={() => setGeneratedLetter(null)}
-                      className="px-5 py-3 rounded-xl border border-gray-200 text-navy font-medium hover:bg-gray-50 transition-colors"
-                    >
-                      Neu generieren
-                    </button>
-                  </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 
