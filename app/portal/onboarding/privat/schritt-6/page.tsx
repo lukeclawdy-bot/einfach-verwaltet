@@ -57,8 +57,8 @@ export default function Schritt6() {
             <span className="font-medium text-navy">E-Mail + Portal</span>
           </div>
           <div className="flex justify-between py-2">
-            <span className="text-text-light">Preis</span>
-            <span className="font-medium text-teal">€24/Einheit/Monat</span>
+            <span className="text-text-light">Paket</span>
+            <span className="font-medium text-teal">Privatvermieter · kostenlos testen</span>
           </div>
         </div>
       </div>
@@ -87,7 +87,7 @@ export default function Schritt6() {
         <p className="text-center text-xs text-text-light">
           Mit der Registrierung stimmen Sie unserer{" "}
           <a href="/datenschutz" className="text-teal hover:underline">Datenschutzerklärung</a> zu.
-          Kein Kreditkarte erforderlich.
+          Keine Kreditkarte erforderlich.
         </p>
       </form>
     </OnboardingShell>

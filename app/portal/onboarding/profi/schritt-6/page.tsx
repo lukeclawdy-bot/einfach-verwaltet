@@ -46,8 +46,8 @@ export default function ProfiSchritt6() {
           <span className="font-medium text-navy">Professioneller Verwalter</span>
         </div>
         <div className="flex justify-between py-2">
-          <span className="text-text-light">Preis</span>
-          <span className="font-medium text-teal">auf Anfrage (ab €24/Einheit/Monat)</span>
+          <span className="text-text-light">Paket</span>
+          <span className="font-medium text-teal">Professionell · kostenloses Erstgespräch</span>
         </div>
       </div>
 
