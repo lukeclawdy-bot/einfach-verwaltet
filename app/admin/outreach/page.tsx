@@ -1,53 +1,53 @@
 export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
-import { leads } from "@/lib/db/schema";
+import { outreachContacts } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 import { AdminLayout } from "../components/AdminLayout";
-import { LeadCRMTable } from "./LeadCRMTable";
+import { OutreachTable } from "./OutreachTable";
 
-interface Lead {
+interface OutreachContact {
   id: string;
   createdAt: Date;
+  updatedAt: Date;
   name: string;
-  email: string;
-  telefon: string | null;
-  verwaltungstyp: string | null;
-  einheiten: string | null;
-  standort: string | null;
-  situation: string | null;
-  prioritaet: string | null;
-  status: string | null;
+  company: string | null;
+  email: string | null;
+  phone: string | null;
+  channel: string;
+  status: string;
+  lastContactAt: Date | null;
   notes: string | null;
+  source: string | null;
 }
 
-async function getLeads(): Promise<Lead[]> {
+async function getOutreachContacts(): Promise<OutreachContact[]> {
   if (!hasDatabase || !db) {
     return [];
   }
 
   try {
-    const data = await db.query.leads.findMany({
-      orderBy: desc(leads.createdAt),
-    }) as Lead[];
+    const data = await db.query.outreachContacts.findMany({
+      orderBy: desc(outreachContacts.createdAt),
+    }) as OutreachContact[];
     return data;
   } catch (error) {
-    console.error("Failed to fetch leads:", error);
+    console.error("Failed to fetch outreach contacts:", error);
     return [];
   }
 }
 
-export default async function AdminLeadsPage() {
-  const leadsData = await getLeads();
+export default async function AdminOutreachPage() {
+  const contacts = await getOutreachContacts();
 
   return (
     <AdminLayout>
       <div className="p-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-navy">Leads CRM</h1>
+          <h1 className="text-2xl font-bold text-navy">Outreach Tracker</h1>
           <p className="text-text-light text-sm mt-1">
-            Alle Anfragen verwalten und tracken
+            Manuelles CRM für Vertriebsaktivitäten
           </p>
         </div>
 
@@ -59,7 +59,7 @@ export default async function AdminLeadsPage() {
             </p>
           </div>
         ) : (
-          <LeadCRMTable leads={leadsData} />
+          <OutreachTable contacts={contacts} />
         )}
       </div>
     </AdminLayout>

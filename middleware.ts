@@ -24,6 +24,11 @@ const PUBLIC_TENANT_PATHS = [
   "/api/tenant/auth/logout",
 ];
 
+// Public admin routes — no auth required
+const PUBLIC_ADMIN_PATHS = [
+  "/admin/login",
+];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -123,10 +128,33 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  // ─── ADMIN ROUTES ─────────────────────────────────────────────────────────
+  if (pathname.startsWith("/admin") || pathname.startsWith("/api/admin")) {
+    // Allow public paths
+    const isPublic = PUBLIC_ADMIN_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(p + "/")
+    );
+    if (isPublic) return NextResponse.next();
+
+    // Check admin secret cookie
+    const adminSecret = process.env.ADMIN_SECRET;
+    if (!adminSecret) {
+      // If no ADMIN_SECRET configured, allow access in dev
+      return NextResponse.next();
+    }
+
+    const adminCookie = request.cookies.get("ADMIN_SECRET")?.value;
+    if (adminCookie !== adminSecret) {
+      return NextResponse.redirect(new URL("/admin/login", request.url));
+    }
+
+    return NextResponse.next();
+  }
+
   // All other routes pass through
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/portal/:path*", "/api/portal/:path*", "/tenant/:path*", "/api/tenant/:path*"],
+  matcher: ["/portal/:path*", "/api/portal/:path*", "/tenant/:path*", "/api/tenant/:path*", "/admin/:path*", "/api/admin/:path*"],
 };

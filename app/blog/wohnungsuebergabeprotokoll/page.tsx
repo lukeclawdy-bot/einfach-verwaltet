@@ -4,15 +4,15 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 export const metadata: Metadata = {
-  title: "Wohnungsübergabeprotokoll: Vorlage und Tipps für Vermieter 2026 | einfach verwaltet.",
+  title: "Wohnungsubergabeprotokoll: So schutzen Sie sich als Vermieter | einfach verwaltet.",
   description:
-    "Das Wohnungsübergabeprotokoll schützt Vermieter und Mieter. Kostenlose Vorlage, Checkliste und rechtliche Tipps für eine lückenlose Wohnungsübergabe.",
+    "Wohnungsubergabeprotokoll richtig erstellen: Checkliste, haufige Fehler, Kautionssicherheit. Was Vermieter bei Ein- und Auszug beachten mussen.",
   keywords:
-    "Wohnungsübergabeprotokoll, Wohnungsübergabe Protokoll Vorlage, Übergabeprotokoll Wohnung, Wohnungsübergabe Checkliste",
+    "Wohnungsubergabeprotokoll, Ubergabeprotokoll Mietwohnung, Wohnungsubergabe Checkliste, Kaution Protokoll",
   openGraph: {
-    title: "Wohnungsübergabeprotokoll: Vorlage und Tipps für Vermieter 2026",
+    title: "Wohnungsubergabeprotokoll: So schutzen Sie sich als Vermieter",
     description:
-      "Professionelles Übergabeprotokoll erstellen: Vorlage, Checkliste und häufige Fehler vermeiden.",
+      "Wohnungsubergabeprotokoll richtig erstellen: Checkliste, haufige Fehler, Kautionssicherheit fur Vermieter.",
     url: "https://einfach-verwaltet.de/blog/wohnungsuebergabeprotokoll",
     siteName: "einfach verwaltet.",
     locale: "de_DE",
@@ -23,54 +23,46 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Article",
-  headline: "Wohnungsübergabeprotokoll: Vorlage und Tipps für Vermieter",
+  headline: "Wohnungsubergabeprotokoll: So schutzen Sie sich als Vermieter",
   description:
-    "Alles zum Wohnungsübergabeprotokoll: Rechtliche Grundlagen, Vorlage und Tipps für Vermieter.",
+    "Wohnungsubergabeprotokoll richtig erstellen: Checkliste, haufige Fehler, Kautionssicherheit fur Vermieter.",
   author: { "@type": "Organization", name: "einfach verwaltet." },
   publisher: {
     "@type": "Organization",
     name: "einfach verwaltet.",
     logo: { "@type": "ImageObject", url: "https://einfach-verwaltet.de/logo.png" },
   },
-  datePublished: "2026-02-01",
+  datePublished: "2026-02-27",
   inLanguage: "de",
   url: "https://einfach-verwaltet.de/blog/wohnungsuebergabeprotokoll",
 };
 
-const faqJsonLd = {
+const faqLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   mainEntity: [
     {
       "@type": "Question",
-      name: "Ist ein Wohnungsübergabeprotokoll gesetzlich vorgeschrieben?",
+      name: "Was muss in ein Wohnungsubergabeprotokoll?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Nein, ein Übergabeprotokoll ist gesetzlich nicht vorgeschrieben. Es ist aber dringend empfohlen, da es den Zustand der Wohnung bei Ein- und Auszug dokumentiert. Ohne Protokoll ist es im Streitfall schwer nachzuweisen, welche Schäden beim Auszug vorhanden waren.",
+        text: "Ein vollstandiges Wohnungsubergabeprotokoll enthalt: Adresse und Wohnungsbeschreibung, Datum und Uhrzeit der Ubergabe, Namen von Vermieter und Mieter, Zustand jedes Raums (Boden, Wande, Fenster, Turen), Inventarliste, Zustand der Sanitareinrichtungen, Funktionsfahigkeit von Elektro und Heizung, Zahlstande aller Verbrauchszahler, Schlusselubergabe mit genauer Anzahl, vorhandene Mangel und Schaden, Unterschriften beider Parteien. Fotos als Anlage empfohlen.",
       },
     },
     {
       "@type": "Question",
-      name: "Was muss ein Wohnungsübergabeprotokoll enthalten?",
+      name: "Ist ein Ubergabeprotokoll gesetzlich vorgeschrieben?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ein vollständiges Übergabeprotokoll enthält: Datum und Uhrzeit, Namen von Vermieter und Mieter, Adresse, Zählerstand für Strom/Gas/Wasser, Schlüsselanzahl und -beschreibung, Zustand aller Räume (Wände, Böden, Fenster, Türen), vorhandene Mängel mit Beschreibung, Fotos als Anlage sowie Unterschriften beider Parteien.",
+        text: "Nein, ein schriftliches Ubergabeprotokoll ist nicht gesetzlich vorgeschrieben. Allerdings wird dringend empfohlen, eines anzufertigen. Ohne Protokoll kann der Vermieter bei Streitigkeiten uber die Kaution nur schwer beweisen, dass Schaden vom Mieter verursacht wurden. Fur den Mieter dient das Protokoll als Nachweis, dass Mangel bereits bei Einzug vorlagen.",
       },
     },
     {
       "@type": "Question",
-      name: "Kann der Vermieter nach der Wohnungsübergabe noch Schäden geltend machen?",
+      name: "Was tun, wenn der Mieter das Protokoll nicht unterschreibt?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "Ja, jedoch nur für Schäden, die im Protokoll vermerkt oder beim Auszug erkennbar waren. Versteckte Mängel können auch nach der Übergabe geltend gemacht werden. Die Verjährungsfrist für Ansprüche aus dem Mietverhältnis beträgt 6 Monate nach Rückgabe der Mietsache (§548 BGB).",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "Muss der Mieter das Übergabeprotokoll unterschreiben?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Der Mieter ist rechtlich nicht verpflichtet, das Protokoll zu unterschreiben. Eine Unterschrift gilt als Bestätigung des dokumentierten Zustands. Verweigert der Mieter die Unterschrift, vermerken Sie dies im Protokoll und nehmen Sie möglichst einen Zeugen mit.",
+        text: "Weigert sich der Mieter zu unterschreiben, sollte der Vermieter das Protokoll dennoch erstellen und den Mieter schriftlich auffordern, es zu unterzeichnen. Der Vermieter kann auch einen Zeugen hinzuziehen (Handwerker, Nachbar, Hausverwalter), der bestatigt, dass das Protokoll korrekt ist. Auch Fotos stutzen den Nachweis erheblich.",
       },
     },
   ],
@@ -85,221 +77,209 @@ export default function Post() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
       <Navbar />
       <main className="bg-warm-white min-h-screen pt-16">
         <article className="max-w-3xl mx-auto px-4 py-16">
           <nav className="text-sm text-gray-500 mb-8">
             <Link href="/" className="hover:text-teal">Startseite</Link>
-            <span className="mx-2">›</span>
+            <span className="mx-2">/</span>
             <Link href="/blog" className="hover:text-teal">Ratgeber</Link>
-            <span className="mx-2">›</span>
-            <span className="text-gray-700">Wohnungsübergabeprotokoll</span>
+            <span className="mx-2">/</span>
+            <span className="text-gray-700">Wohnungsubergabeprotokoll</span>
           </nav>
 
           <header className="mb-10">
             <p className="text-teal text-sm font-semibold uppercase tracking-wider mb-3">
-              Ratgeber · 9 min Lesezeit
+              Ratgeber · 8 min Lesezeit · Vermieter
             </p>
             <h1 className="text-3xl md:text-4xl font-bold text-navy font-playfair mb-4 leading-tight">
-              Wohnungsübergabeprotokoll: Vorlage und Tipps für Vermieter
+              Wohnungsubergabeprotokoll: So schutzen Sie sich als Vermieter
             </h1>
             <p className="text-gray-500 text-sm">Februar 2026 · einfach verwaltet.</p>
           </header>
 
           <div className="prose prose-lg max-w-none text-gray-700 leading-relaxed space-y-6">
-
             <p>
-              Ein fehlerhaftes oder fehlendes Übergabeprotokoll ist einer der häufigsten
-              Streitgründe zwischen Vermietern und Mietern. Wer beim Einzug oder Auszug
-              kein lückenloses Protokoll erstellt, verliert im Zweifel seinen Anspruch
-              auf Schadensersatz — selbst wenn echte Schäden vorhanden sind.
+              Das Wohnungsubergabeprotokoll ist das wichtigste Dokument bei Mietbeginn und Mietende. 
+              Es schutzt sowohl Vermieter als auch Mieter vor Streitigkeiten uber Zustand und Kaution. 
+              Doch viele Protokolle sind lickenhaft oder unzureichend. Dieser Artikel zeigt, wie Sie 
+              ein wasserdichtes Protokoll erstellen.
             </p>
 
             <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
-              Warum ist das Übergabeprotokoll so wichtig?
+              Warum ist das Ubergabeprotokoll so wichtig?
             </h2>
             <p>
-              Das Übergabeprotokoll ist kein Formalismus — es ist Ihr zentrales
-              Beweisdokument. Es dokumentiert den Zustand der Wohnung zu einem bestimmten
-              Zeitpunkt und dient als Grundlage für:
+              Bei Streitigkeiten uber die Ruckzahlung der Kaution kommt es auf Beweise an. 
+              Ein vollstandiges Protokoll dokumentiert den Zustand der Wohnung bei Ubergabe und 
+              Ruckgabe. Ohne Protokoll steht Aussage gegen Aussage -- mit ungewissem Ausgang fur den Vermieter.
             </p>
+            <p>
+              Besonders wichtig ist das Protokoll bei:<br/>
+              -- Streitigkeiten uber die Kaution<br/>
+              -- Mangelragen wahrend der Mietzeit<br/>
+              -- Schonheitsreparaturen und Renoviierungspflichten<br/>
+              -- Schaden an Inventar und Installationen
+            </p>
+
+            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
+              Checkliste: Was gehort in ein Ubergabeprotokoll?
+            </h2>
+            
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Allgemeine Angaben</h3>
             <ul className="list-disc pl-6 space-y-2">
-              <li>Schadensersatzansprüche beim Auszug (§ 280 BGB)</li>
-              <li>Berechnung von Kautionsabzügen (§ 551 BGB)</li>
-              <li>Nachweis des Wohnungszustands bei Rechtsstreitigkeiten</li>
-              <li>Klarheit über abgelesene Zählerstände (Strom, Gas, Wasser)</li>
-            </ul>
-            <p>
-              Ohne Protokoll gilt im Zweifelsfall: Die Wohnung wurde in ordnungsgemäßem
-              Zustand übergeben — unabhängig vom tatsächlichen Zustand.
-            </p>
-
-            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
-              Was gehört in ein vollständiges Übergabeprotokoll?
-            </h2>
-
-            <div className="bg-navy/5 border border-navy/10 rounded-xl p-6 my-6">
-              <h3 className="font-bold text-navy mb-4">Checkliste: Pflichtinhalt</h3>
-              <div className="space-y-2 text-sm">
-                {[
-                  "Datum und Uhrzeit der Übergabe",
-                  "Namen und Unterschriften von Vermieter und Mieter",
-                  "Vollständige Adresse der Wohnung (inkl. Stockwerk, Wohnungsnummer)",
-                  "Zählerstand Strom (mit Zählernummer)",
-                  "Zählerstand Gas (falls vorhanden, mit Zählernummer)",
-                  "Zählerstand Wasser (Kalt- und Warmwasser, mit Zählernummer)",
-                  "Anzahl und Art der übergebenen Schlüssel",
-                  "Zustand aller Räume: Wände, Böden, Decken, Fenster, Türen",
-                  "Vorhandene Mängel mit genauer Beschreibung",
-                  "Fotos aller Mängel als Anlage (nummeriert und datiert)",
-                  "Zustand von Einbauküche, Sanitäreinrichtungen, Heizung",
-                  "Zustand Keller, Balkon, Garage (falls vorhanden)",
-                  "Bestehende Vereinbarungen über Beseitigung von Mängeln",
-                ].map((item) => (
-                  <div key={item} className="flex items-start gap-2">
-                    <span className="text-teal font-bold flex-shrink-0">✓</span>
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
-              Vorlage: Wohnungsübergabeprotokoll
-            </h2>
-            <div className="bg-gray-50 border border-gray-200 rounded-xl p-6 text-sm text-gray-700 space-y-3 font-mono">
-              <p className="font-bold text-center">WOHNUNGSÜBERGABEPROTOKOLL</p>
-              <p>Datum: _______________ &nbsp;&nbsp; Uhrzeit: _______________</p>
-              <p>Vermieter: _______________________________________________</p>
-              <p>Mieter: _________________________________________________</p>
-              <p>Objekt: _________________________________________________</p>
-              <p className="mt-3 font-bold">ZÄHLERSTÄNDE</p>
-              <p>Strom (Zähler-Nr. _______): _______ kWh</p>
-              <p>Gas (Zähler-Nr. _______): _______ m³</p>
-              <p>Wasser kalt (Zähler-Nr. _______): _______ m³</p>
-              <p>Wasser warm (Zähler-Nr. _______): _______ m³</p>
-              <p className="mt-3 font-bold">SCHLÜSSEL</p>
-              <p>Wohnungsschlüssel: __ Stück &nbsp; Briefkastenschlüssel: __ Stück</p>
-              <p>Keller: __ Stück &nbsp; Garage: __ Stück &nbsp; Sonstige: ___________</p>
-              <p className="mt-3 font-bold">MÄNGEL (falls vorhanden)</p>
-              <p>Raum: ___________ Beschreibung: _________________________</p>
-              <p>Raum: ___________ Beschreibung: _________________________</p>
-              <p className="mt-3">Fotos angefertigt: □ Ja &nbsp; □ Nein &nbsp; Anzahl: _____</p>
-              <p className="mt-3">____________________________ ____________________________</p>
-              <p>Unterschrift Vermieter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unterschrift Mieter</p>
-            </div>
-
-            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
-              5 häufige Fehler beim Übergabeprotokoll
-            </h2>
-            <div className="space-y-4">
-              {[
-                {
-                  fehler: "Kein Protokoll beim Einzug",
-                  folge: "Beim Auszug ist unklar, welche Schäden schon vorher vorhanden waren.",
-                },
-                {
-                  fehler: "Mängel nur vage beschreiben",
-                  folge: "‚Kratzer in der Küche' statt ‚3 cm Kratzer links neben der Spüle, sichtbar auf Foto 4'.",
-                },
-                {
-                  fehler: "Keine Fotos",
-                  folge: "Fotos sind das stärkste Beweismittel — ohne Fotos ist jede Beschreibung angreifbar.",
-                },
-                {
-                  fehler: "Falsche Zählerstände",
-                  folge: "Führt zu Streit bei der Nebenkostenabrechnung. Lesen Sie stets direkt am Zähler ab.",
-                },
-                {
-                  fehler: "Unterschrift fehlt",
-                  folge: "Ein Protokoll ohne Unterschrift hat vor Gericht wenig Beweiskraft. Bestehen Sie auf die Unterschrift.",
-                },
-              ].map(({ fehler, folge }) => (
-                <div key={fehler} className="flex gap-3 p-4 bg-red-50 border border-red-200 rounded-xl">
-                  <span className="text-red-500 font-bold flex-shrink-0">✗</span>
-                  <div>
-                    <div className="font-bold text-red-800 text-sm">{fehler}</div>
-                    <p className="text-red-700 text-sm mt-1">{folge}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
-              Tipps für die professionelle Übergabe
-            </h2>
-            <ul className="list-disc pl-6 space-y-2">
-              <li>
-                <strong>Übergabe bei Tageslicht:</strong> Mängel sind bei Kunstlicht
-                schwerer erkennbar.
-              </li>
-              <li>
-                <strong>Ausreichend Zeit einplanen:</strong> Rechnen Sie mindestens
-                45–60 Minuten für eine Durchschnittswohnung.
-              </li>
-              <li>
-                <strong>Zeugen mitbringen:</strong> Falls der Mieter die Unterschrift
-                verweigert, ist ein Zeuge hilfreich.
-              </li>
-              <li>
-                <strong>Zweifaches Exemplar:</strong> Beide Parteien erhalten eine
-                Kopie des unterzeichneten Protokolls.
-              </li>
-              <li>
-                <strong>Fotos mit Zeitstempel:</strong> Smartphone-Fotos speichern
-                automatisch Datum und Uhrzeit — nutzen Sie das.
-              </li>
+              <li>Vollstandige Adresse der Wohnung</li>
+              <li>Obergeschoss und Wohnungsnummer</li>
+              <li>Datum und Uhrzeit der Ubergabe</li>
+              <li>Namen und Kontaktdaten von Vermieter und Mieter</li>
             </ul>
 
-            {/* FAQ Section */}
-            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-6">
-              Häufige Fragen zum Wohnungsübergabeprotokoll
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Zustand der Raume</h3>
+            <p>Fur jeden Raum sollten folgende Punkte dokumentiert werden:</p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li><strong>Boden:</strong> Zustand (neu, gut, abgenutzt), Beschadigungen, Flecken</li>
+              <li><strong>Wande:</strong> Tapetenzustand, Risse, Schimmel, Farbe</li>
+              <li><strong>Decke:</strong> Zustand, Wasserflecken, Risse</li>
+              <li><strong>Fenster:</strong> Funktionsfahigkeit, Dichtheit, Rahmenzustand, Glasbruch</li>
+              <li><strong>Turen:</strong> Funktion, Schlosser, Klinke, Beschlage, Scharniere</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Sanitar und Kuche</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Badewanne/Dusche: Zustand, Versiegelung, Armaturen</li>
+              <li>Waschbecken: Kratzer, Armaturen, Siphon</li>
+              <li>WC: Spulung, Sitz, Keramik</li>
+              <li>Kucheneinbauten: Schranke, Arbeitsplatte, Spule, Herd, Backofen</li>
+              <li>Fliesen: Zustand, Fugen, Beschadigungen</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Installationen und Gerate</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Elektro: Funktion aller Steckdosen und Schalter</li>
+              <li>Beleuchtung: Alle Lampen funktionsfahig</li>
+              <li>Heizung: Heizkorper heizen, Thermostate funktionieren</li>
+              <li>Lufung: Funktionsfahigkeit prufen</li>
+              <li>Gerate: Herd, Kuhlschrank, Waschmaschine (falls vorhanden)</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Verbrauchszahler</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Stromzahlerstand (bei getrennter Messung)</li>
+              <li>Wasserzahlerstand (Warm- und Kaltwasser getrennt)</li>
+              <li>Gaszahlerstand (falls relevant)</li>
+              <li>Heizungsablesung (falls vorhanden)</li>
+              <li>Zahler-Nr. und Einbauort notieren</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">Inventar und Schlussel</h3>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Liste aller ubergebenen Gegenstande (Mobel, Vorhange, Gerate)</li>
+              <li>Schlusselubergabe: Anzahl und Art (Wohnungstur, Haustur, Kellertur, Briefkasten)</li>
+              <li>Wohnungskarte/Chip/Transponder (falls vorhanden)</li>
+              <li>Gemeinschaftsschlussel (Mullraum, Waschkuche)</li>
+            </ul>
+
+            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
+              Fotos: Unverzichtbare Beweissicherung
             </h2>
+            <p>
+              Fotos sind ein wesentlicher Bestandteil eines guten Ubergabeprotokolls. Fotografieren Sie:
+            </p>
+            <ul className="list-disc pl-6 space-y-2">
+              <li>Jeden Raum aus verschiedenen Perspektiven</li>
+              <li>Besonderheiten und vorhandene Mangel</li>
+              <li>Inventar und Gerate</li>
+              <li>Verbrauchszahler mit sichtbarem Stand</li>
+              <li>Alle beschadigten Stellen (auch wenn sie alt sind)</li>
+            </ul>
+            <p>
+              <strong>Tipp:</strong> Fotos sollten mit Zeitstempel gemacht werden oder auf dem Protokoll 
+              mit Datum und Uhrzeit vermerkt werden.
+            </p>
 
-            <div className="space-y-6">
-              {[
-                {
-                  q: "Ist ein Wohnungsübergabeprotokoll gesetzlich vorgeschrieben?",
-                  a: "Nein, ein Übergabeprotokoll ist gesetzlich nicht vorgeschrieben — aber dringend empfohlen. Ohne Protokoll ist es im Streitfall schwer nachzuweisen, welche Schäden beim Auszug vorhanden waren.",
-                },
-                {
-                  q: "Was muss ein Wohnungsübergabeprotokoll enthalten?",
-                  a: "Datum und Uhrzeit, Namen beider Parteien, Adresse, Zählerstände, Schlüsselanzahl, Zustand aller Räume, vorhandene Mängel mit Beschreibung, Fotos als Anlage sowie Unterschriften beider Parteien.",
-                },
-                {
-                  q: "Kann der Vermieter nach der Übergabe noch Schäden geltend machen?",
-                  a: "Ja — für Schäden, die im Protokoll vermerkt oder beim Auszug erkennbar waren. Versteckte Mängel können auch nachträglich geltend gemacht werden. Die Verjährungsfrist beträgt 6 Monate nach Rückgabe der Mietsache (§548 BGB).",
-                },
-                {
-                  q: "Muss der Mieter das Übergabeprotokoll unterschreiben?",
-                  a: "Rechtlich nicht verpflichtend. Verweigert der Mieter die Unterschrift, vermerken Sie dies im Protokoll und nehmen Sie einen Zeugen mit. Eine Unterschrift gilt als Bestätigung des dokumentierten Zustands.",
-                },
-              ].map(({ q, a }) => (
-                <div key={q} className="border border-gray-200 rounded-xl p-5">
-                  <h3 className="font-bold text-navy mb-2">{q}</h3>
-                  <p className="text-gray-600 text-sm">{a}</p>
-                </div>
-              ))}
-            </div>
+            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
+              Die 5 haufigsten Fehler bei Ubergabeprotokollen
+            </h2>
+            
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">1. Zu wenig Details</h3>
+            <p>
+              Formulierungen wie "Wohnung wurde besichtigt, OK" genugen nicht. Jeder Raum muss 
+              einzeln beschrieben werden. Nur so kann spater nachgewiesen werden, wo Schaden entstanden sind.
+            </p>
 
-            {/* CTA */}
-            <div className="bg-navy text-white rounded-2xl p-8 mt-10 text-center">
-              <h3 className="text-xl font-bold font-playfair mb-3">
-                Wohnungsübergaben professionell organisiert
-              </h3>
-              <p className="text-white/80 mb-6 text-sm">
-                Professionelle Hausverwaltung übernimmt Übergaben, Protokollierung und
-                Schlüsselübergabe — lückenlos und rechtssicher.
-              </p>
-              <Link
-                href="/anfrage"
-                className="inline-block bg-teal hover:bg-teal/90 text-white font-semibold py-3 px-8 rounded-lg transition-colors"
-              >
-                Hausverwaltung anfragen →
-              </Link>
-            </div>
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">2. Keine Fotos</h3>
+            <p>
+              Ohne Fotos bleibt es bei der gesprochenen Beschreibung. Gerade bei Schonheitsreparaturen 
+              oder Mangeln sind Bilder der beste Beweis.
+            </p>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">3. Nur eine Unterschrift</h3>
+            <p>
+              Beide Parteien mussen das Protokoll unterschreiben. Weigert sich der Mieter, sollte 
+              der Vermieter zumindest einen Zeugen hinzuziehen und das Protokoll dem Mieter schriftlich zustellen.
+            </p>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">4. Keine Zweitschrift</h3>
+            <p>
+              Erstellen Sie immer zwei Exemplare -- eines fur den Mieter, eines fur sich. Bei Streitigkeiten 
+              mussen beide Parteien das gleiche Protokoll vorweisen konnen.
+            </p>
+
+            <h3 className="text-xl font-semibold text-navy mt-6 mb-2">5. Zahlstande nicht notiert</h3>
+            <p>
+              Verbrauchszahlerstande mussen bei Ein- und Auszug dokumentiert werden. Sonst entsteht 
+              spater Streit uber die Abrechnung.
+            </p>
+
+            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
+              Ubergabeprotokoll bei Wohnungsruckgabe
+            </h2>
+            <p>
+              Bei der Wohnungsruckgabe ist das Protokoll noch wichtiger, weil es uber die Kaution entscheidet. 
+              Gehen Sie systematisch vor:
+            </p>
+            <ol className="list-decimal pl-6 space-y-2">
+              <li>Vergleichen Sie den aktuellen Zustand mit dem Einzugsprotokoll</li>
+              <li>Dokumentieren Sie neu entstandene Schaden fotografisch</li>
+              <li>Notieren Sie fehlende Gegenstande aus dem Inventar</li>
+              <li>Vergleichen Sie Verbrauchszahlerstande mit vorherigen Werten</li>
+              <li>Prufen Sie, ob alle Schlussel vollstandig zuruckgegeben wurden</li>
+              <li>Vereinbaren Sie ggf. eine Reinigungskompensation oder Nachbesserung</li>
+              <li>Lassen Sie das Protokoll von beiden Seiten unterschreiben</li>
+            </ol>
+
+            <h2 className="text-2xl font-bold text-navy font-playfair mt-10 mb-4">
+              Fazit: Praxistipp fur Vermieter
+            </h2>
+            <p>
+              Ein vollstandiges Ubergabeprotokoll ist die beste Versicherung gegen Kautionsstreitigkeiten. 
+              Nehmen Sie sich Zeit bei der Erstellung, dokumentieren Sie umfassend und archivieren Sie das 
+              Protokoll sicher. Investieren Sie in gute Vorbereitung -- es zahlt sich bei der Ruckgabe aus.
+            </p>
+          </div>
+
+          <div className="mt-12 bg-teal/10 border border-teal/20 rounded-xl p-8">
+            <h3 className="text-xl font-bold text-navy mb-2 font-playfair">
+              Ubergabeprotokolle professionell erstellen lassen
+            </h3>
+            <p className="text-gray-600 mb-4">
+              einfach verwaltet. erstellt Ihr Ubergabeprotokoll fachgerecht inklusive Fotodokumentation 
+              und Inventarliste. Schutzen Sie sich vor Kautionsstreitigkeiten.
+            </p>
+            <Link
+              href="/anfrage"
+              className="inline-block bg-teal text-white font-semibold px-6 py-3 rounded-lg hover:bg-teal/90 transition-colors"
+            >
+              Jetzt kostenlos anfragen
+            </Link>
+          </div>
+
+          <div className="mt-10">
+            <Link href="/blog" className="text-teal hover:underline text-sm">
+              Zuruck zum Ratgeber
+            </Link>
           </div>
         </article>
       </main>

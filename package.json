@@ -16,6 +16,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@stripe/stripe-js": "^8.8.0",
     "@vercel/blob": "^2.3.0",
+    "date-fns": "^4.1.0",
     "drizzle-kit": "^0.31.9",
     "drizzle-orm": "^0.45.1",
     "inngest": "^3.52.3",
@@ -25,6 +26,7 @@
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "recharts": "^3.7.0",
     "resend": "^4.8.0",
     "stripe": "^20.4.0"
   },

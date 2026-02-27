@@ -249,6 +249,24 @@ export const billingEvents = pgTable('billing_events', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
+// ─── OUTREACH TABLES v5 ─────────────────────────────────────────────────────
+
+// Outreach contacts — manual CRM for sales outreach
+export const outreachContacts = pgTable('outreach_contacts', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+  name: text('name').notNull(),
+  company: text('company'),
+  email: text('email'),
+  phone: text('phone'),
+  channel: text('channel').notNull().default('email'), // email | whatsapp | linkedin | phone
+  status: text('status').notNull().default('sent'), // sent | opened | replied | meeting | dead
+  lastContactAt: timestamp('last_contact_at'),
+  notes: text('notes'),
+  source: text('source').default('cold'), // cold | referral | m&a | inbound
+});
+
 // ─── VOICE TABLES v4 ─────────────────────────────────────────────────────────
 
 // Phone calls — Retell AI voice call records (Kai)
