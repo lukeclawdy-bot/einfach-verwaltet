@@ -47,7 +47,11 @@ export async function POST(req: NextRequest) {
       .where(eq(landlords.email, normalised));
 
     if (!landlord) {
-      return NextResponse.json({ message: GENERIC_MSG });
+      // No account found — tell them to register instead
+      return NextResponse.json({
+        message: GENERIC_MSG,
+        noAccount: true,
+      });
     }
 
     // Generate PIN + JWT token

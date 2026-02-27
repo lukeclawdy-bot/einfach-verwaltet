@@ -29,6 +29,12 @@ export default function PortalLoginPage() {
         return;
       }
 
+      // No account found — redirect to onboarding
+      if (data.noAccount) {
+        window.location.href = `/portal/onboarding?email=${encodeURIComponent(email.trim())}`;
+        return;
+      }
+
       setSubmitted(true);
       // In dev mode, the token is returned directly
       if (data.token) {
