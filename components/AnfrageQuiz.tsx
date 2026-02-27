@@ -6,7 +6,7 @@ import { trackAnfrageConversion } from "@/lib/gtag";
 import { CheckIcon, ArrowRightIcon, HouseLogoIcon, HomeIcon, ScaleIcon, ClipboardIcon, ChatIcon, MapPinIcon, BoltIcon, LockOpenIcon, WrenchIcon, StarIcon, ShieldIcon, BuildingIcon, QuestionIcon, CurrencyIcon, UsersIcon } from "./Icons";
 
 // --- Types ---
-type StepType = "choice" | "input" | "result";
+type StepType = "choice" | "multi" | "input" | "result";
 
 interface Choice {
   value: string;
@@ -61,12 +61,13 @@ const steps: Step[] = [
     id: "standort",
     type: "choice",
     headline: "Wo befindet sich Ihre Immobilie?",
-    subline: "Wir starten in Hamburg — und expandieren bald.",
+    subline: "Wir sind bundesweit aktiv — Schwerpunkt Hamburg, Berlin und München.",
     choices: [
-      { value: "hamburg", label: "Hamburg", sublabel: "Unser Heimatmarkt — sofort verfügbar" },
-      { value: "hamburg-umland", label: "Hamburger Umland", sublabel: "Norderstedt, Pinneberg, Ahrensburg & Co." },
-      { value: "berlin", label: "Berlin", sublabel: "Kommt bald — wir nehmen Sie auf die Warteliste" },
-      { value: "andere", label: "Anderer Standort", sublabel: "Wir prüfen gerne, ob wir helfen können" },
+      { value: "hamburg", label: "Hamburg & Umland", sublabel: "Unser Heimatmarkt — sofort verfügbar" },
+      { value: "berlin", label: "Berlin", sublabel: "Sofort verfügbar" },
+      { value: "muenchen", label: "München", sublabel: "Sofort verfügbar" },
+      { value: "mehrere", label: "Mehrere Standorte", sublabel: "Portfolio über verschiedene Städte verteilt" },
+      { value: "andere", label: "Anderer Standort", sublabel: "Deutschlandweit — wir prüfen gerne" },
     ],
   },
   {
@@ -88,14 +89,15 @@ const steps: Step[] = [
   },
   {
     id: "prioritaet",
-    type: "choice",
-    headline: "Was ist Ihnen am wichtigsten?",
-    subline: "Wählen Sie, worauf es Ihnen ankommt — wir richten uns danach.",
+    type: "multi",
+    headline: "Was ist Ihnen wichtig?",
+    subline: "Mehrere Antworten möglich — wir richten uns danach.",
     choices: [
       { value: "erreichbarkeit", label: "Schnelle Reaktionszeiten", sublabel: "Keine Warteschleifen, keine ignorierten E-Mails" },
       { value: "transparenz", label: "Volle Kostentransparenz", sublabel: "Jeder Euro nachvollziehbar, jederzeit einsehbar" },
       { value: "qualitaet", label: "Zuverlässige Handwerker", sublabel: "Gute Arbeit, faire Preise, kein Pfusch" },
       { value: "preis", label: "Faires Preis-Leistungs-Verhältnis", sublabel: "Keine versteckten Kosten, klare Kalkulation" },
+      { value: "digital", label: "Digitales Portal & Transparenz", sublabel: "Jederzeit Einblick in Dokumente und Finanzen" },
     ],
   },
   {
@@ -143,6 +145,13 @@ export function AnfrageQuiz() {
     setAnswers(updated);
     // Auto-advance after short delay
     setTimeout(() => setCurrent((c) => Math.min(c + 1, totalSteps - 1)), 250);
+  }
+
+  function toggleMulti(value: string) {
+    const current_vals = answers[step.id] ? answers[step.id].split(",") : [];
+    const exists = current_vals.includes(value);
+    const next = exists ? current_vals.filter(v => v !== value) : [...current_vals, value];
+    setAnswers(prev => ({ ...prev, [step.id]: next.join(",") }));
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -330,6 +339,54 @@ export function AnfrageQuiz() {
               </button>
             );
           })}
+        </div>
+      )}
+
+      {/* Multi-select */}
+      {step.type === "multi" && step.choices && (
+        <div className="space-y-3">
+          {step.choices.map((c) => {
+            const selectedVals = answers[step.id] ? answers[step.id].split(",") : [];
+            const selected = selectedVals.includes(c.value);
+            return (
+              <button
+                key={c.value}
+                type="button"
+                onClick={() => toggleMulti(c.value)}
+                className={`w-full text-left p-5 rounded-xl border-2 transition-all ${
+                  selected
+                    ? "border-teal bg-teal/5 shadow-sm"
+                    : "border-gray-200 bg-white hover:border-navy/30 hover:shadow-sm"
+                }`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`flex-shrink-0 w-5 h-5 rounded border-2 mt-0.5 flex items-center justify-center ${
+                    selected ? "border-teal bg-teal" : "border-gray-300"
+                  }`}>
+                    {selected && <CheckIcon className="w-3 h-3 text-white" />}
+                  </div>
+                  <div>
+                    <div className="font-semibold text-navy">{c.label}</div>
+                    {c.sublabel && <div className="text-sm text-text-light mt-0.5">{c.sublabel}</div>}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+          <button
+            type="button"
+            onClick={() => {
+              if (answers[step.id]) setCurrent(c => Math.min(c + 1, totalSteps - 1));
+            }}
+            disabled={!answers[step.id]}
+            className={`w-full py-3.5 rounded-xl font-semibold transition-all mt-2 ${
+              answers[step.id]
+                ? "bg-teal text-white hover:bg-navy"
+                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+            }`}
+          >
+            Weiter →
+          </button>
         </div>
       )}
 
