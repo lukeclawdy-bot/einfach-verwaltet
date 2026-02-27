@@ -26,6 +26,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/demo`, priority: 0.5, changeFrequency: "monthly", lastModified: today },
     // Other marketing
     { url: `${baseUrl}/nachfolge`, priority: 0.7, changeFrequency: "monthly", lastModified: today },
+    { url: `${baseUrl}/kostenvergleich`, priority: 0.8, changeFrequency: "monthly", lastModified: today },
     { url: `${baseUrl}/pitch`, priority: 0.5, changeFrequency: "monthly", lastModified: today },
     // Legal pages (low priority)
     { url: `${baseUrl}/impressum`, priority: 0.3, changeFrequency: "yearly", lastModified: today },
@@ -168,6 +169,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "weg-verwaltung-hannover",
     "mietverwaltung-leipzig-kosten",
     "hausverwaltung-kuendigen-was-tun",
+    // Sprint 16 — Essen/Dortmund + BK Checkliste + Mietvertrag + NKA Einspruch
+    "hausverwaltung-essen",
+    "hausverwaltung-dortmund",
+    "betriebskosten-checkliste-vermieter",
+    "mietvertrag-klauseln-unwirksam",
+    "nebenkostenabrechnung-einspruch-fristen",
   ];
 
   const blogPosts: MetadataRoute.Sitemap = blogSlugs.map((slug) => ({
