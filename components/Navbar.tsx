@@ -14,6 +14,7 @@ const werkzeuge = [
   { href: "/bka-rechner", label: "BKA-Rechner", sub: "Betriebskosten nach §2 BetrKV" },
   { href: "/mieterhohung-rechner", label: "Mieterhöhungsrechner", sub: "§ 558 BGB berechnen" },
   { href: "/beschlussprotokoll", label: "Beschlussprotokoll", sub: "WEG-Protokoll erstellen" },
+  { href: "/wechseln", label: "Wechsel-Guide", sub: "Hausverwaltung wechseln — kostenlos" },
 ];
 
 const standorte = [
@@ -24,7 +25,7 @@ const standorte = [
   { href: "/hausverwaltung-muenchen", label: "Hausverwaltung München", sub: "WEG & Mietverwaltung in München" },
   { href: "/hausverwaltung-frankfurt", label: "Hausverwaltung Frankfurt", sub: "Miet- & WEG-Verwaltung in Frankfurt" },
   { href: "/hausverwaltung-duesseldorf", label: "Hausverwaltung Düsseldorf", sub: "Miet- & WEG-Verwaltung in Düsseldorf" },
-  { href: "/hausverwaltung-wechseln", label: "Hausverwaltung wechseln", sub: "Schritt-für-Schritt-Guide" },
+  { href: "/wechseln", label: "Hausverwaltung wechseln", sub: "Wechsel-Guide + Kündigung Generator" },
   { href: "/hausverwaltung-hamburg-vergleich", label: "Vergleich 2026", sub: "einfach verwaltet. vs. Markt" },
   { href: "/nachfolge", label: "Nachfolge", sub: "Für Verwalter im Ruhestand" },
 ];

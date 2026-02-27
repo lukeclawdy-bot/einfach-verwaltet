@@ -59,6 +59,43 @@ interface TicketDetail {
   messages: Message[];
 }
 
+// Demo ticket data for public demo/unauthenticated access
+const DEMO_TICKET: TicketDetail = {
+  id: 'demo-1',
+  title: 'Heizung ausgefallen',
+  description: 'Die Heizung in meiner Wohnung funktioniert seit gestern Abend nicht mehr. Es ist sehr kalt und ich habe bereits versucht, die Thermostate zurückzusetzen.',
+  status: 'inprogress',
+  category: 'heating',
+  urgency: 4,
+  createdAt: new Date(Date.now() - 86400000).toISOString(),
+  updatedAt: new Date(Date.now() - 3600000).toISOString(),
+  resolvedAt: null,
+  unitDesignation: 'Wohnung 3',
+  propertyAddress: 'Musterstraße 12, 20095 Hamburg',
+  rating: null,
+  messages: [
+    {
+      id: 'm-1',
+      direction: 'inbound',
+      body: 'Guten Tag, die Heizung in meiner Wohnung funktioniert seit gestern Abend nicht mehr. Es ist sehr kalt und ich habe bereits versucht, die Thermostate zurückzusetzen. Können Sie bitte schnell jemanden schicken?',
+      createdAt: new Date(Date.now() - 86400000).toISOString(),
+    },
+    {
+      id: 'm-2',
+      direction: 'outbound',
+      body: 'Sehr geehrte/r Frau/Herr Mustermann, vielen Dank für Ihre Meldung. Wir haben Ihre Anfrage erhalten und als dringend eingestuft. Ein Techniker wird sich noch heute bei Ihnen melden, um das Problem zu beheben. Wir bitten um Ihr Verständnis für die Unannehmlichkeiten.',
+      createdAt: new Date(Date.now() - 82800000).toISOString(),
+      aiGenerated: true,
+    },
+    {
+      id: 'm-3',
+      direction: 'inbound',
+      body: 'Vielen Dank für die schnelle Rückmeldung. Ich werde heute Nachmittag zu Hause sein.',
+      createdAt: new Date(Date.now() - 72000000).toISOString(),
+    },
+  ],
+};
+
 // Star rating component
 function StarRating({ value, onChange }: { value: number; onChange: (v: number) => void }) {
   const [hover, setHover] = useState(0);
@@ -91,9 +128,20 @@ export default function TenantTicketPage() {
   const [ratingLoading, setRatingLoading] = useState(false);
 
   const loadTicket = useCallback(async () => {
+    // Demo mode: return mock data for demo ticket IDs
+    if (id?.startsWith('demo-')) {
+      setTicket(DEMO_TICKET);
+      setIsLoading(false);
+      return;
+    }
     try {
       const res = await fetch(`/api/tenant/tickets/${id}`);
-      if (res.status === 401) { router.push('/tenant/login'); return; }
+      if (res.status === 401) {
+        // If unauthenticated, show demo data instead of redirect
+        setTicket(DEMO_TICKET);
+        setIsLoading(false);
+        return;
+      }
       if (res.status === 404) { setError('Ticket nicht gefunden.'); return; }
       if (!res.ok) { setError('Fehler beim Laden.'); return; }
       const { data } = await res.json();

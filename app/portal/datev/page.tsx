@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 interface DatevRow {
@@ -35,6 +35,29 @@ function formatCents(cents: number): string {
   }).format(cents / 100);
 }
 
+// Demo DATEV data for public demo mode
+const DEMO_DATEV_PREVIEW: PreviewResult = {
+  transactionCount: 14,
+  totalIncome: 1247500,
+  totalExpenses: 183200,
+  rows: [
+    { umsatz: 85000, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0102", belegfeld1: "MR-2026-001", buchungstext: "Miete Feb — M. Schmidt Whg. 1" },
+    { umsatz: 92000, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0102", belegfeld1: "MR-2026-002", buchungstext: "Miete Feb — T. Müller Whg. 2" },
+    { umsatz: 78500, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0302", belegfeld1: "MR-2026-003", buchungstext: "Miete Feb — A. Weber Whg. 3" },
+    { umsatz: 110000, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0302", belegfeld1: "MR-2026-004", buchungstext: "Miete Feb — K. Fischer Whg. 4" },
+    { umsatz: 95000, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0402", belegfeld1: "MR-2026-005", buchungstext: "Miete Feb — S. Bauer Whg. 5" },
+    { umsatz: 880000, sollHaben: "H", konto: "8400", gegenkonto: "1200", belegdatum: "0502", belegfeld1: "MR-2026-NKV", buchungstext: "Nebenkostenvorauszahlung — 9 Einheiten" },
+    { umsatz: 45000, sollHaben: "S", konto: "4130", gegenkonto: "3300", belegdatum: "1002", belegfeld1: "RG-2026-021", buchungstext: "Heizungswartung — Techniker GmbH" },
+    { umsatz: 28500, sollHaben: "S", konto: "4000", gegenkonto: "3300", belegdatum: "1202", belegfeld1: "RG-2026-022", buchungstext: "Hausmeisterservice Februar" },
+    { umsatz: 19800, sollHaben: "S", konto: "4130", gegenkonto: "3300", belegdatum: "1502", belegfeld1: "RG-2026-023", buchungstext: "Treppenhausreinigung Feb" },
+    { umsatz: 32500, sollHaben: "S", konto: "4130", gegenkonto: "3300", belegdatum: "1802", belegfeld1: "RG-2026-024", buchungstext: "Reparatur Briefkasten — Handwerker" },
+    { umsatz: 12000, sollHaben: "S", konto: "4000", gegenkonto: "3300", belegdatum: "2002", belegfeld1: "RG-2026-025", buchungstext: "Versicherungsanteil Februar" },
+    { umsatz: 25400, sollHaben: "S", konto: "4000", gegenkonto: "3300", belegdatum: "2202", belegfeld1: "RG-2026-026", buchungstext: "Grundsteuer Vorauszahlung Q1" },
+    { umsatz: 10000, sollHaben: "S", konto: "4130", gegenkonto: "3300", belegdatum: "2502", belegfeld1: "RG-2026-027", buchungstext: "Kleinreparatur Heizung Whg. 3" },
+    { umsatz: 10000, sollHaben: "S", konto: "4000", gegenkonto: "3300", belegdatum: "2802", belegfeld1: "RG-2026-028", buchungstext: "Verwaltungsgebühr Februar" },
+  ],
+};
+
 export default function DatevPage() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth()); // 0-indexed
   const [selectedYear, setSelectedYear] = useState(CURRENT_YEAR);
@@ -42,6 +65,13 @@ export default function DatevPage() {
   const [exporting, setExporting] = useState(false);
   const [preview, setPreview] = useState<PreviewResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isDemo, setIsDemo] = useState(false);
+
+  // Detect demo mode from cookie
+  useEffect(() => {
+    const hasDemoCookie = document.cookie.includes("ev-demo-session");
+    setIsDemo(hasDemoCookie);
+  }, []);
 
   function getDateRange() {
     const from = new Date(selectedYear, selectedMonth, 1);
@@ -53,6 +83,16 @@ export default function DatevPage() {
   }
 
   async function handlePreview() {
+    // Demo mode: use hardcoded demo data
+    if (isDemo) {
+      setLoading(true);
+      setError(null);
+      await new Promise((r) => setTimeout(r, 600)); // simulate loading
+      setPreview(DEMO_DATEV_PREVIEW);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     setPreview(null);
@@ -81,6 +121,30 @@ export default function DatevPage() {
   }
 
   async function handleExport() {
+    // Demo mode: generate a sample CSV download
+    if (isDemo) {
+      setExporting(true);
+      await new Promise((r) => setTimeout(r, 800));
+      const csvLines = [
+        "\uFEFF\"EXTF\";700;21;\"Buchungsstapel\";7;\"20260227\";;\"\";1;\"20260227\";\"20260201\";\"20260228\";\"00000\";\"00001\";4;\"EUR\"",
+        "\"Umsatz (ohne Soll/Haben-Kz)\";\"Soll/Haben-Kennzeichen\";\"WKZ Umsatz\";\"Kurs\";\"Basis-Umsatz\";\"WKZ Basis-Umsatz\";\"Konto\";\"Gegenkonto (ohne BU-Schlüssel)\";\"BU-Schlüssel\";\"Belegdatum\";\"Belegfeld 1\";\"Belegfeld 2\";\"Skonto\";\"Buchungstext\";",
+        ...DEMO_DATEV_PREVIEW.rows.map(r =>
+          `"${(r.umsatz / 100).toFixed(2).replace(".", ",")}";\"${r.sollHaben}\";\"EUR\";\"\";\"\";\"\";\"${r.konto}\";\"${r.gegenkonto}\";\"\";\"${r.belegdatum}\";\"${r.belegfeld1}\";\"\";\"\";\"`+r.buchungstext+`\";`
+        )
+      ].join("\r\n");
+      const blob = new Blob([csvLines], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `DATEV_Buchungsjournal_Demo_${selectedYear}-${String(selectedMonth + 1).padStart(2, "0")}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      setExporting(false);
+      return;
+    }
+
     setExporting(true);
     setError(null);
 
@@ -129,7 +193,19 @@ export default function DatevPage() {
   ];
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50 flex-col">
+      {/* Demo Banner */}
+      {isDemo && (
+        <div className="w-full bg-amber-50 border-b border-amber-200 px-4 py-2 flex items-center justify-center gap-2 text-sm text-amber-800 z-50">
+          <span className="inline-flex items-center gap-1.5 bg-amber-100 text-amber-700 px-2.5 py-0.5 rounded-full text-xs font-medium">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Demo-Modus
+          </span>
+          <span>Sie sehen Beispieldaten. DATEV-Export zeigt eine Muster-CSV.</span>
+          <a href="/anfrage" className="ml-2 text-amber-900 underline hover:no-underline font-medium">Jetzt anfragen →</a>
+        </div>
+      )}
+      <div className="flex flex-1">
       {/* Sidebar */}
       <aside className="w-56 bg-navy min-h-screen flex flex-col fixed left-0 top-0 bottom-0">
         <div className="px-5 py-5 border-b border-white/10">
@@ -323,6 +399,7 @@ export default function DatevPage() {
             </ul>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
