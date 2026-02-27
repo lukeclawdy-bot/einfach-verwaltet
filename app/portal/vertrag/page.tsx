@@ -135,6 +135,12 @@ export default function VertragPage() {
   const [emailSent, setEmailSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Signature upload state
+  const [signatureFile, setSignatureFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   // In a real implementation, this would be fetched server-side
   // For now, we use demo data with a client component
   const contract = DEMO_CONTRACT;
@@ -201,7 +207,7 @@ export default function VertragPage() {
     setEmailSent(false);
     setError(null);
     try {
-      const res = await fetch("/api/portal/vertrag/email", {
+      const res = await fetch("/api/portal/vertrag/send-email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -227,6 +233,35 @@ export default function VertragPage() {
       setError(err instanceof Error ? err.message : "Unbekannter Fehler.");
     } finally {
       setIsSendingEmail(false);
+    }
+  }
+
+  async function handleSignatureUpload() {
+    if (!signatureFile) return;
+    setIsUploading(true);
+    setUploadSuccess(false);
+    setUploadError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", signatureFile);
+
+      const res = await fetch("/api/portal/vertrag/upload-signature", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!res.ok) {
+        const { error: errMsg } = await res.json();
+        throw new Error(errMsg || "Upload fehlgeschlagen.");
+      }
+
+      setUploadSuccess(true);
+      setSignatureFile(null);
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : "Unbekannter Fehler.");
+    } finally {
+      setIsUploading(false);
     }
   }
 
@@ -441,6 +476,77 @@ export default function VertragPage() {
                 </>
               )}
             </div>
+
+            {/* Unterschrift hochladen */}
+            {contract.status !== "none" && (
+              <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-9 h-9 bg-purple-50 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-navy">Unterschrift hochladen</h3>
+                    <p className="text-xs text-gray-500">Laden Sie einen Scan des unterzeichneten Vertrags hoch</p>
+                  </div>
+                </div>
+
+                {uploadSuccess ? (
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-3 mb-4 text-sm text-green-700 flex items-center gap-2">
+                    <CheckCircleIcon className="w-4 h-4 flex-shrink-0" />
+                    Unterschrift erfolgreich hochgeladen. Wir werden den Vertrag prüfen.
+                  </div>
+                ) : (
+                  <>
+                    {uploadError && (
+                      <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4 text-sm text-red-700">
+                        {uploadError}
+                      </div>
+                    )}
+
+                    <div className="border-2 border-dashed border-gray-200 rounded-xl p-6 text-center mb-4 hover:border-teal/40 transition-colors">
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp"
+                        onChange={(e) => setSignatureFile(e.target.files?.[0] ?? null)}
+                        className="hidden"
+                        id="signature-file-input"
+                      />
+                      <label htmlFor="signature-file-input" className="cursor-pointer">
+                        <svg className="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        {signatureFile ? (
+                          <div>
+                            <p className="text-sm font-medium text-navy">{signatureFile.name}</p>
+                            <p className="text-xs text-gray-500 mt-1">
+                              {(signatureFile.size / 1024 / 1024).toFixed(2)} MB
+                            </p>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-sm font-medium text-navy">Datei auswählen oder hierher ziehen</p>
+                            <p className="text-xs text-gray-500 mt-1">PDF, JPEG, PNG oder WebP — max. 10 MB</p>
+                          </div>
+                        )}
+                      </label>
+                    </div>
+
+                    <button
+                      onClick={handleSignatureUpload}
+                      disabled={!signatureFile || isUploading}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-purple-600 text-white rounded-xl text-sm font-medium hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                      </svg>
+                      {isUploading ? "Wird hochgeladen…" : "Unterschrift hochladen"}
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
 
             {/* Info box */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">

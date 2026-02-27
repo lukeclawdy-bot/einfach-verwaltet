@@ -221,6 +221,20 @@ export default function HausverwaltungEssen() {
               </div>
             </div>
 
+            <div className="not-prose bg-teal/5 border border-teal/20 rounded-xl p-4 my-6 flex items-center gap-4">
+              <div className="w-8 h-8 bg-teal/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <svg className="w-4 h-4 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <div className="flex-1">
+                <p className="text-xs text-text-light mb-0.5">Vollständige Stadtseite</p>
+                <Link href="/hausverwaltung-essen" className="text-sm font-semibold text-navy hover:text-teal transition-colors">
+                  Hausverwaltung Essen — Preise, Leistungen & FAQ →
+                </Link>
+              </div>
+            </div>
+
             <div className="not-prose bg-amber/10 border border-amber/30 rounded-2xl p-7 my-8 text-center">
               <h3 className="text-xl font-bold text-navy mb-2">Kostenloses Angebot für Essen anfragen</h3>
               <p className="text-text-light text-sm mb-5">Teilen Sie uns Ihre Einheitenzahl mit — wir melden uns innerhalb von 24 Stunden mit einem transparenten Angebot.</p>

@@ -4,7 +4,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Kostenlose Vermieter-Werkzeuge | einfach verwaltet.",
   description:
-    "Kostenlose Vermieter Werkzeuge: BKA-Rechner, Mieterhöhungsrechner, WEG Beschlussprotokoll-Generator, Wechsel-Assistent und Preis-Quiz. Sofort nutzbar, kein Login.",
+    "Kostenlose Vermieter Werkzeuge: BKA-Rechner, Mieterhöhungsrechner, WEG Beschlussprotokoll-Generator, Wechsel-Assistent, Preis-Quiz und Vermieter-Checkliste 2025. Sofort nutzbar, kein Login.",
   openGraph: {
     title: "Kostenlose Vermieter-Werkzeuge | einfach verwaltet.",
     description:
@@ -124,6 +124,27 @@ const tools = [
     cta: "Preis berechnen",
     ctaVariant: "secondary",
   },
+  {
+    href: "/checkliste",
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.8}
+          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
+        />
+      </svg>
+    ),
+    tag: "Checkliste",
+    title: "Vermieter-Checkliste 2025",
+    description:
+      "25 Punkte, die jeder Vermieter kennen muss — von Mietrecht über Nebenkostenabrechnung bis zur Kündigung. Kostenlos als PDF herunterladen.",
+    badge: "PDF Download",
+    badgeColor: "bg-rose-50 text-rose-700",
+    cta: "Checkliste ansehen",
+    ctaVariant: "secondary",
+  },
 ];
 
 const jsonLd = {
@@ -148,7 +169,7 @@ const jsonLd = {
   mainEntity: {
     "@type": "ItemList",
     name: "Vermieter-Werkzeuge",
-    numberOfItems: tools.length,
+    numberOfItems: 6,
     itemListElement: tools.map((t, i) => ({
       "@type": "ListItem",
       position: i + 1,
@@ -191,7 +212,7 @@ export default function WerkzeugePage() {
             {/* Stats bar */}
             <div className="mt-10 flex flex-wrap justify-center gap-8 text-sm">
               {[
-                { value: "5", label: "Werkzeuge" },
+                { value: "6", label: "Werkzeuge" },
                 { value: "100%", label: "Kostenlos" },
                 { value: "0", label: "Registrierung nötig" },
               ].map((s) => (

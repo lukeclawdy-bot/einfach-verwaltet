@@ -236,58 +236,63 @@ export default function BetaPage() {
         {/* Eligibility Section */}
         <section className="py-20 lg:py-28 bg-warm-white">
           <div className="max-w-[1100px] mx-auto px-6">
-            <div className="text-center mb-16">
-              <span className="inline-block text-teal font-semibold text-sm uppercase tracking-wide mb-3">Für wen das Programm gedacht ist</span>
-              <h2 className="text-3xl sm:text-4xl font-bold text-navy mb-4 font-serif">
-                Sind Sie dabei?
-              </h2>
-              <p className="text-text-light max-w-2xl mx-auto">
-                Wir suchen Eigentümer, die bereit sind, mit uns zusammenzuwachsen.
-              </p>
-            </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {eligibility.map((item) => (
-                <div key={item.text} className="bg-white rounded-2xl p-6 text-center border border-gray-100 hover:shadow-lg transition-all">
-                  <div className="w-12 h-12 rounded-xl bg-teal/10 flex items-center justify-center mx-auto mb-4">
-                    <item.icon className="w-6 h-6 text-teal" />
-                  </div>
-                  <p className="text-navy font-medium text-sm leading-relaxed">{item.text}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* Timeline */}
-            <div className="mt-16 bg-white rounded-2xl p-8 border border-gray-100">
-              <h3 className="text-xl font-bold text-navy mb-8 text-center font-serif">Zeitplan</h3>
-              <div className="relative">
-                {/* Timeline line */}
-                <div className="absolute left-0 right-0 top-1/2 h-0.5 bg-gray-200 hidden lg:block" style={{ transform: 'translateY(-50%)' }} />
-                
-                <div className="grid lg:grid-cols-4 gap-8">
-                  <div className="relative text-center lg:text-left">
-                    <div className="w-10 h-10 rounded-full bg-teal text-white flex items-center justify-center font-bold mx-auto lg:mx-0 mb-3 relative z-10">1</div>
-                    <h4 className="font-semibold text-navy mb-1">Jetzt</h4>
-                    <p className="text-text-light text-sm">Platz sichern über das Anfrage-Formular</p>
-                  </div>
-                  <div className="relative text-center lg:text-left">
-                    <div className="w-10 h-10 rounded-full bg-teal text-white flex items-center justify-center font-bold mx-auto lg:mx-0 mb-3 relative z-10">2</div>
-                    <h4 className="font-semibold text-navy mb-1">Februar/März 2026</h4>
-                    <p className="text-text-light text-sm">Persönliches Gespräch & Onboarding-Planung</p>
-                  </div>
-                  <div className="relative text-center lg:text-left">
-                    <div className="w-10 h-10 rounded-full bg-teal text-white flex items-center justify-center font-bold mx-auto lg:mx-0 mb-3 relative z-10">3</div>
-                    <h4 className="font-semibold text-navy mb-1">März–Mai 2026</h4>
-                    <p className="text-text-light text-sm">3 Monate Beta-Phase mit vollem Service</p>
-                  </div>
-                  <div className="relative text-center lg:text-left">
-                    <div className="w-10 h-10 rounded-full bg-amber text-white flex items-center justify-center font-bold mx-auto lg:mx-0 mb-3 relative z-10">4</div>
-                    <h4 className="font-semibold text-navy mb-1">Juni 2026</h4>
-                    <p className="text-text-light text-sm">Feedback & Entscheidung für langfristige Partnerschaft</p>
-                  </div>
+            {/* Eligibility + CTA split */}
+            <div className="grid lg:grid-cols-2 gap-12 items-center mb-20">
+              <div>
+                <span className="inline-block text-teal font-semibold text-sm uppercase tracking-wide mb-3">Für wen das Programm gedacht ist</span>
+                <h2 className="text-3xl sm:text-4xl font-bold text-navy mb-4 font-serif">
+                  Passt das zu Ihnen?
+                </h2>
+                <p className="text-text-light mb-8">
+                  Wir suchen fünf Eigentümer, die bereit sind, mit uns von Anfang an zu gestalten.
+                </p>
+                <div className="space-y-4">
+                  {eligibility.map((item) => (
+                    <div key={item.text} className="flex items-start gap-4 bg-white rounded-xl p-4 border border-gray-100">
+                      <div className="w-10 h-10 rounded-lg bg-teal/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <item.icon className="w-5 h-5 text-teal" />
+                      </div>
+                      <p className="text-navy font-medium text-sm leading-relaxed pt-2.5">{item.text}</p>
+                    </div>
+                  ))}
                 </div>
               </div>
+
+              {/* Right: compact timeline */}
+              <div className="bg-navy rounded-2xl p-8 text-white">
+                <h3 className="text-lg font-bold mb-8 font-serif">Ihr Weg zum Beta-Platz</h3>
+                <div className="relative">
+                  {/* vertical line */}
+                  <div className="absolute left-5 top-6 bottom-6 w-px bg-white/15" />
+                  <div className="space-y-8">
+                    {[
+                      { step: "1", label: "Jetzt", desc: "Platz sichern über das Anfrage-Formular", active: true },
+                      { step: "2", label: "März 2026", desc: "Persönliches Gespräch & Onboarding-Planung", active: false },
+                      { step: "3", label: "März–Mai", desc: "3 Monate Beta-Phase mit vollem Service", active: false },
+                      { step: "4", label: "Juni 2026", desc: "Feedback & Entscheidung für langfristige Partnerschaft", active: false },
+                    ].map((s) => (
+                      <div key={s.step} className="flex items-start gap-5 relative">
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 relative z-10 ${s.active ? 'bg-amber text-white' : 'bg-white/10 text-white/70'}`}>
+                          {s.step}
+                        </div>
+                        <div className="pt-2">
+                          <p className={`font-semibold text-sm ${s.active ? 'text-amber' : 'text-white/50'}`}>{s.label}</p>
+                          <p className="text-white/80 text-sm mt-0.5 leading-relaxed">{s.desc}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <a
+                  href="/anfrage?beta_program=true"
+                  className="mt-10 block w-full text-center bg-amber text-white py-3.5 rounded-xl font-semibold hover:bg-amber/90 transition-all text-sm"
+                >
+                  Jetzt Beta-Platz sichern →
+                </a>
+              </div>
             </div>
+
           </div>
         </section>
 
