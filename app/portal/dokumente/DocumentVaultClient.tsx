@@ -14,6 +14,7 @@ type DocumentVaultClientProps = {
   initialDocuments: DocumentWithExtraction[];
   properties: Property[];
   landlordId: string;
+  isDemo?: boolean;
 };
 
 const TYPE_GROUPS = [
@@ -53,7 +54,8 @@ const CLASSIFICATION_COLORS: Record<string, string> = {
 export function DocumentVaultClient({ 
   initialDocuments, 
   properties,
-  landlordId 
+  landlordId,
+  isDemo = false,
 }: DocumentVaultClientProps) {
   const [documents, setDocuments] = useState<DocumentWithExtraction[]>(initialDocuments);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
