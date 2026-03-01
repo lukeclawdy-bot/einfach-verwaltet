@@ -42,7 +42,7 @@ Eingegangen: ${new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
 
     // Send to Lukas
     const { error: sendError } = await resend.emails.send({
-      from: "einfach verwaltet. <kontakt@einfach-verwaltet.de>",
+      from: "einfach verwaltet. <anfrage@immo.einfach-verwaltet.de>",
       to: ["lukas.schmitz@years.co"],
       replyTo: email,
       subject: `Neue Kontaktanfrage: ${name} (${einheiten || "?"} Einheiten)`,
@@ -56,7 +56,7 @@ Eingegangen: ${new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })
 
     // Send confirmation to visitor
     await resend.emails.send({
-      from: "einfach verwaltet. <kontakt@einfach-verwaltet.de>",
+      from: "einfach verwaltet. <anfrage@immo.einfach-verwaltet.de>",
       to: [email],
       subject: "Ihre Anfrage bei einfach verwaltet. — Wir melden uns heute noch",
       text: `Hallo ${name},
