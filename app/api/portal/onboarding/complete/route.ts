@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { landlords } from "@/lib/db/schema";
+import { landlords, onboardingSessions } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { createToken } from "@/lib/auth/jwt";
 import { Resend } from "resend";
@@ -8,42 +8,147 @@ import { Resend } from "resend";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, type, name, firma, kommunikation, aiAutonomy } = body;
+    const {
+      email,
+      type,
+      name,
+      firma,
+      kommunikation,
+      aiAutonomy,
+      // v7 wizard fields
+      portfolioGroesse,
+      struktur,
+      verwaltungstyp,
+      einheitenAnzahl,
+      vorname,
+      nachname,
+      telefon,
+      unternehmen,
+      strasse,
+      plz,
+      stadt,
+      mieterOption,
+      mieter,
+    } = body;
 
-    if (!email) {
-      return NextResponse.json({ error: "Email required" }, { status: 400 });
-    }
+    // Derive email from body — wizard may pass it or it may be empty (magic-link flow)
+    const rawEmail = email || body.emailAdresse || "";
+    const normalised = rawEmail.toLowerCase().trim();
 
-    const normalised = email.toLowerCase().trim();
-
-    // Check if landlord already exists
-    const existing = await db
-      .select()
-      .from(landlords)
-      .where(eq(landlords.email, normalised))
-      .limit(1);
+    // Build display name from wizard fields or fallback
+    const displayName = name || (vorname && nachname ? `${vorname} ${nachname}` : null) || firma || unternehmen || null;
 
     let landlordId: string;
 
-    if (existing.length > 0) {
-      landlordId = existing[0].id;
+    if (normalised) {
+      // Check if landlord already exists
+      const existing = await db
+        .select()
+        .from(landlords)
+        .where(eq(landlords.email, normalised))
+        .limit(1);
+
+      if (existing.length > 0) {
+        landlordId = existing[0].id;
+        // Update name/company if provided
+        if (displayName || vorname || nachname || telefon || unternehmen || firma) {
+          await db
+            .update(landlords)
+            .set({
+              name: displayName ?? existing[0].name,
+              companyName: (unternehmen || firma) ?? existing[0].companyName,
+              type: type === "profi" ? "professional" : "private",
+              onboardingCompleted: true,
+            })
+            .where(eq(landlords.id, landlordId));
+        }
+      } else {
+        const [newLandlord] = await db
+          .insert(landlords)
+          .values({
+            email: normalised,
+            name: displayName,
+            companyName: unternehmen || firma || null,
+            type: type === "profi" ? "professional" : "private",
+            communicationChannel: kommunikation || "email",
+            aiAutonomyLevel: aiAutonomy || "supervised",
+            onboardingCompleted: true,
+          })
+          .returning();
+        landlordId = newLandlord.id;
+      }
+
+      // Persist onboarding session with wizard fields
+      await db.insert(onboardingSessions).values({
+        landlordId,
+        currentStep: 7,
+        totalSteps: 7,
+        type: type === "profi" ? "profi" : "privat",
+        portfolioGroesse: portfolioGroesse ?? null,
+        struktur: struktur ?? null,
+        verwaltungstyp: verwaltungstyp ?? null,
+        einheitenAnzahl: einheitenAnzahl ? Number(einheitenAnzahl) : null,
+        vorname: vorname ?? null,
+        nachname: nachname ?? null,
+        telefon: telefon ?? null,
+        unternehmen: (unternehmen || firma) ?? null,
+        data: {
+          strasse: strasse ?? null,
+          plz: plz ?? null,
+          stadt: stadt ?? null,
+          mieterOption: mieterOption ?? null,
+          mieter: mieter ?? [],
+        },
+        completedAt: new Date(),
+      }).onConflictDoNothing();
     } else {
-      const [newLandlord] = await db
+      // No email provided — create anonymous session placeholder
+      // This path is used when email is collected separately (magic-link)
+      const [tempLandlord] = await db
         .insert(landlords)
         .values({
-          email: normalised,
-          name: name || firma || null,
-          companyName: firma || null,
+          email: `tmp-${Date.now()}@onboarding.ev`,
+          name: displayName,
+          companyName: unternehmen || firma || null,
           type: type === "profi" ? "professional" : "private",
-          communicationChannel: kommunikation || "email",
-          aiAutonomyLevel: aiAutonomy || "supervised",
-          onboardingCompleted: true,
+          communicationChannel: "email",
+          aiAutonomyLevel: "supervised",
+          onboardingCompleted: false,
         })
         .returning();
-      landlordId = newLandlord.id;
+      landlordId = tempLandlord.id;
+
+      await db.insert(onboardingSessions).values({
+        landlordId,
+        currentStep: 7,
+        totalSteps: 7,
+        type: type === "profi" ? "profi" : "privat",
+        portfolioGroesse: portfolioGroesse ?? null,
+        struktur: struktur ?? null,
+        verwaltungstyp: verwaltungstyp ?? null,
+        einheitenAnzahl: einheitenAnzahl ? Number(einheitenAnzahl) : null,
+        vorname: vorname ?? null,
+        nachname: nachname ?? null,
+        telefon: telefon ?? null,
+        unternehmen: (unternehmen || firma) ?? null,
+        data: {
+          strasse: strasse ?? null,
+          plz: plz ?? null,
+          stadt: stadt ?? null,
+          mieterOption: mieterOption ?? null,
+          mieter: mieter ?? [],
+        },
+        completedAt: new Date(),
+      });
+
+      return NextResponse.json({
+        success: true,
+        landlordId,
+        message: "Onboarding-Daten gespeichert. Keine E-Mail versandt (kein E-Mail-Feld ausgefüllt).",
+      });
     }
 
-    // Generate magic link using existing createToken helper
+    // Generate magic link
     const token = await createToken({ landlordId, email: normalised });
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://einfach-verwaltet.de";
     const magicLink = `${baseUrl}/api/portal/auth/verify?token=${token}`;
@@ -81,7 +186,7 @@ export async function POST(req: NextRequest) {
         </tr>
         <tr>
           <td style="padding:32px">
-            <h1 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#0f172a">Willkommen!</h1>
+            <h1 style="margin:0 0 12px;font-size:22px;font-weight:700;color:#0f172a">Willkommen${displayName ? `, ${displayName}` : ""}!</h1>
             <p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.6">
               Ihr Portal ist eingerichtet. Klicken Sie auf den Button, um sich anzumelden — kein Passwort notwendig.
             </p>

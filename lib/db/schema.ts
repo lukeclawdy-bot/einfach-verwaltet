@@ -4,6 +4,7 @@
 // v4: Added voice tables (phone_calls)
 // v5: Added outreach tables (outreach_contacts)
 // v6: Added admin GTM pipeline fields (leads.source, pipeline_stage, email_events, outreach_touches)
+// v7: Extended onboarding_sessions with wizard fields (portfolioGroesse, struktur, verwaltungstyp, einheitenAnzahl, vorname, nachname, telefon, unternehmen)
 // Using Neon PostgreSQL + Drizzle ORM
 
 import { pgTable, text, timestamp, integer, boolean, decimal, uuid, jsonb } from 'drizzle-orm/pg-core';
@@ -124,8 +125,17 @@ export const onboardingSessions = pgTable('onboarding_sessions', {
   landlordId: uuid('landlord_id').notNull(),
   currentStep: integer('current_step').default(1),
   totalSteps: integer('total_steps').default(7),
-  type: text('type'), // private | professional
+  type: text('type'), // privat | profi
   data: jsonb('data').default({}), // accumulated form data
+  // v7: granular onboarding wizard fields (2026-03-01 redesign)
+  portfolioGroesse: text('portfolio_groesse'),   // "1" | "2-5" | "6-10" | "11-50" | "51-200" | "200+"
+  struktur: text('struktur'),                    // selected structure option text
+  verwaltungstyp: text('verwaltungstyp'),        // "miet" | "weg" | "sev"
+  einheitenAnzahl: integer('einheiten_anzahl'),
+  vorname: text('vorname'),
+  nachname: text('nachname'),
+  telefon: text('telefon'),
+  unternehmen: text('unternehmen'),
   completedAt: timestamp('completed_at'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow(),
