@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { inngest } from "@/lib/inngest/client";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -10,73 +11,55 @@ export async function POST(req: NextRequest) {
 
     // Honeypot check
     if (website) {
-      return NextResponse.json({ success: true }); // silently ignore bots
+      return NextResponse.json({ success: true });
     }
 
     if (!name || !email) {
       return NextResponse.json({ error: "Name und E-Mail sind Pflichtfelder." }, { status: 400 });
     }
 
-    const typLabel: Record<string, string> = {
-      miet: "Mietverwaltung",
-      weg: "WEG-Verwaltung",
-      beides: "Miet- & WEG-Verwaltung",
-      unsicher: "Noch unsicher",
-    };
-
-    const emailBody = `
-Neue Kontaktanfrage über einfach-verwaltet.de/kontakt
-
-Name: ${name}
-E-Mail: ${email}
-Telefon: ${telefon || "nicht angegeben"}
-Einheiten: ${einheiten || "nicht angegeben"}
-Verwaltungstyp: ${typLabel[typ] || typ || "nicht angegeben"}
-
-Nachricht:
-${nachricht || "(keine Nachricht)"}
-
----
-Eingegangen: ${new Date().toLocaleString("de-DE", { timeZone: "Europe/Berlin" })} Uhr
-    `.trim();
-
-    // Send to Lukas
-    const { error: sendError } = await resend.emails.send({
-      from: "einfach verwaltet. <anfrage@immo.einfach-verwaltet.de>",
-      to: [process.env.ADMIN_EMAIL || "lukas@einfach-verwaltet.de"],
-      replyTo: email,
-      subject: `Neue Kontaktanfrage: ${name} (${einheiten || "?"} Einheiten)`,
-      text: emailBody,
-    });
-
-    if (sendError) {
-      console.error("Resend error:", sendError);
-      return NextResponse.json({ error: "E-Mail konnte nicht gesendet werden." }, { status: 500 });
+    // Fire Inngest pipeline — handles Angebot in 3min + admin notification + DB persist
+    try {
+      await inngest.send({
+        name: "lead/submitted",
+        data: {
+          name,
+          email,
+          telefon: telefon || "",
+          einheiten: einheiten || "",
+          typ: typ || "miet",
+          standort: "Hamburg", // /kontakt doesn't ask standort, default Hamburg
+          nachricht: nachricht || "",
+          source: "kontakt",
+        },
+      });
+    } catch (inngestErr) {
+      // Non-blocking — don't fail the request if Inngest is down
+      console.error("Inngest send error:", inngestErr);
     }
 
-    // Send confirmation to visitor
+    // Immediate confirmation to visitor (Inngest also sends Angebot in 3min)
     await resend.emails.send({
-      from: "einfach verwaltet. <anfrage@immo.einfach-verwaltet.de>",
+      from: "Lukas Schmitz <anfrage@immo.einfach-verwaltet.de>",
       to: [email],
-      subject: "Ihre Anfrage bei einfach verwaltet. — Wir melden uns heute noch",
+      replyTo: "lukas@einfach-verwaltet.de",
+      subject: "Ihre Anfrage bei einfach verwaltet. — Angebot folgt in Kürze",
       text: `Hallo ${name},
 
-vielen Dank für Ihre Anfrage! Wir haben Ihre Nachricht erhalten und melden uns noch heute bei Ihnen.
+vielen Dank für Ihre Anfrage! Wir haben Ihre Nachricht erhalten.
 
-Ihre Angaben:
-- Einheiten: ${einheiten || "nicht angegeben"}
-- Verwaltungstyp: ${typLabel[typ] || "nicht angegeben"}
+Sie erhalten in wenigen Minuten Ihr persönliches Angebot per E-Mail.
 
 Bei dringenden Fragen erreichen Sie uns unter kontakt@einfach-verwaltet.de.
 
 Mit freundlichen Grüßen
-Ihr Team von einfach verwaltet.
-Hausverwaltung Hamburg
+Lukas Schmitz
+einfach verwaltet. | Hausverwaltung Hamburg
 
 ---
 einfach verwaltet. | Singapurstr. 19, 20457 Hamburg
 kontakt@einfach-verwaltet.de | einfach-verwaltet.de`,
-    }).catch(() => null); // non-blocking — don't fail if confirmation fails
+    }).catch((e) => console.error("Confirmation email error:", e));
 
     return NextResponse.json({ success: true });
   } catch (err) {
