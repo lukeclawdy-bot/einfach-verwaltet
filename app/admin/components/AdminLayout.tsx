@@ -10,9 +10,11 @@ const navItems = [
   { label: "🔨 Freelancer", href: "/admin/freelancers" },
   { label: "✅ Genehmigungen", href: "/admin/approvals" },
   { label: "👥 Leads", href: "/admin/leads" },
+  { label: "📊 Finanzen", href: "/admin/finanzen" },
+  { label: "🤖 Agent Feed", href: "/admin/agent-feed" },
+  { label: "📋 Audit Trail", href: "/admin/audit-trail" },
   { label: "📤 Outreach", href: "/admin/outreach" },
-  { label: "📊 Funnel", href: "/admin/funnel" },
-  { label: "🤖 Agenten", href: "/admin/agents" },
+  { label: "📈 Funnel", href: "/admin/funnel" },
 ];
 
 export function AdminSidebar() {
@@ -46,9 +48,12 @@ export function AdminSidebar() {
         </Link>
       </div>
 
-      <nav className="flex-1 px-3 py-4 space-y-1">
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+          const isActive =
+            item.href === "/admin"
+              ? pathname === "/admin"
+              : pathname === item.href || pathname.startsWith(`${item.href}/`);
           return (
             <Link
               key={item.href}
@@ -86,13 +91,19 @@ export function AdminSidebar() {
       </nav>
 
       <div className="px-4 py-4 border-t border-white/10 space-y-2">
+        {/* Role badge */}
+        <div className="flex items-center gap-2 mb-2">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-teal/20 text-teal border border-teal/30">
+            Manager
+          </span>
+        </div>
         <a
           href="/admin/logout"
           className="block text-white/40 hover:text-white/70 text-xs transition-colors"
         >
           Abmelden
         </a>
-        <p className="text-white/30 text-xs">Admin v1.0</p>
+        <p className="text-white/30 text-xs">Admin v2.0</p>
       </div>
     </aside>
   );
@@ -102,9 +113,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-light-gray flex">
       <AdminSidebar />
-      <main className="flex-1 ml-64">
-        {children}
-      </main>
+      <main className="flex-1 ml-64">{children}</main>
     </div>
   );
 }
