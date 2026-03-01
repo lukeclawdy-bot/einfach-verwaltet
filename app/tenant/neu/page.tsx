@@ -146,7 +146,7 @@ function ProgressBar({ step, total }: { step: number; total: number }) {
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function TenantNeuPage() {
-  const router = useRouter();
+  const _router = useRouter();
   const [step, setStep] = useState(1);
   const TOTAL_STEPS = 5;
 

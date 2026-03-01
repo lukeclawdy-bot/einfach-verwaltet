@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 
 interface Property {
   id: string;
@@ -33,7 +32,7 @@ export function EinheitenClient({ initialProperties, initialUnits, isDemo }: Ein
   const [units] = useState<Unit[]>(initialUnits);
   const [showModal, setShowModal] = useState(false);
   const [selectedPropertyId, setSelectedPropertyId] = useState("");
-  const [formData, setFormData] = useState({
+  const [_formData, _setFormData] = useState({
     designation: "",
     floor: "",
     areaM2: "",

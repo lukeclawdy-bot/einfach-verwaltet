@@ -5,7 +5,7 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { billingSubscriptions, billingInvoices, billingEvents, landlords } from '@/lib/db/schema';
+import { billingSubscriptions, billingInvoices, billingEvents } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getStripe } from '@/lib/stripe';
 import { inngest } from '@/lib/inngest/client';

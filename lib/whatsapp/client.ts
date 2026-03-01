@@ -84,7 +84,7 @@ export interface IncomingWhatsAppMessage {
 
 export class WhatsAppClient {
   private apiKey: string;
-  private phoneNumberId: string;
+  private _phoneNumberId: string;
 
   constructor(apiKey?: string, phoneNumberId?: string) {
     this.apiKey = apiKey || process.env.WHATSAPP_API_KEY || "";

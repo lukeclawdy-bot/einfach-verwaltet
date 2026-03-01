@@ -151,7 +151,7 @@ export function FunnelCharts({ data }: { data: AnalyticsData }) {
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {typData.map((entry, index) => (
+                  {typData.map((_entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

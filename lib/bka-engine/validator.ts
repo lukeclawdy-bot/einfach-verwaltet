@@ -244,7 +244,7 @@ function validatePeriod(periodStart: Date, periodEnd: Date): ValidationWarning[]
  * Validate a single cost entry
  */
 function validateCostEntry(cost: { category: BKACostCategory; total_eur: number; allocation_key: AllocationKey; description?: string },
-                          input: BKAInput): ValidationWarning[] {
+                          _input: BKAInput): ValidationWarning[] {
   const warnings: ValidationWarning[] = [];
   
   // Check umlagefähigkeit
@@ -309,7 +309,7 @@ function validateUnits(input: BKAInput): ValidationWarning[] {
   }
   
   // Check each unit
-  const totalArea = input.property.units.reduce((sum, u) => sum + u.area_m2, 0);
+  const _totalArea = input.property.units.reduce((sum, u) => sum + u.area_m2, 0);
   
   for (const unit of input.property.units) {
     // Check for zero or negative area

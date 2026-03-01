@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 import { AdminSidebar } from "../components/AdminLayout";
 import { db, hasDatabase } from "@/lib/db";
 import { approvals, landlords } from "@/lib/db/schema";
-import { desc, eq, and } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 
 interface ApprovalRow {

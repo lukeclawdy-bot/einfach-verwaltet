@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { financialTransactions, properties, units } from '@/lib/db/schema';
+import { financialTransactions, properties } from '@/lib/db/schema';
 import { eq, inArray, gte, and } from 'drizzle-orm';
 import { getDemoFinanzenData } from '@/lib/demo-data';
 

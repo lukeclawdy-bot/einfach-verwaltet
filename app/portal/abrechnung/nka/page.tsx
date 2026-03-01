@@ -60,24 +60,6 @@ const DEMO_PROPERTIES: PropertyRow[] = [
   },
 ];
 
-// ─── Sidebar ─────────────────────────────────────────────────────────────────
-
-function Sidebar() {
-  const navItems = [
-    { label: 'Übersicht',   href: '/portal/dashboard' },
-    { label: 'Einheiten',   href: '/portal/einheiten' },
-    { label: 'Mieter',      href: '/portal/mieter' },
-    { label: 'Tickets',     href: '/portal/tickets' },
-    { label: 'Dokumente',   href: '/portal/dokumente' },
-    { label: 'Finanzen',    href: '/portal/finanzen' },
-    { label: 'Mieterhöhung', href: '/portal/mieterhohung' },
-    { label: 'NKA',          href: '/portal/nka' },
-    { label: 'Analysen',     href: '/portal/analytics' },
-    { label: 'DATEV Export', href: '/portal/datev' },
-    { label: 'Abrechnung',  href: '/portal/abrechnung', active: true },
-  ];
-
-}
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
 
@@ -127,7 +109,7 @@ export default function NKAPage() {
 
   // Generate single NKA
   const generateNKA = useCallback(
-    async (propertyId: string, tenantId: string, tenantName: string) => {
+    async (propertyId: string, tenantId: string, _tenantName: string) => {
       const key = `${propertyId}:${tenantId}`;
       setGenerationStates(prev => ({ ...prev, [key]: 'loading' }));
 

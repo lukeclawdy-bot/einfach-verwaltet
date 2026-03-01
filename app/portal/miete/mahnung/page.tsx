@@ -93,7 +93,6 @@ function calculateVerzugszinsen(amountCents: number, daysOverdue: number): numbe
 
 // Generate Mahnung letter content
 function generateMahnungLetter(item: OverdueTenant): string {
-  const level = MAHNUNG_LEVELS[item.mahnungLevel] || MAHNUNG_LEVELS[1];
   const verzugszinsen = calculateVerzugszinsen(item.coldRentCents, item.daysOverdue);
   const totalAmount = item.coldRentCents + verzugszinsen;
 

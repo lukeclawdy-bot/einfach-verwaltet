@@ -32,6 +32,7 @@ interface WizardData {
   // Step 6
   vorname: string;
   nachname: string;
+  email: string;
   telefon: string;
   unternehmen: string;
   agbAkzeptiert: boolean;
@@ -187,10 +188,12 @@ function RadioRow({
   label,
   selected,
   onClick,
+  tooltip,
 }: {
   label: string;
   selected: boolean;
   onClick: () => void;
+  tooltip?: string;
 }) {
   return (
     <button
@@ -209,6 +212,16 @@ function RadioRow({
         {selected && <div className="w-2 h-2 rounded-full bg-white" />}
       </div>
       <span className={`text-sm font-medium ${selected ? "text-navy" : "text-gray-700"}`}>{label}</span>
+      {tooltip && (
+        <span className="relative group ml-auto flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+          <svg className="w-4 h-4 text-gray-400 hover:text-teal transition-colors cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="absolute right-0 bottom-full mb-2 w-52 bg-navy text-white text-xs rounded-lg px-3 py-2 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-20 text-center shadow-lg leading-relaxed">
+            {tooltip}
+          </span>
+        </span>
+      )}
     </button>
   );
 }
@@ -238,8 +251,8 @@ function Step1({
             </svg>
           }
           title="Privateigentümer"
-          subtitle="1–10 Einheiten · Vermietet privat"
-          perks={["In 10 Minuten startklar", "Keine Vorkenntnisse nötig", "Automatische Mieterkorrespondenz"]}
+          subtitle="1–10 Einheiten"
+          perks={["Persönliche Betreuung", "Schneller Start", "Ideal für kleinere Bestände"]}
         />
         <SelectionCard
           selected={data.eigentuemerTyp === "profi"}
@@ -250,8 +263,8 @@ function Step1({
             </svg>
           }
           title="Portfolio-Eigentümer / Unternehmen"
-          subtitle="11+ Einheiten oder WEG-Verwalter"
-          perks={["Portfolio-Import (CSV)", "Team-Zugang", "WEG & Mietverwaltung"]}
+          subtitle="11+ Einheiten oder mehrere Gebäude"
+          perks={["Portfolio-Import (CSV)", "Skalierbare Prozesse", "Geeignet für Unternehmen & Family Offices"]}
         />
       </div>
 
@@ -266,7 +279,7 @@ function Step1({
 // ─── STEP 2: Portfolio-Größe ──────────────────────────────────────────────────
 function Step2({
   data,
-  update,
+  _update,
   onSelect,
 }: {
   data: WizardData;
@@ -294,9 +307,6 @@ function Step2({
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-gray-400 italic text-center">
-        Warum so früh? Das ist die stärkste Segmentierungsvariable. Wichtig für Pricing &amp; Feature-Freischaltung.
-      </p>
     </div>
   );
 }
@@ -310,17 +320,17 @@ function Step3({
   onSelect: (val: string) => void;
 }) {
   const privatOptions = [
-    "Eine einzelne Einheit (z. B. eine Eigentumswohnung)",
-    "Mehrere Einheiten im selben Gebäude (z. B. 3 Wohnungen in einem Haus)",
-    "Einheiten in mehreren Gebäuden (z. B. Portfolio über mehrere Standorte)",
+    { label: "Eine einzelne Einheit", tooltip: "z. B. eine Eigentumswohnung" },
+    { label: "Mehrere Einheiten im selben Gebäude", tooltip: "z. B. 3 Wohnungen in einem Haus" },
+    { label: "Einheiten in mehreren Gebäuden", tooltip: "z. B. Portfolio über mehrere Standorte" },
   ];
-  const profiOptions = [
+  const profiOptions: Array<string | { label: string; tooltip?: string }> = [
     "Hauptsächlich WEG-Verwaltung",
     "Hauptsächlich Mietverwaltung",
     "Gemischt (WEG + Miet)",
     "Gewerbe oder Sonderobjekte",
   ];
-  const options = data.eigentuemerTyp === "privat" ? privatOptions : profiOptions;
+  const options: Array<string | { label: string; tooltip?: string }> = data.eigentuemerTyp === "privat" ? privatOptions : profiOptions;
 
   return (
     <div>
@@ -329,14 +339,19 @@ function Step3({
       </div>
 
       <div className="space-y-3">
-        {options.map((opt) => (
-          <RadioRow
-            key={opt}
-            label={opt}
-            selected={data.struktur === opt}
-            onClick={() => onSelect(opt)}
-          />
-        ))}
+        {options.map((opt) => {
+          const label = typeof opt === "string" ? opt : opt.label;
+          const tooltip = typeof opt === "string" ? undefined : opt.tooltip;
+          return (
+            <RadioRow
+              key={label}
+              label={label}
+              tooltip={tooltip}
+              selected={data.struktur === label}
+              onClick={() => onSelect(label)}
+            />
+          );
+        })}
       </div>
     </div>
   );
@@ -683,9 +698,15 @@ function Step6({
   submitting: boolean;
   submitError: string | null;
 }) {
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email.trim());
+  const phoneValid = data.telefon.trim() === "" || /^[+0-9][0-9 ()\-]{6,}$/.test(data.telefon.trim());
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
   const canSubmit =
     data.vorname.trim().length > 0 &&
     data.nachname.trim().length > 0 &&
+    emailValid &&
+    phoneValid &&
     data.agbAkzeptiert;
 
   return (
@@ -719,6 +740,26 @@ function Step6({
           </div>
         </div>
 
+        {/* E-Mail */}
+        <div>
+          <label className="block text-sm font-medium text-navy mb-1">E-Mail-Adresse</label>
+          <input
+            type="email"
+            value={data.email}
+            onBlur={() => setTouched(t => ({ ...t, email: true }))}
+            onChange={(e) => update({ email: e.target.value })}
+            placeholder="max@mustermann.de"
+            className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${
+              touched.email && !emailValid
+                ? "border-red-300 focus:ring-red-200 bg-red-50"
+                : "border-gray-200 focus:ring-teal/30"
+            }`}
+          />
+          {touched.email && !emailValid && (
+            <p className="text-red-500 text-xs mt-1">Bitte geben Sie eine gültige E-Mail-Adresse ein.</p>
+          )}
+        </div>
+
         {/* Telefon */}
         <div>
           <label className="block text-sm font-medium text-navy mb-1">
@@ -727,10 +768,18 @@ function Step6({
           <input
             type="tel"
             value={data.telefon}
+            onBlur={() => setTouched(t => ({ ...t, telefon: true }))}
             onChange={(e) => update({ telefon: e.target.value })}
             placeholder="+49 40 123456789"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-teal/30"
+            className={`w-full border rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 transition-colors ${
+              touched.telefon && data.telefon.trim() && !phoneValid
+                ? "border-red-300 focus:ring-red-200 bg-red-50"
+                : "border-gray-200 focus:ring-teal/30"
+            }`}
           />
+          {touched.telefon && data.telefon.trim() && !phoneValid && (
+            <p className="text-red-500 text-xs mt-1">Bitte geben Sie eine gültige Telefonnummer ein (z. B. +49 40 123456).</p>
+          )}
         </div>
 
         {/* Unternehmen (nur für Portfolio-Eigentümer) */}

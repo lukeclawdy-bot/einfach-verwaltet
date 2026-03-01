@@ -14,7 +14,7 @@ type DocumentVaultClientProps = {
   initialDocuments: DocumentWithExtraction[];
   properties: Property[];
   landlordId: string;
-  isDemo?: boolean;
+  _isDemo?: boolean;
 };
 
 const TYPE_GROUPS = [
@@ -125,7 +125,8 @@ export function DocumentVaultClient({
     }
   };
 
-  const formatDate = (dateString: string) => {
+  const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "—";
     return new Date(dateString).toLocaleDateString("de-DE", {
       day: "2-digit",
       month: "2-digit",

@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
 import { conversations, tickets, tenants } from "@/lib/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 
 export const tenantMessage = inngest.createFunction(
   { id: "tenant-message", name: "Tenant Message Handler" },

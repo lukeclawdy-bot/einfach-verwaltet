@@ -11,7 +11,7 @@
 import {
   BKACostCategory,
   CostEntry,
-  Property,
+  _Property,
   Unit,
   BKAInput,
   BKAResult,
@@ -39,7 +39,7 @@ export const VERZUGSZINSEN_RATE = BASISZINSSATZ + 0.05; // 6.27%
 /**
  * Days in a year ( accounting year)
  */
-const DAYS_PER_YEAR = 365;
+const _DAYS_PER_YEAR = 365;
 
 /**
  * Milliseconds per day
@@ -286,7 +286,7 @@ export function calculateBKA(input: BKAInput): BKAResult {
     // Calculate days occupied
     const effectiveStart = unit.moveInDate && unit.moveInDate > input.periodStart ? unit.moveInDate : input.periodStart;
     const effectiveEnd = unit.moveOutDate && unit.moveOutDate < input.periodEnd ? unit.moveOutDate : input.periodEnd;
-    const totalDays = getDaysBetween(input.periodStart, input.periodEnd);
+    const _totalDays = getDaysBetween(input.periodStart, input.periodEnd);
     const daysOccupied = getDaysBetween(effectiveStart, effectiveEnd);
     
     for (const costEntry of input.costs) {

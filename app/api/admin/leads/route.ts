@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
-import { leads, emailEvents } from "@/lib/db/schema";
+import { leads } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 

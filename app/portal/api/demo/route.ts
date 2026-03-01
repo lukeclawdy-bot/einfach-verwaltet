@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { landlords, properties, units, tenants, tickets, financialTransactions } from '@/lib/db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 const DEMO_EMAIL = 'demo@einfach-verwaltet.de';
 

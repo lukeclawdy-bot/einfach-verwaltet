@@ -1,7 +1,7 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
 import { units, financialTransactions, aiActions, tenants, properties, documents } from "@/lib/db/schema";
-import { eq, and, gte, isNull, desc, sql } from "drizzle-orm";
+import { eq, and, gte, desc, sql } from "drizzle-orm";
 
 // Mahnung levels according to BGB §286
 const MAHNUNG_THRESHOLDS = {
@@ -347,7 +347,7 @@ export const rentMonitoring = inngest.createFunction(
     });
 
     // Step 3: Send formal Mahnung (day 10) and create actions
-    const mahnungResult = await step.run("send-mahnung", async () => {
+    const _mahnungResult = await step.run("send-mahnung", async () => {
       const unitsDay10 = overdueUnits.filter((u) => u.daysOverdue >= 10);
 
       try {

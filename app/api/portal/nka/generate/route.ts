@@ -35,7 +35,7 @@ import { generateNKAHtml } from '@/lib/pdf/nka-generator';
 // ─── Demo data ────────────────────────────────────────────────────────────────
 
 function buildDemoInput(
-  propertyId: string,
+  _propertyId: string,
   tenantId: string,
   year: number
 ): {

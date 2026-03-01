@@ -262,7 +262,7 @@ export default function HausverwaltungWechselnPage() {
             </div>
 
             <div className="space-y-8">
-              {steps.map((step, idx) => (
+              {steps.map((step, _idx) => (
                 <div key={step.number} className="bg-warm-white rounded-2xl p-8 border border-gray-100">
                   <div className="flex flex-col md:flex-row gap-6">
                     <div className="flex-shrink-0">

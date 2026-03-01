@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { conversations, tickets, tenants, units, properties } from '@/lib/db/schema';
+import { conversations, tickets, tenants } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { Resend } from 'resend';
 

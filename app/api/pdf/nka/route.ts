@@ -7,7 +7,7 @@
  * Query params (GET) / body (POST):
  *   - propertyName: string (default: "Musterstraße 7, Hamburg")
  *   - year: number (default: last year)
- *   - propertyId?: string
+ *   - _propertyId_suppress?: string
  *   - tenantId?: string
  *
  * Uses demo data when DATABASE_URL is unavailable.

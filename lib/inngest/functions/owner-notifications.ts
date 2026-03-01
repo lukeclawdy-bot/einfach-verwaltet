@@ -1,6 +1,6 @@
 import { inngest } from "../client";
 import { db } from "@/lib/db";
-import { landlords, tenants, units, properties, documents, tickets } from "@/lib/db/schema";
+import { landlords, tenants, units } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 
 // Types for notification payloads

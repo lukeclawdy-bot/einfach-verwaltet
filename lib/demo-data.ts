@@ -471,8 +471,8 @@ export function getDemoUnits(): DemoUnit[] {
 
 // Demo Tenants
 export function getDemoTenants(): DemoTenant[] {
-  const units = getDemoUnits();
-  const properties = getDemoProperties();
+  const _units = getDemoUnits();
+  const _properties = getDemoProperties();
   
   return [
     {

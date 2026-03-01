@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { cookies, headers } from "next/headers";
 import { getTokenFromCookie } from "@/lib/auth/jwt";
 import { getDemoAnalyticsData } from "@/lib/demo-data";

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createDemoToken } from "@/lib/auth/jwt";
 
-export async function POST(req: NextRequest) {
+export async function POST(_req: NextRequest) {
   try {
     // Create a demo JWT token (1 hour expiry)
     const token = await createDemoToken();

@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
 import { AdminSidebar } from "../components/AdminLayout";
 import { db, hasDatabase } from "@/lib/db";
-import { tickets, tenants, properties, units } from "@/lib/db/schema";
-import { desc, eq, ne, and } from "drizzle-orm";
+import { tickets, tenants, properties } from "@/lib/db/schema";
+import { desc, eq } from "drizzle-orm";
 import Link from "next/link";
 
 const DEMO_TICKETS = [

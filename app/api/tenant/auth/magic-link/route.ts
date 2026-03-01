@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { tenants, units, properties } from "@/lib/db/schema";
-import { eq, or, ilike } from "drizzle-orm";
+import { eq, ilike } from "drizzle-orm";
 import { createTenantToken } from "@/lib/auth/tenant-jwt";
 import { storeTenantPin } from "@/lib/auth/tenant-pin-store";
 import { Resend } from "resend";
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     const [tenantUnit] = tenant.unitId
       ? await db.select().from(units).where(eq(units.id, tenant.unitId))
       : [];
-    const [property] = tenantUnit?.propertyId
+    const [_property] = tenantUnit?.propertyId
       ? await db.select().from(properties).where(eq(properties.id, tenantUnit.propertyId))
       : [];
 

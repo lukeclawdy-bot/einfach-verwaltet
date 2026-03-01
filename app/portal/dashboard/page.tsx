@@ -182,23 +182,6 @@ const AGENT_ACTIVITY = [
   },
 ];
 
-// ─── APPROVAL TYPE BADGE ──────────────────────────────────────────────────────
-
-const APPROVAL_TYPE_LABEL: Record<string, string> = {
-  repair_cost: "Reparatur",
-  rent_increase: "Mieterhöhung",
-  investment: "Abrechnung",
-  tenant_change: "Mieterwechsel",
-  eviction: "Kündigung",
-};
-
-const APPROVAL_TYPE_COLOR: Record<string, string> = {
-  repair_cost: "bg-amber-50 text-amber-700 border-amber-200",
-  rent_increase: "bg-blue-50 text-blue-700 border-blue-200",
-  investment: "bg-purple-50 text-purple-700 border-purple-200",
-  tenant_change: "bg-orange-50 text-orange-700 border-orange-200",
-  eviction: "bg-red-50 text-red-700 border-red-200",
-};
 
 // ApprovalCard is now handled by ApprovalActions.tsx (client component)
 

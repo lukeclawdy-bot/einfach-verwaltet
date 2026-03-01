@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
-import { leads, properties, tenants, tickets, aiActions, landlords, units, approvals } from "@/lib/db/schema";
-import { desc, sql, ne, eq, and } from "drizzle-orm";
+import { leads, properties, tenants, aiActions } from "@/lib/db/schema";
+import { desc, sql } from "drizzle-orm";
 import { subDays, formatDistanceToNow } from "date-fns";
 import { de } from "date-fns/locale";
 

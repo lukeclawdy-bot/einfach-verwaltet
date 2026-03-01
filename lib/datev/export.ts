@@ -16,7 +16,7 @@
  */
 
 import { db } from "@/lib/db";
-import { financialTransactions, properties } from "@/lib/db/schema";
+import { financialTransactions } from "@/lib/db/schema";
 import { and, gte, lte, eq } from "drizzle-orm";
 
 export interface DatevTransaction {

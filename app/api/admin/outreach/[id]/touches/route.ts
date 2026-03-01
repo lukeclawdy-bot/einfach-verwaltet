@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 
 // GET /api/admin/outreach/[id]/touches - list touches for a contact
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   if (!hasDatabase || !db) {

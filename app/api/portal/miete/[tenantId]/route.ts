@@ -37,7 +37,6 @@ export async function POST(req: NextRequest) {
 
     // Check if payment already exists for this month
     const today = new Date();
-    const firstOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 
     const [existingPayment] = await db
       .select()

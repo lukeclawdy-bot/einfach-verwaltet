@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import { trackAnfrageConversion } from "@/lib/gtag";
 import { trackEvent } from "@/components/Analytics";
-import { CheckIcon, ArrowRightIcon, HouseLogoIcon, HomeIcon, ScaleIcon, ClipboardIcon, ChatIcon, MapPinIcon, BoltIcon, LockOpenIcon, WrenchIcon, StarIcon, ShieldIcon, BuildingIcon, QuestionIcon, CurrencyIcon, UsersIcon, TargetIcon } from "./Icons";
+import { CheckIcon, ArrowRightIcon, HouseLogoIcon, HomeIcon, ClipboardIcon, ChatIcon, BoltIcon, ShieldIcon, BuildingIcon, TargetIcon } from "./Icons";
 
 // --- Types ---
 type StepType = "choice" | "multi" | "input" | "result";

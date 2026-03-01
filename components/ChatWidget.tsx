@@ -106,7 +106,7 @@ export function ChatWidget() {
   }, [messages, loading, showLeadForm]);
 
   // Count user messages (excluding initial assistant message)
-  const userMessageCount = messages.filter((m) => m.role === "user").length;
+  const _userMessageCount = messages.filter((m) => m.role === "user").length;
 
   async function send() {
     const text = input.trim();

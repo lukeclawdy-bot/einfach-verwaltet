@@ -40,8 +40,7 @@ async function uploadToBlob(
 
 async function saveToDB(landlordId: string, filename: string, fileSizeBytes: number): Promise<void> {
   try {
-    const { getDb } = await import('@/lib/db');
-    const db = getDb();
+    const { db } = await import('@/lib/db');
     // Store in document_uploads table if it exists, otherwise log only
     await db.execute(
       `INSERT INTO document_uploads (landlord_id, filename, file_size_bytes, upload_type, uploaded_at)

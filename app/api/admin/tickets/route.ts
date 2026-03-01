@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db, hasDatabase } from "@/lib/db";
 import { tickets, tenants, properties } from "@/lib/db/schema";
-import { desc, eq, and, ne, like, or, sql } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { desc, eq, sql } from "drizzle-orm";
 
 const PAGE_SIZE = 20;
 

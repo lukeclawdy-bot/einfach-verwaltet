@@ -42,7 +42,6 @@ export async function GET(req: NextRequest) {
 
     // Financial — rent this month
     const now = new Date();
-    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
     const [rentThisMonth] = await db.select({ total: sum(financialTransactions.amountCents) })
       .from(financialTransactions)
       .where(and(

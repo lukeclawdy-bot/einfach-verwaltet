@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
-import { leads, outreachContacts, emailEvents } from "@/lib/db/schema";
+import { emailEvents } from "@/lib/db/schema";
 import { sql, gte, and } from "drizzle-orm";
 import { subDays, startOfDay, startOfWeek } from "date-fns";
 import { NextResponse } from "next/server";
@@ -42,7 +42,6 @@ export async function GET() {
   try {
     const now = new Date();
     const weekAgo = subDays(now, 7);
-    const dayAgo = subDays(now, 1);
     const twoWeeksAgo = subDays(now, 14);
 
     // ─── LEADS ANALYTICS ─────────────────────────────────────────────────────

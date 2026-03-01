@@ -12,7 +12,7 @@ const MAHNUNG_LABELS: Record<number, string> = {
 };
 
 // GET handler for Mahnung history
-export async function GET(req: NextRequest, { params }: { params: Promise<{ tenantId: string }> }) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ tenantId: string }> }) {
   try {
     const { tenantId } = await params;
 

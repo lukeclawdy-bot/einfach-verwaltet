@@ -115,39 +115,7 @@ const localBusinessStructuredData = {
   "openingHours": "Mo-So 00:00-23:59"
 };
 
-const features = [
-  {
-    title: "Thüringen-Expertise",
-    description: "Wir verstehen den Thüringer Immobilienmarkt — von Landeshauptstadt Erfurt bis zu den ländlichen Wohngebieten.",
-  },
-  {
-    title: "Transparente Preise",
-    description: "Ab 24 €/Einheit/Monat für Mietverwaltung. Alle Kosten auf einen Blick — keine versteckten Gebühren, faire Konditionen für Thüringen.",
-  },
-  {
-    title: "24/7 Erreichbarkeit",
-    description: "Mieteranfragen werden innerhalb von 15 Minuten bestätigt. Rückrufe am selben Werktag. Digitale Kommunikation reduziert Distanzen.",
-  },
-  {
-    title: "Digitales Portal",
-    description: "Rund um die Uhr Zugriff auf alle Dokumente, Mieteingänge, Reparaturstatus und Mieterkommunikation. Volle Transparenz, egal wo Sie sind.",
-  },
-];
 
-const localKnowledge = [
-  {
-    title: "Stabiler Mietmarkt",
-    description: "Erfurt bietet im thüringischen Vergleich stabile Mieten und eine hohe Wohnqualität. Die Nachfrage übersteigt das Angebot leicht.",
-  },
-  {
-    title: "Wachsende Metropole",
-    description: "Erfurt wächst kontinuierlich und profiliert sich als attraktiver Wirtschaftsstandort. Positive Entwicklung für Immobilieneigentümer.",
-  },
-  {
-    title: "Lokales Handwerkernetz",
-    description: "Wir kooperieren mit geprüften Handwerkern in Erfurt und Umgebung für schnelle Reparaturen und faire Preise.",
-  },
-];
 
 export default function HausverwaltungErfurtPage() {
   return (

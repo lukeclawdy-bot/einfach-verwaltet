@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 
 // Types
 interface Property {
@@ -72,14 +71,14 @@ const getMonthsSince = (dateString: string | null | undefined): number => {
 interface MieterhohungClientProps {
   initialProperties: Property[];
   initialUnits: Unit[];
-  isDemo: boolean;
+  _isDemo: boolean;
 }
 
 export function MieterhohungClient({ initialProperties, initialUnits, isDemo }: MieterhohungClientProps) {
   // Data states
   const [properties, setProperties] = useState<Property[]>(initialProperties);
   const [units, setUnits] = useState<Unit[]>(initialUnits);
-  const [loading, setLoading] = useState(false);
+  const [_loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   // Selection states

@@ -64,7 +64,6 @@ export function MieterClient({ initialTenants, isDemo }: MieterClientProps) {
   };
 
   const activeTenants = tenants.filter(t => t.active !== false);
-  const inactiveTenants = tenants.filter(t => t.active === false);
 
   return (
     <div className="p-8">

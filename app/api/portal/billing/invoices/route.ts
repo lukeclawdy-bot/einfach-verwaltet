@@ -9,7 +9,7 @@ import { billingSubscriptions } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import { getStripe } from '@/lib/stripe';
 
-export async function GET(req: NextRequest) {
+export async function GET(_req: NextRequest) {
   try {
     // Auth check
     const cookieStore = await cookies();

@@ -2,7 +2,7 @@ export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
 import { leads } from "@/lib/db/schema";
-import { desc, sql } from "drizzle-orm";
+import { desc } from "drizzle-orm";
 import { FunnelCharts } from "./FunnelCharts";
 import { subDays, format } from "date-fns";
 

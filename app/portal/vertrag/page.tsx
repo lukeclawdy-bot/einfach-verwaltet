@@ -19,7 +19,7 @@ const DEMO_CONTRACT = {
 
 // ─── Sidebar nav ──────────────────────────────────────────────────────────────
 
-const NAV_ITEMS = [
+const _NAV_ITEMS = [
   { label: "Übersicht", href: "/portal/dashboard", active: false },
   { label: "Chat", href: "/portal/chat", active: false },
   { label: "Einheiten", href: "/portal/einheiten", active: false },
@@ -144,7 +144,7 @@ export default function VertragPage() {
   // In a real implementation, this would be fetched server-side
   // For now, we use demo data with a client component
   const contract = DEMO_CONTRACT;
-  const isDemo = true;
+  const _isDemo = true;
 
   const monthlyFee = contract.feePerUnit * contract.units;
   const annualFee = monthlyFee * 12;

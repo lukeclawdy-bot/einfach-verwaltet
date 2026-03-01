@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 import { AdminSidebar } from "../components/AdminLayout";
 import { db, hasDatabase } from "@/lib/db";
-import { landlords, properties, units } from "@/lib/db/schema";
+import { landlords, properties } from "@/lib/db/schema";
 import { eq, count, sql, desc } from "drizzle-orm";
 import Link from "next/link";
 

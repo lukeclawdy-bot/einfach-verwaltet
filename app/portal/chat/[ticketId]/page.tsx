@@ -94,7 +94,7 @@ export default function ChatDetailPage({ params }: { params: Promise<{ ticketId:
   const [messages, setMessages] = useState<Message[]>(MOCK_MESSAGES);
   const [ticket, setTicket] = useState<TicketData>(MOCK_TICKET);
   const [replyText, setReplyText] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [_loading, _setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [closing, setClosing] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);

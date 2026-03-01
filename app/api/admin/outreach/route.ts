@@ -1,8 +1,8 @@
 export const dynamic = "force-dynamic";
 
 import { db, hasDatabase } from "@/lib/db";
-import { outreachContacts, outreachTouches } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { outreachContacts } from "@/lib/db/schema";
+import { desc } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 // GET /api/admin/outreach - list all outreach contacts
