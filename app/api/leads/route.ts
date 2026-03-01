@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     const resend = getResendClient();
     const { data, error } = await resend.emails.send({
       from: "anfrage@immo.einfach-verwaltet.de",
-      to: process.env.ADMIN_EMAIL || "lukas.schmitz@years.co",
+      to: process.env.ADMIN_EMAIL || "lukas@einfach-verwaltet.de",
       subject: `Neue Anfrage: ${body.name} — ${einheitenDisplay} Einheiten (${standortDisplay})`,
       html: htmlContent,
       replyTo: "kontakt@einfach-verwaltet.de",

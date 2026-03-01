@@ -137,7 +137,7 @@ export async function POST(request: NextRequest) {
       const resend = getResendClient();
       await resend.emails.send({
         from: "anfrage@immo.einfach-verwaltet.de",
-        to: process.env.ADMIN_EMAIL || "lukas.schmitz@years.co",
+        to: process.env.ADMIN_EMAIL || "lukas@einfach-verwaltet.de",
         subject: `Neue Partner-Bewerbung: ${body.name} — ${body.kategorie} (${body.standort})`,
         html: htmlContent,
         replyTo: body.email,
