@@ -29,6 +29,14 @@ const PUBLIC_ADMIN_PATHS = [
   "/admin/login",
 ];
 
+// Public freelancer routes — no auth required
+const PUBLIC_FREELANCER_PATHS = [
+  "/freelancer/login",
+  "/api/freelancer/auth/magic-link",
+  "/api/freelancer/auth/verify",
+  "/api/freelancer/auth/logout",
+];
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -151,10 +159,61 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // ─── FREELANCER ROUTES ────────────────────────────────────────────────────
+  if (pathname.startsWith("/freelancer") || pathname.startsWith("/api/freelancer")) {
+    // Allow public paths
+    const isPublic = PUBLIC_FREELANCER_PATHS.some(
+      (p) => pathname === p || pathname.startsWith(p + "/")
+    );
+    if (isPublic) return NextResponse.next();
+
+    // Skip auth if JWT_SECRET not configured (dev/demo mode)
+    if (!process.env.JWT_SECRET) {
+      return NextResponse.next();
+    }
+
+    const token = request.cookies.get("freelancer_session")?.value;
+    if (!token) {
+      return NextResponse.redirect(new URL("/freelancer/login", request.url));
+    }
+
+    try {
+      const { verifyFreelancerToken } = await import("@/lib/auth/freelancer-jwt");
+      const payload = await verifyFreelancerToken(token);
+      if (!payload?.freelancerId) {
+        const res = NextResponse.redirect(new URL("/freelancer/login", request.url));
+        res.cookies.set("freelancer_session", "", { maxAge: 0, path: "/" });
+        return res;
+      }
+
+      // Inject freelancerId as request headers
+      const requestHeaders = new Headers(request.headers);
+      requestHeaders.set("x-freelancer-id", payload.freelancerId);
+      requestHeaders.set("x-freelancer-email", payload.email ?? "");
+      if (payload.name) {
+        requestHeaders.set("x-freelancer-name", payload.name);
+      }
+      return NextResponse.next({ request: { headers: requestHeaders } });
+    } catch {
+      const res = NextResponse.redirect(new URL("/freelancer/login", request.url));
+      res.cookies.set("freelancer_session", "", { maxAge: 0, path: "/" });
+      return res;
+    }
+  }
+
   // All other routes pass through
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/portal/:path*", "/api/portal/:path*", "/tenant/:path*", "/api/tenant/:path*", "/admin/:path*", "/api/admin/:path*"],
+  matcher: [
+    "/portal/:path*",
+    "/api/portal/:path*",
+    "/tenant/:path*",
+    "/api/tenant/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*",
+    "/freelancer/:path*",
+    "/api/freelancer/:path*",
+  ],
 };

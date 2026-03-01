@@ -355,3 +355,84 @@ export const nkaRecords = pgTable('nka_records', {
   generatedAt: timestamp('generated_at'),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+// ─── AGENT-FIRST ARCHITECTURE v9 ─────────────────────────────────────────────
+// Database schema v3 — agent-first architecture
+// freelancers, job_catalog, jobs, approvals, audit_trail
+
+// freelancers — local service providers dispatched for physical tasks
+export const freelancers = pgTable('freelancers', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  name: text('name').notNull(),
+  email: text('email').notNull().unique(),
+  phone: text('phone'),
+  skills: text('skills').array(), // e.g. ['inspection','handover','mediation']
+  rating: decimal('rating', { precision: 3, scale: 2 }), // 0.00–5.00
+  jobsCompleted: integer('jobs_completed').default(0),
+  status: text('status').notNull().default('pending'), // active | inactive | pending
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// job_catalog — library of job types with fixed pricing
+export const jobCatalog = pgTable('job_catalog', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  category: text('category').notNull(), // inspection | handover | mediation | maintenance | etv | key
+  name: text('name').notNull(),
+  description: text('description'),
+  fixedPriceCents: integer('fixed_price_cents').notNull(),
+  estimatedMinutes: integer('estimated_minutes'),
+  active: boolean('active').default(true),
+});
+
+// jobs — physical tasks dispatched to freelancers
+export const jobs = pgTable('jobs', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  ticketId: uuid('ticket_id'), // FK → tickets (nullable)
+  landlordId: uuid('landlord_id').notNull(), // FK → landlords
+  propertyAddress: text('property_address').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  instructions: text('instructions'), // agent-generated briefing text
+  category: text('category'), // inspection | handover | mediation | maintenance | etv | key
+  fixedPriceCents: integer('fixed_price_cents'),
+  status: text('status').notNull().default('open'), // open | claimed | in_progress | completed | disputed
+  freelancerId: uuid('freelancer_id'), // FK → freelancers (nullable until claimed)
+  claimedAt: timestamp('claimed_at'),
+  completedAt: timestamp('completed_at'),
+  dueDate: timestamp('due_date'),
+  completionPhotoUrls: text('completion_photo_urls').array(),
+  completionNotes: text('completion_notes'),
+  landlordApprovalRequired: boolean('landlord_approval_required').default(false),
+  landlordApprovedAt: timestamp('landlord_approved_at'),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+// approvals — Eigentümer must approve before agent takes action
+export const approvals = pgTable('approvals', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  landlordId: uuid('landlord_id').notNull(), // FK → landlords
+  ticketId: uuid('ticket_id'), // FK → tickets (nullable)
+  jobId: uuid('job_id'), // FK → jobs (nullable)
+  type: text('type').notNull(), // repair_cost | rent_increase | tenant_change | eviction | investment
+  title: text('title').notNull(),
+  description: text('description'),
+  amountCents: integer('amount_cents'), // nullable — used for cost approvals
+  status: text('status').notNull().default('pending'), // pending | approved | rejected | expired
+  requestedAt: timestamp('requested_at').defaultNow(),
+  decidedAt: timestamp('decided_at'),
+  expiresAt: timestamp('expires_at'),
+  metadata: jsonb('metadata').default({}),
+});
+
+// audit_trail — immutable log of every action by any actor
+export const auditTrail = pgTable('audit_trail', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  entityType: text('entity_type').notNull(), // ticket | job | approval | tenant | property
+  entityId: uuid('entity_id').notNull(),
+  action: text('action').notNull(),
+  actorType: text('actor_type').notNull(), // agent | admin | landlord | freelancer | tenant
+  actorId: text('actor_id'), // uuid or identifier of actor
+  description: text('description'),
+  metadata: jsonb('metadata').default({}),
+  createdAt: timestamp('created_at').defaultNow(),
+});
