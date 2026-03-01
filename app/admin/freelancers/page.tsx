@@ -1,6 +1,14 @@
 export const dynamic = "force-dynamic";
 import { AdminSidebar } from "../components/AdminLayout";
 
+// QA status for last completed job per freelancer (demo data)
+const DEMO_QA_STATUS: Record<string, { qaStatus: string; label: string; bg: string; text: string }> = {
+  f1: { qaStatus: "approved",      label: "✓ Abgenommen",         bg: "bg-green-50",  text: "text-green-700" },
+  f2: { qaStatus: "approved",      label: "✓ Abgenommen",         bg: "bg-green-50",  text: "text-green-700" },
+  f3: { qaStatus: "pending",       label: "—",                    bg: "bg-gray-50",   text: "text-gray-400" },
+  f4: { qaStatus: "needs-review",  label: "👀 Manuelle Prüfung",  bg: "bg-amber-50",  text: "text-amber-700" },
+};
+
 const DEMO_FREELANCERS = [
   { id: "f1", name: "Klaus Mertens", email: "k.mertens@gmail.com", skills: ["Übergabe", "ETV", "Besichtigung"], rating: 4.9, jobs: 23, earnings: 840, status: "active", city: "Hamburg" },
   { id: "f2", name: "Ingrid Bauer", email: "i.bauer@web.de", skills: ["Übergabe", "Schlüssel"], rating: 4.7, jobs: 11, earnings: 420, status: "active", city: "Hamburg" },
@@ -57,6 +65,7 @@ export default function AdminFreelancersPage() {
               <th className="px-4 py-3 text-left">Bewertung</th>
               <th className="px-4 py-3 text-left">Verdient</th>
               <th className="px-4 py-3 text-left">Status</th>
+              <th className="px-4 py-3 text-left">Letzter Job QA</th>
               <th className="px-4 py-3 text-right">Aktionen</th>
             </tr></thead>
             <tbody>
@@ -80,6 +89,17 @@ export default function AdminFreelancersPage() {
                     </td>
                     <td className="px-4 py-3 text-navy">{f.earnings > 0 ? `${f.earnings} €` : "—"}</td>
                     <td className="px-4 py-3"><span className={`px-2 py-0.5 rounded-full text-xs font-medium ${s.bg} ${s.text}`}>{s.label}</span></td>
+                    <td className="px-4 py-3">
+                      {(() => {
+                        const qa = DEMO_QA_STATUS[f.id];
+                        if (!qa || qa.qaStatus === "pending") return <span className="text-text-light text-xs">—</span>;
+                        return (
+                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${qa.bg} ${qa.text}`}>
+                            {qa.label}
+                          </span>
+                        );
+                      })()}
+                    </td>
                     <td className="px-4 py-3 text-right">
                       <div className="flex gap-1 justify-end">
                         {f.status === "pending" && <button className="text-xs bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600">Genehmigen</button>}

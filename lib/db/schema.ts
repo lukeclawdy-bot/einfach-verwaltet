@@ -402,6 +402,7 @@ export const jobs = pgTable('jobs', {
   dueDate: timestamp('due_date'),
   completionPhotoUrls: text('completion_photo_urls').array(),
   completionNotes: text('completion_notes'),
+  qaStatus: text('qa_status').$type<'pending'|'approved'|'needs-revision'|'needs-review'>().default('pending'),
   landlordApprovalRequired: boolean('landlord_approval_required').default(false),
   landlordApprovedAt: timestamp('landlord_approved_at'),
   createdAt: timestamp('created_at').defaultNow(),

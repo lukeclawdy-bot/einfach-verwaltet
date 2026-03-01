@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CompleteJobForm } from "./CompleteJobForm";
+import { QAStatusBadge } from "./QAStatusBadge";
 
 // ─── DEMO JOB DATA ────────────────────────────────────────────────────────────
 
@@ -218,6 +219,9 @@ export default async function FreelancerJobDetailPage({
             ))}
           </div>
         </div>
+
+        {/* QA Status Badge */}
+        <QAStatusBadge jobId={job.id} />
 
         {/* Complete Job Form */}
         <CompleteJobForm jobId={job.id} />

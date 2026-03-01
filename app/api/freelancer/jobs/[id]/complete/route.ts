@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { verifyFreelancerToken } from "@/lib/auth/freelancer-jwt";
+import { inngest } from "@/lib/inngest/client";
 
 export async function POST(
   req: NextRequest,
@@ -65,6 +66,18 @@ export async function POST(
         { status: 404 }
       );
     }
+
+    // Fire Inngest job/completed event for photo QA
+    await inngest.send({
+      name: "job/completed",
+      data: {
+        jobId: updated.id,
+        freelancerId,
+        photoUrls: photoUrls || [],
+        jobType: updated.category || "unknown",
+        jobDescription: updated.description || updated.title,
+      },
+    });
 
     return NextResponse.json({
       success: true,
