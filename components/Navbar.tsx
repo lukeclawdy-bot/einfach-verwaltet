@@ -38,12 +38,35 @@ const standorte = [
   { href: "/standorte", label: "Weitere Städte →", sub: "Alle Standorte ansehen" },
 ];
 
+const portalLinks = [
+  {
+    href: "/portal/login",
+    label: "Eigentümer",
+    sub: "Ihr Dashboard, Tickets & Finanzen",
+    icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
+  },
+  {
+    href: "/tenant/login",
+    label: "Mieter",
+    sub: "Schäden melden & Nachrichten",
+    icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z",
+  },
+  {
+    href: "/freelancer/login",
+    label: "Dienstleister",
+    sub: "Aufträge & Abrechnung",
+    icon: "M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z",
+  },
+];
+
 export function Navbar() {
   const [toolsOpen, setToolsOpen] = useState(false);
   const [standorteOpen, setStandorteOpen] = useState(false);
+  const [portalOpen, setPortalOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileToolsOpen, setMobileToolsOpen] = useState(false);
   const [mobileStandorteOpen, setMobileStandorteOpen] = useState(false);
+  const [mobilePortalOpen, setMobilePortalOpen] = useState(false);
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-warm-white/95 backdrop-blur-sm border-b border-navy/8">
@@ -115,13 +138,51 @@ export function Navbar() {
             )}
           </div>
 
-          <a href="/portal/login"
-            className="text-text-light hover:text-navy text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1.5">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            Portal
-          </a>
+          {/* Portal dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setPortalOpen(true)}
+            onMouseLeave={() => setPortalOpen(false)}
+          >
+            <button
+              onClick={() => setPortalOpen(!portalOpen)}
+              className="text-text-light hover:text-navy text-sm font-medium transition-colors whitespace-nowrap flex items-center gap-1.5"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              Portal
+              <svg className={`w-3.5 h-3.5 transition-transform duration-200 ${portalOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {portalOpen && (
+              <div className="absolute right-0 top-full mt-1 w-64 bg-white rounded-2xl shadow-xl border border-navy/8 py-2 z-50">
+                <p className="px-4 pt-2 pb-1 text-[11px] font-semibold text-text-light uppercase tracking-wider">
+                  Portal wählen
+                </p>
+                {portalLinks.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setPortalOpen(false)}
+                    className="flex items-start gap-3 px-4 py-3 hover:bg-navy/4 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-navy/6 flex items-center justify-center flex-shrink-0 mt-0.5 group-hover:bg-teal/10 transition-colors">
+                      <svg className="w-4 h-4 text-navy group-hover:text-teal transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                      </svg>
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-navy">{item.label}</p>
+                      <p className="text-xs text-text-light mt-0.5">{item.sub}</p>
+                    </div>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
           <a href="/anfrage" className="bg-teal text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-navy transition-colors whitespace-nowrap">
             Angebot anfragen
           </a>
@@ -219,13 +280,43 @@ export function Navbar() {
               >
                 Angebot anfragen
               </a>
-              <a
-                href="/portal/login"
-                onClick={() => setMobileOpen(false)}
-                className="block w-full text-center border border-navy/20 text-navy py-3 rounded-xl font-medium hover:bg-navy/5 transition-colors text-sm"
-              >
-                Portal Login
-              </a>
+              {/* Mobile portal accordion */}
+              <div>
+                <button
+                  onClick={() => setMobilePortalOpen(!mobilePortalOpen)}
+                  className="w-full flex items-center justify-between border border-navy/20 text-navy py-3 px-4 rounded-xl font-medium hover:bg-navy/5 transition-colors text-sm"
+                >
+                  <span className="flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                    Portal
+                  </span>
+                  <svg className={`w-4 h-4 transition-transform ${mobilePortalOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {mobilePortalOpen && (
+                  <div className="mt-1 border border-navy/10 rounded-xl overflow-hidden">
+                    {portalLinks.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className="flex items-center gap-3 px-4 py-3 hover:bg-navy/5 transition-colors border-b border-navy/5 last:border-0"
+                      >
+                        <svg className="w-4 h-4 text-teal flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
+                        </svg>
+                        <div>
+                          <p className="text-sm font-semibold text-navy">{item.label}</p>
+                          <p className="text-xs text-text-light">{item.sub}</p>
+                        </div>
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

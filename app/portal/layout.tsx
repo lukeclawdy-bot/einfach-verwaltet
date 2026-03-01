@@ -1,36 +1,42 @@
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 import { getTokenFromCookie } from "@/lib/auth/jwt";
 import { PortalSidebar } from "@/components/PortalSidebar";
 
-async function getIsDemo(): Promise<boolean> {
+/**
+ * Portal layout — conditionally renders the sidebar.
+ *
+ * Rules:
+ * - No portal_session cookie (unauthenticated) → no sidebar (clean login page)
+ * - portal_session or ev-demo-session present → sidebar + optional demo banner
+ *
+ * The login page itself renders full-screen; once logged in, the session cookie
+ * is set and subsequent navigations show the sidebar.
+ */
+async function getSessionState(): Promise<{ hasSidebar: boolean; isDemo: boolean }> {
   try {
-    const hdrs = await headers();
-    const isDemoHeader = hdrs.get("x-is-demo") === "true";
-    if (isDemoHeader) return true;
-
     const cookieStore = await cookies();
 
-    // Demo session cookie → always demo
+    // Demo session → always show sidebar with banner
     const demoToken = cookieStore.get("ev-demo-session")?.value;
     if (demoToken) {
       const payload = await getTokenFromCookie(demoToken);
-      if (payload?.isDemo) return true;
+      if (payload?.isDemo) return { hasSidebar: true, isDemo: true };
     }
 
-    // Regular portal session — check if the account is "real" (has a DB record)
-    // For now: if landlordId is "demo" or isDemo flag is set → show banner
+    // Real portal session
     const portalToken = cookieStore.get("portal_session")?.value;
     if (portalToken) {
       const payload = await getTokenFromCookie(portalToken);
-      if (payload?.isDemo || payload?.landlordId === "demo") return true;
-      // Real registered users: isDemo = false
-      return false;
+      if (payload) {
+        const isDemo = !!(payload.isDemo || payload.landlordId === "demo");
+        return { hasSidebar: true, isDemo };
+      }
     }
 
-    // No session at all (shouldn't happen past middleware, but be safe)
-    return true;
+    // No valid session → no sidebar (login page)
+    return { hasSidebar: false, isDemo: false };
   } catch {
-    return false;
+    return { hasSidebar: false, isDemo: false };
   }
 }
 
@@ -39,12 +45,17 @@ export default async function PortalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const isDemo = await getIsDemo();
+  const { hasSidebar, isDemo } = await getSessionState();
+
+  if (!hasSidebar) {
+    // Login / unauthenticated: clean full-screen layout, no sidebar
+    return <>{children}</>;
+  }
 
   return (
     <div className="min-h-screen bg-light-gray">
       <PortalSidebar isDemo={isDemo} />
-      {/* Main content — offset for sidebar (+ demo banner if shown) */}
+      {/* Offset for fixed sidebar (256px) + optional demo banner (52px) */}
       <div className={`ml-56 ${isDemo ? "pt-[52px]" : ""}`}>
         {children}
       </div>
