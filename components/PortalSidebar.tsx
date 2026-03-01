@@ -20,6 +20,7 @@ const NAV_ITEMS = [
   { label: "Partner",      href: "/portal/partner" },
   { label: "Analysen",     href: "/portal/analytics" },
   { label: "DATEV Export", href: "/portal/datev" },
+  { label: "+ Objekt hinzufügen", href: "/portal/onboarding/objekt" },
 ];
 
 interface PortalSidebarProps {

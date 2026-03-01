@@ -3,6 +3,7 @@ import { cookies, headers } from "next/headers";
 import { getTokenFromCookie } from "@/lib/auth/jwt";
 import { getDemoDashboardData, getDemoTickets } from "@/lib/demo-data";
 import { StatsCard } from "./components/StatsCard";
+import { ApprovalsSection } from "./ApprovalActions";
 
 const URGENCY_COLOR: Record<number, string> = {
   5: "bg-red-500",
@@ -199,50 +200,7 @@ const APPROVAL_TYPE_COLOR: Record<string, string> = {
   eviction: "bg-red-50 text-red-700 border-red-200",
 };
 
-// ─── APPROVAL CARD (client-side interactivity wrapped in server component) ───
-
-function ApprovalCard({
-  approval,
-}: {
-  approval: (typeof PENDING_APPROVALS)[0];
-}) {
-  return (
-    <div className="bg-white rounded-xl border border-gray-100 p-5 shadow-sm hover:shadow-md transition-shadow">
-      <div className="flex items-start gap-3 mb-3">
-        <UrgencyDot urgency={approval.urgency} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span
-              className={`text-xs px-2 py-0.5 rounded-full border font-medium ${APPROVAL_TYPE_COLOR[approval.type] || "bg-gray-50 text-gray-600 border-gray-200"}`}
-            >
-              {APPROVAL_TYPE_LABEL[approval.type] || approval.type}
-            </span>
-            {approval.amountCents !== null && (
-              <span className="text-xs font-semibold text-navy">
-                {(approval.amountCents / 100).toLocaleString("de-DE", {
-                  style: "currency",
-                  currency: "EUR",
-                })}
-              </span>
-            )}
-          </div>
-          <p className="font-semibold text-navy text-sm leading-snug">
-            {approval.title}
-          </p>
-          <p className="text-sm text-text-light mt-0.5">{approval.description}</p>
-        </div>
-      </div>
-      <div className="flex gap-2 justify-end">
-        <button className="px-3 py-1.5 text-xs font-semibold bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200 transition-colors cursor-pointer">
-          {approval.rejectLabel}
-        </button>
-        <button className="px-3 py-1.5 text-xs font-semibold bg-teal text-white rounded-lg hover:bg-teal/90 transition-colors cursor-pointer">
-          {approval.approveLabel}
-        </button>
-      </div>
-    </div>
-  );
-}
+// ApprovalCard is now handled by ApprovalActions.tsx (client component)
 
 // ─── PAGE ─────────────────────────────────────────────────────────────────────
 
@@ -327,11 +285,7 @@ export default async function DashboardPage() {
             Ihr persönlicher Assistent hat die folgenden Maßnahmen vorbereitet und wartet auf Ihre Freigabe.
           </p>
 
-          <div className="space-y-3">
-            {PENDING_APPROVALS.map((approval) => (
-              <ApprovalCard key={approval.id} approval={approval} />
-            ))}
-          </div>
+          <ApprovalsSection initialApprovals={PENDING_APPROVALS} />
         </div>
 
         {/* ── Zuletzt von uns erledigt ──────────────────────────────────── */}
