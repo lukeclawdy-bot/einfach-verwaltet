@@ -191,7 +191,6 @@ export default function DatevPage() {
           <a href="/anfrage" className="ml-2 text-amber-900 underline hover:no-underline font-medium">Jetzt anfragen →</a>
         </div>
       )}
-      {/* Sidebar */}
 
       {/* Main content */}
       <div className="flex-1">
@@ -351,6 +350,5 @@ export default function DatevPage() {
         </div>
       </div>
       </div>
-    </div>
   );
 }

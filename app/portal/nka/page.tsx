@@ -74,13 +74,6 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ─── Sidebar ───────────────────────────────────────────────────────────────
-
-function Sidebar({ active }: { active?: string }) {
-
-  return (
-  );
-}
 
 // ─── Page ─────────────────────────────────────────────────────────────────
 
@@ -100,7 +93,6 @@ export default async function NkaListPage() {
   };
 
   return (
-          <Sidebar />
 
       <div className="flex-1">
 
@@ -256,6 +248,5 @@ export default async function NkaListPage() {
 
         </div>
       </div>
-    </div>
   );
 }

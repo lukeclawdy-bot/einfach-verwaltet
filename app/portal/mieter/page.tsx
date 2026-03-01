@@ -46,13 +46,8 @@ export default async function MieterPage() {
   const tenants = await getTenants(landlordId, isDemo);
 
   return (
-        {/* Sidebar */}
-
-        {/* Main Content */}
         <div className="flex-1">
           <MieterClient initialTenants={tenants} isDemo={isDemo} />
         </div>
-      </div>
-    </div>
   );
 }

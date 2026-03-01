@@ -210,9 +210,6 @@ export default async function MahnungPage() {
   };
 
   return (
-        {/* Sidebar */}
-
-        {/* Main */}
         <div className="flex-1">
           <div className="max-w-6xl mx-auto px-8 py-8">
             {/* Header */}
@@ -322,8 +319,6 @@ export default async function MahnungPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }
 

@@ -142,9 +142,6 @@ export default async function MietePage({ searchParams }: { searchParams: Promis
   const hasOverdue = items.some((i) => i.paymentStatus === "overdue");
 
   return (
-        {/* Sidebar */}
-
-        {/* Main */}
         <div className="flex-1">
           <div className="max-w-6xl mx-auto px-8 py-8">
             {/* Header */}
@@ -302,7 +299,5 @@ export default async function MietePage({ searchParams }: { searchParams: Promis
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

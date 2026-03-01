@@ -103,9 +103,6 @@ export default async function FinanzenPage() {
   );
 
   return (
-        {/* Sidebar */}
-
-        {/* Main */}
         <div className="flex-1">
           <div className="max-w-5xl mx-auto px-8 py-8">
             <div className="flex items-center justify-between mb-6">
@@ -257,7 +254,5 @@ export default async function FinanzenPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

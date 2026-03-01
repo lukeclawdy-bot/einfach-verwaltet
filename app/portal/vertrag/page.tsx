@@ -266,9 +266,6 @@ export default function VertragPage() {
   }
 
   return (
-        {/* Sidebar */}
-
-        {/* Main content */}
         <div className="flex-1 ml-56 p-8">
           <div className="max-w-3xl mx-auto">
             {/* Page header */}
@@ -518,7 +515,5 @@ export default function VertragPage() {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

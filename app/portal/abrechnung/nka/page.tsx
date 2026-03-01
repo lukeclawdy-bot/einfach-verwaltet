@@ -77,8 +77,6 @@ function Sidebar() {
     { label: 'Abrechnung',  href: '/portal/abrechnung', active: true },
   ];
 
-  return (
-  );
 }
 
 // ─── Status badge ─────────────────────────────────────────────────────────────
@@ -192,7 +190,6 @@ export default function NKAPage() {
   const doneCount = Object.values(generationStates).filter(s => s === 'done').length;
 
   return (
-          <Sidebar />
 
       <div className="flex-1">
         <div className="max-w-5xl mx-auto px-8 py-8">
@@ -423,6 +420,5 @@ export default function NKAPage() {
 
         </div>
       </div>
-    </div>
   );
 }

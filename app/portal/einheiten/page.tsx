@@ -63,9 +63,6 @@ export default async function EinheitenPage() {
   const units = await getUnits(landlordId, isDemo);
 
   return (
-        {/* Sidebar */}
-
-        {/* Main Content */}
         <div className="flex-1">
           <EinheitenClient 
             initialProperties={properties} 
@@ -73,7 +70,5 @@ export default async function EinheitenPage() {
             isDemo={isDemo}
           />
         </div>
-      </div>
-    </div>
   );
 }

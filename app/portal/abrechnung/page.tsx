@@ -122,9 +122,6 @@ export default async function AbrechnungPage() {
   const unitCountNearLimit = sub && tierInfo ? sub.unitCount >= Math.round(tierInfo.maxUnits * 0.8) : false;
 
   return (
-          {/* Sidebar — same as dashboard */}
-
-      {/* Main */}
       <div className="flex-1">
         <div className="max-w-4xl mx-auto px-8 py-8">
 
@@ -334,7 +331,6 @@ export default async function AbrechnungPage() {
 
         </div>
       </div>
-    </div>
   );
 }
 

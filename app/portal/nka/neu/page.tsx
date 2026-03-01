@@ -72,12 +72,6 @@ function fmtPct(n: number): string {
   return n.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' %';
 }
 
-// ─── Sidebar ───────────────────────────────────────────────────────────────
-
-function Sidebar() {
-  return (
-  );
-}
 
 // ─── Step Indicator ────────────────────────────────────────────────────────
 
@@ -288,7 +282,6 @@ function NkaWizardContent() {
   // ─── Render ───────────────────────────────────────────────────────────────
 
   return (
-          <Sidebar />
 
       <div className="flex-1">
         <div className="max-w-3xl mx-auto px-8 py-8">
@@ -725,7 +718,6 @@ function NkaWizardContent() {
 
         </div>
       </div>
-    </div>
   );
 }
 
@@ -735,7 +727,6 @@ export default function NkaWizardPage() {
   return (
     <Suspense fallback={
               <div className="w-8 h-8 border-4 border-teal border-t-transparent rounded-full animate-spin" />
-      </div>
     }>
       <NkaWizardContent />
     </Suspense>

@@ -48,14 +48,10 @@ export default async function EinstellungenPage() {
   }
 
   return (
-          {/* Sidebar */}
-
-      {/* Main */}
       <div className="flex-1">
         <EinstellungenClient 
           landlord={landlord}
         />
       </div>
-    </div>
   );
 }

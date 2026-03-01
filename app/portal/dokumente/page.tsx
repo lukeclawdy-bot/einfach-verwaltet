@@ -193,9 +193,6 @@ export default async function DokumentePage() {
   const properties = await getProperties(landlordId, isDemo);
 
   return (
-        {/* Sidebar */}
-
-        {/* Main */}
         <div className="flex-1">
           <DocumentVaultClient 
             initialDocuments={documents} 
@@ -204,7 +201,5 @@ export default async function DokumentePage() {
             isDemo={isDemo}
           />
         </div>
-      </div>
-    </div>
   );
 }

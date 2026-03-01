@@ -456,9 +456,7 @@ export function PartnerClient() {
   };
 
   return (
-      {/* Sidebar */}
-
-      {/* Main Content */}
+    <>
       <div className="flex-1">
         <div className="max-w-6xl mx-auto px-8 py-8">
           {/* Hero/Intro Bar */}
@@ -567,6 +565,6 @@ export function PartnerClient() {
           setSelectedPartner(null);
         }}
       />
-    </div>
+    </>
   );
 }

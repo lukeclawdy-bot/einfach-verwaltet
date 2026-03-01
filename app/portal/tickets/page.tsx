@@ -131,7 +131,5 @@ export default async function TicketsPage({ searchParams }: { searchParams: Prom
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 }

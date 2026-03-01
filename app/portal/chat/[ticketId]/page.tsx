@@ -188,9 +188,6 @@ export default function ChatDetailPage({ params }: { params: Promise<{ ticketId:
   const priority = PRIORITY_CONFIG[ticket.priority] || PRIORITY_CONFIG.normal;
 
   return (
-          {/* Sidebar */}
-
-      {/* Main Content */}
       <div className="flex-1">
         <div className="max-w-4xl mx-auto">
           {/* Header */}
@@ -356,6 +353,5 @@ export default function ChatDetailPage({ params }: { params: Promise<{ ticketId:
           )}
         </div>
       </div>
-    </div>
   );
 }

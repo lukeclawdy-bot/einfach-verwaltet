@@ -249,9 +249,6 @@ export default async function ChatPage() {
   const groups = await getConversations(landlordId, isDemo);
 
   return (
-        {/* Sidebar */}
-
-        {/* Main Content */}
         <div className="flex-1">
           <div className="max-w-4xl mx-auto px-8 py-8">
             <div className="flex items-center justify-between mb-6">
@@ -351,7 +348,5 @@ export default async function ChatPage() {
             )}
           </div>
         </div>
-      </div>
-    </div>
   );
 }

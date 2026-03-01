@@ -123,7 +123,6 @@ export default function TicketDetailPage({
   const isResolved = ticket.status === "resolved";
 
   return (
-
       <div className="flex-1">
         <div className="max-w-3xl mx-auto px-8 py-8">
           {/* Back */}
@@ -302,6 +301,5 @@ export default function TicketDetailPage({
           )}
         </div>
       </div>
-    </div>
   );
 }
