@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import type { ExtractedObjektData, ExtractedUnit } from "@/app/api/portal/onboarding/extract-objekt/route";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Unit {
@@ -1125,6 +1126,609 @@ function SummaryRow({ label, value }: { label: string; value: string }) {
   );
 }
 
+// ─── AI Upload Flow: helpers ───────────────────────────────────────────────────
+
+function fileTypeIcon(type: string) {
+  if (type.startsWith("image/")) {
+    return (
+      <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+    );
+  }
+  return (
+    <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+  );
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function confidenceDot(score: number) {
+  if (score === 0) {
+    return <span className="inline-block w-2 h-2 rounded-full bg-gray-300 flex-shrink-0" title="Nicht gefunden" />;
+  }
+  if (score >= 80) {
+    return <span className="inline-block w-2 h-2 rounded-full bg-green-500 flex-shrink-0" title={`Sicher (${score}%)`} />;
+  }
+  return <span className="inline-block w-2 h-2 rounded-full bg-amber-400 flex-shrink-0" title={`Unsicher (${score}%)`} />;
+}
+
+function inputClass(fieldName: string, confidence: Record<string, number>) {
+  const c = confidence[fieldName] ?? 0;
+  const base = "w-full rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 border";
+  if (c > 0 && c < 80) {
+    return `${base} border-amber-300 focus:ring-amber-200`;
+  }
+  return `${base} border-gray-200 focus:ring-teal/30`;
+}
+
+// ─── AI Upload: Step 0 — Mode Selection ───────────────────────────────────────
+function UploadModeSelect({
+  onSelectUpload,
+  onSelectManual,
+}: {
+  onSelectUpload: () => void;
+  onSelectManual: () => void;
+}) {
+  return (
+    <div className="space-y-5">
+      {/* Card A — AI Upload (recommended) */}
+      <button
+        type="button"
+        onClick={onSelectUpload}
+        className="w-full text-left border-2 border-teal rounded-2xl p-5 bg-teal/5 hover:bg-teal/10 transition-colors focus:outline-none focus:ring-2 focus:ring-teal/40 relative"
+      >
+        <div className="flex items-start gap-4">
+          {/* Sparkle icon */}
+          <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-teal flex items-center justify-center">
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap mb-1">
+              <span className="font-semibold text-navy text-base">Dokumente hochladen</span>
+              <span className="inline-block bg-teal text-white text-[10px] font-bold px-2 py-0.5 rounded-full leading-tight">
+                Empfohlen · Spart ~5 Minuten
+              </span>
+            </div>
+            <p className="text-sm text-text-light mb-2">
+              KI liest Ihre Unterlagen und füllt die Felder automatisch aus
+            </p>
+            <p className="text-xs text-gray-400">
+              Mietvertrag · Energieausweis · Grundriss · Letzte NKA · Übergabeprotokoll
+            </p>
+          </div>
+          <div className="flex-shrink-0 ml-2">
+            <svg className="w-5 h-5 text-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </div>
+      </button>
+
+      {/* Card B — Manual */}
+      <button
+        type="button"
+        onClick={onSelectManual}
+        className="w-full text-left border border-gray-200 rounded-2xl p-5 bg-white hover:border-gray-300 hover:bg-gray-50 transition-colors focus:outline-none focus:ring-2 focus:ring-gray-200"
+      >
+        <div className="flex items-start gap-4">
+          {/* Pencil icon */}
+          <div className="flex-shrink-0 w-11 h-11 rounded-xl bg-gray-100 flex items-center justify-center">
+            <svg className="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="font-semibold text-navy text-base mb-1">Manuell eingeben</p>
+            <p className="text-sm text-text-light">Felder direkt ausfüllen</p>
+          </div>
+          <div className="flex-shrink-0 ml-2">
+            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </div>
+      </button>
+    </div>
+  );
+}
+
+// ─── AI Upload: Upload Screen ─────────────────────────────────────────────────
+function UploadScreen({
+  files,
+  setFiles,
+  onAnalyze,
+  extractError,
+  onManual,
+}: {
+  files: File[];
+  setFiles: (f: File[]) => void;
+  onAnalyze: () => void;
+  extractError: string | null;
+  onManual: () => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  function handleFileList(list: FileList) {
+    const incoming = Array.from(list);
+    const combined = [...files, ...incoming].slice(0, 5);
+    setFiles(combined);
+  }
+
+  return (
+    <div className="space-y-5">
+      {/* Drag & drop zone */}
+      <div
+        className={`border-2 border-dashed rounded-2xl p-8 text-center transition-colors cursor-pointer ${
+          dragOver ? "border-teal bg-teal/5" : "border-gray-200 hover:border-teal/40"
+        }`}
+        onClick={() => inputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          if (e.dataTransfer.files.length > 0) handleFileList(e.dataTransfer.files);
+        }}
+      >
+        <div className="w-14 h-14 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        <p className="text-sm text-navy font-medium mb-1">
+          Dateien hierher ziehen oder{" "}
+          <span className="text-teal">auswählen</span>
+        </p>
+        <p className="text-xs text-gray-400">
+          PDF, JPG, PNG · max. 10 MB pro Datei · max. 5 Dateien
+        </p>
+        <input
+          ref={inputRef}
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          multiple
+          className="hidden"
+          onChange={(e) => e.target.files && handleFileList(e.target.files)}
+        />
+      </div>
+
+      {/* File list */}
+      {files.length > 0 && (
+        <div className="space-y-2">
+          {files.map((f, i) => (
+            <div key={i} className="flex items-center gap-3 bg-gray-50 rounded-xl px-4 py-3">
+              {fileTypeIcon(f.type)}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-navy font-medium truncate">{f.name}</p>
+                <p className="text-xs text-gray-400">{formatFileSize(f.size)}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFiles(files.filter((_, j) => j !== i))}
+                className="flex-shrink-0 text-gray-400 hover:text-red-500 transition-colors p-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          ))}
+
+          {files.length < 5 && (
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              className="text-sm text-teal font-medium hover:underline"
+            >
+              + Weitere Dateien hinzufügen
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Error */}
+      {extractError && (
+        <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-600">
+          {extractError}
+          <button
+            type="button"
+            onClick={onManual}
+            className="block mt-2 text-teal font-medium hover:underline text-xs"
+          >
+            Stattdessen manuell eingeben →
+          </button>
+        </div>
+      )}
+
+      {/* CTA */}
+      <button
+        type="button"
+        disabled={files.length === 0}
+        onClick={onAnalyze}
+        className="w-full py-3 bg-teal text-white font-semibold rounded-xl hover:bg-teal/90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      >
+        Weiter &amp; KI analysieren →
+      </button>
+
+      <p className="text-xs text-center text-gray-400">
+        Ihre Dokumente werden nicht dauerhaft gespeichert — nur zur einmaligen Datenextraktion verwendet.
+      </p>
+    </div>
+  );
+}
+
+// ─── AI Upload: Review Screen ─────────────────────────────────────────────────
+
+// Map MFH/EFH/Gewerbe → WizardData immobilientyp values
+function mapImmobilientyp(v: string | null): string {
+  if (!v) return "Mehrfamilienhaus";
+  if (v === "MFH") return "Mehrfamilienhaus";
+  if (v === "EFH") return "Einfamilienhaus";
+  if (v === "Gewerbe") return "Gewerbe";
+  return "Mehrfamilienhaus";
+}
+
+function ReviewScreen({
+  extracted,
+  confidence,
+  onAccept,
+  onManual,
+}: {
+  extracted: ExtractedObjektData;
+  confidence: Record<string, number>;
+  onAccept: (data: ExtractedObjektData) => void;
+  onManual: () => void;
+}) {
+  const [local, setLocal] = useState<ExtractedObjektData>({ ...extracted });
+  const [einheitenOpen, setEinheitenOpen] = useState(true);
+
+  function patch(p: Partial<ExtractedObjektData>) {
+    setLocal((prev) => ({ ...prev, ...p }));
+  }
+
+  function updateUnit(idx: number, p: Partial<ExtractedUnit>) {
+    const arr = [...local.einheiten];
+    arr[idx] = { ...arr[idx], ...p };
+    patch({ einheiten: arr });
+  }
+
+  function addUnit() {
+    patch({
+      einheiten: [
+        ...local.einheiten,
+        { whgNr: "", etage: 0, zimmer: 2, flaeche: 60, kaltmiete: 0, nkVorauszahlung: 150 },
+      ],
+    });
+  }
+
+  function removeUnit(idx: number) {
+    if (local.einheiten.length <= 1) return;
+    patch({ einheiten: local.einheiten.filter((_, i) => i !== idx) });
+  }
+
+  const ic = (field: string) => inputClass(field, confidence);
+
+  return (
+    <div className="space-y-6">
+      {/* Section: Objekt-Grunddaten */}
+      <div>
+        <h3 className="text-sm font-semibold text-navy mb-3">Objekt-Grunddaten</h3>
+        <div className="space-y-4">
+          {/* Straße + Hausnummer */}
+          <div className="grid grid-cols-3 gap-3">
+            <div className="col-span-2">
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.strasse ?? 0)}
+                <label className="text-xs font-medium text-navy">Straße</label>
+              </div>
+              <input
+                type="text"
+                value={local.strasse ?? ""}
+                onChange={(e) => patch({ strasse: e.target.value || null })}
+                className={ic("strasse")}
+                placeholder="Musterstraße"
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.hausnummer ?? 0)}
+                <label className="text-xs font-medium text-navy">Hausnummer</label>
+              </div>
+              <input
+                type="text"
+                value={local.hausnummer ?? ""}
+                onChange={(e) => patch({ hausnummer: e.target.value || null })}
+                className={ic("hausnummer")}
+                placeholder="12a"
+              />
+            </div>
+          </div>
+
+          {/* PLZ + Stadt */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.plz ?? 0)}
+                <label className="text-xs font-medium text-navy">PLZ</label>
+              </div>
+              <input
+                type="text"
+                value={local.plz ?? ""}
+                onChange={(e) => patch({ plz: e.target.value || null })}
+                className={ic("plz")}
+                placeholder="20095"
+                maxLength={5}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.stadt ?? 0)}
+                <label className="text-xs font-medium text-navy">Stadt</label>
+              </div>
+              <input
+                type="text"
+                value={local.stadt ?? ""}
+                onChange={(e) => patch({ stadt: e.target.value || null })}
+                className={ic("stadt")}
+                placeholder="Hamburg"
+              />
+            </div>
+          </div>
+
+          {/* Immobilientyp */}
+          <div>
+            <div className="flex items-center gap-1.5 mb-2">
+              {confidenceDot(confidence.immobilientyp ?? 0)}
+              <label className="text-xs font-medium text-navy">Immobilientyp</label>
+            </div>
+            <div className="flex gap-2 flex-wrap">
+              {(["MFH", "EFH", "Gewerbe"] as const).map((opt) => (
+                <button
+                  key={opt}
+                  type="button"
+                  onClick={() => patch({ immobilientyp: opt })}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium border transition-colors ${
+                    local.immobilientyp === opt
+                      ? "bg-teal text-white border-teal"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-teal/50"
+                  }`}
+                >
+                  {opt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Baujahr + Wohnfläche + Energieausweis */}
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.baujahr ?? 0)}
+                <label className="text-xs font-medium text-navy">Baujahr</label>
+              </div>
+              <input
+                type="number"
+                value={local.baujahr ?? ""}
+                onChange={(e) => patch({ baujahr: parseInt(e.target.value) || null })}
+                className={ic("baujahr")}
+                placeholder="1972"
+                min={1800}
+                max={new Date().getFullYear()}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.gesamtflaeche ?? 0)}
+                <label className="text-xs font-medium text-navy">Wohnfläche m²</label>
+              </div>
+              <input
+                type="number"
+                value={local.gesamtflaeche ?? ""}
+                onChange={(e) => patch({ gesamtflaeche: parseFloat(e.target.value) || null })}
+                className={ic("gesamtflaeche")}
+                placeholder="350"
+                min={0}
+              />
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {confidenceDot(confidence.energieausweis ?? 0)}
+                <label className="text-xs font-medium text-navy">Energieausweis</label>
+              </div>
+              <select
+                value={local.energieausweis ?? ""}
+                onChange={(e) => patch({ energieausweis: (e.target.value as ExtractedObjektData["energieausweis"]) || null })}
+                className={ic("energieausweis")}
+              >
+                <option value="">— unbekannt —</option>
+                {ENERGIEAUSWEIS_OPTIONS.map((o) => (
+                  <option key={o} value={o}>{o}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Section: Einheiten (collapsible, only if extracted) */}
+      {local.einheiten.length > 0 && (
+        <div className="border border-gray-200 rounded-xl overflow-hidden">
+          <button
+            type="button"
+            className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 hover:bg-gray-100 transition-colors text-left"
+            onClick={() => setEinheitenOpen(!einheitenOpen)}
+          >
+            <span className="text-sm font-semibold text-navy">
+              Einheiten ({local.einheiten.length})
+            </span>
+            <span className="text-gray-400 text-xs">{einheitenOpen ? "▲" : "▼"}</span>
+          </button>
+
+          {einheitenOpen && (
+            <div className="p-4 space-y-4">
+              {local.einheiten.map((unit, idx) => (
+                <div key={idx} className="bg-gray-50 rounded-xl p-3 space-y-3">
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">Whg-Nr.</label>
+                      <input
+                        type="text"
+                        value={unit.whgNr}
+                        onChange={(e) => updateUnit(idx, { whgNr: e.target.value })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        placeholder="1a"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">Etage</label>
+                      <input
+                        type="number"
+                        value={unit.etage}
+                        onChange={(e) => updateUnit(idx, { etage: parseInt(e.target.value) || 0 })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        min={-1}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">Zimmer</label>
+                      <input
+                        type="number"
+                        value={unit.zimmer}
+                        onChange={(e) => updateUnit(idx, { zimmer: parseFloat(e.target.value) || 0 })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        step={0.5}
+                        min={1}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">Fläche m²</label>
+                      <input
+                        type="number"
+                        value={unit.flaeche}
+                        onChange={(e) => updateUnit(idx, { flaeche: parseFloat(e.target.value) || 0 })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        min={0}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">Kaltmiete €</label>
+                      <input
+                        type="number"
+                        value={unit.kaltmiete}
+                        onChange={(e) => updateUnit(idx, { kaltmiete: parseFloat(e.target.value) || 0 })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        min={0}
+                        step={50}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-navy mb-1">NK-Voraus. €</label>
+                      <input
+                        type="number"
+                        value={unit.nkVorauszahlung}
+                        onChange={(e) => updateUnit(idx, { nkVorauszahlung: parseFloat(e.target.value) || 0 })}
+                        className="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm"
+                        min={0}
+                        step={10}
+                      />
+                    </div>
+                  </div>
+                  {local.einheiten.length > 1 && (
+                    <div className="flex justify-end">
+                      <button
+                        type="button"
+                        onClick={() => removeUnit(idx)}
+                        className="text-xs text-red-500 hover:text-red-700 transition-colors"
+                      >
+                        Einheit entfernen
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addUnit}
+                className="w-full border border-dashed border-gray-300 rounded-xl py-2 text-xs text-teal font-medium hover:border-teal/50 transition-colors"
+              >
+                + Einheit hinzufügen
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Confidence legend */}
+      <div className="flex items-center gap-4 text-xs text-gray-500 bg-gray-50 rounded-xl px-4 py-3">
+        <span className="font-medium text-navy">Zuverlässigkeit:</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-green-500" /> Hoch (&gt;80%)</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-amber-400" /> Prüfen (&lt;80%)</span>
+        <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-gray-300" /> Nicht gefunden</span>
+      </div>
+
+      {/* Actions */}
+      <button
+        type="button"
+        onClick={() => onAccept(local)}
+        className="w-full py-3 bg-teal text-white font-semibold rounded-xl hover:bg-teal/90 transition-colors"
+      >
+        Daten übernehmen &amp; weiter →
+      </button>
+
+      <div className="text-center">
+        <button
+          type="button"
+          onClick={onManual}
+          className="text-sm text-gray-500 hover:text-teal transition-colors underline underline-offset-2"
+        >
+          Lieber manuell eingeben
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ─── Loading Overlay ──────────────────────────────────────────────────────────
+function LoadingOverlay() {
+  return (
+    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white/90 backdrop-blur-sm">
+      <div className="flex flex-col items-center gap-4">
+        {/* Spinner */}
+        <svg
+          className="w-12 h-12 text-teal animate-spin"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path
+            className="opacity-75"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+          />
+        </svg>
+        <div className="text-center">
+          <p className="text-navy font-semibold text-lg">KI liest Ihre Dokumente&hellip;</p>
+          <p className="text-text-light text-sm mt-1">Das dauert in der Regel 10–30 Sekunden.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Wizard Component ────────────────────────────────────────────────────
 export default function ObjektOnboardingPage() {
   const router = useRouter();
@@ -1132,6 +1736,14 @@ export default function ObjektOnboardingPage() {
   const [data, setData] = useState<WizardData>(defaultData());
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  // ── Upload flow state ──────────────────────────────────────────────────────
+  const [uploadMode, setUploadMode] = useState<"select" | "uploading" | "review" | "manual">("select");
+  const [extractedData, setExtractedData] = useState<ExtractedObjektData | null>(null);
+  const [extractedConfidence, setExtractedConfidence] = useState<Record<string, number>>({});
+  const [uploadFiles, setUploadFiles] = useState<File[]>([]);
+  const [extracting, setExtracting] = useState(false);
+  const [extractError, setExtractError] = useState<string | null>(null);
 
   // Load draft from localStorage
   useEffect(() => {
@@ -1184,6 +1796,106 @@ export default function ObjektOnboardingPage() {
     if (step > 1) setStep((s) => s - 1);
   }
 
+  // ── Convert File → base64 dataUrl ─────────────────────────────────────────
+  function fileToDataUrl(file: File): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── Trigger AI extraction ─────────────────────────────────────────────────
+  async function handleAnalyze() {
+    if (uploadFiles.length === 0) return;
+    setExtracting(true);
+    setExtractError(null);
+
+    try {
+      const converted = await Promise.all(
+        uploadFiles.map(async (f) => ({
+          name: f.name,
+          type: f.type,
+          dataUrl: await fileToDataUrl(f),
+        }))
+      );
+
+      const res = await fetch("/api/portal/onboarding/extract-objekt", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ files: converted }),
+      });
+
+      const json = await res.json();
+
+      if (!res.ok) {
+        throw new Error(json.error ?? "KI-Extraktion fehlgeschlagen.");
+      }
+
+      setExtractedData(json.extracted);
+      setExtractedConfidence(json.confidence ?? {});
+      setUploadMode("review");
+    } catch (err) {
+      setExtractError(
+        err instanceof Error
+          ? err.message
+          : "Unbekannter Fehler — bitte erneut versuchen."
+      );
+    } finally {
+      setExtracting(false);
+    }
+  }
+
+  // ── Accept extracted data → populate WizardData → jump to Step 2 ──────────
+  function handleAcceptExtracted(reviewed: ExtractedObjektData) {
+    // Map extracted fields → WizardData
+    const patch: Partial<WizardData> = {
+      strasse: reviewed.strasse ?? "",
+      hausnummer: reviewed.hausnummer ?? "",
+      plz: reviewed.plz ?? "",
+      stadt: reviewed.stadt ?? "",
+      immobilientyp: mapImmobilientyp(reviewed.immobilientyp),
+      baujahr: reviewed.baujahr ?? 1970,
+      gesamtflaeche: reviewed.gesamtflaeche ?? 0,
+      energieausweis: reviewed.energieausweis ?? "C",
+    };
+
+    // Map extracted einheiten → WizardData units
+    if (reviewed.einheiten && reviewed.einheiten.length > 0) {
+      patch.einheiten = reviewed.einheiten.map((u) => ({
+        whgNr: u.whgNr ?? "",
+        etage: u.etage ?? 0,
+        zimmer: u.zimmer ?? 2,
+        flaeche: u.flaeche ?? 0,
+        kaltmiete: u.kaltmiete ?? 0,
+        nkVorauszahlung: u.nkVorauszahlung ?? 150,
+      }));
+    }
+
+    update(patch);
+    setUploadMode("manual");
+    setStep(2); // Skip Step 1 (Grunddaten already filled), go to Einheiten
+  }
+
+  // ── "Lieber manuell eingeben" from review — pre-fill Step 1 ───────────────
+  function handleReviewManual() {
+    if (extractedData) {
+      update({
+        strasse: extractedData.strasse ?? "",
+        hausnummer: extractedData.hausnummer ?? "",
+        plz: extractedData.plz ?? "",
+        stadt: extractedData.stadt ?? "",
+        immobilientyp: mapImmobilientyp(extractedData.immobilientyp),
+        baujahr: extractedData.baujahr ?? 1970,
+        gesamtflaeche: extractedData.gesamtflaeche ?? 0,
+        energieausweis: extractedData.energieausweis ?? "C",
+      });
+    }
+    setUploadMode("manual");
+    setStep(1);
+  }
+
   async function handleSubmit() {
     setSubmitting(true);
     setSubmitError(null);
@@ -1234,6 +1946,87 @@ export default function ObjektOnboardingPage() {
 
   const score = calcScore(data);
 
+  // ── Upload mode screens (replace entire step content) ─────────────────────
+  if (uploadMode !== "manual") {
+    return (
+      <div className="flex-1">
+        {extracting && <LoadingOverlay />}
+
+        <div className="max-w-2xl mx-auto px-6 py-8">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-navy">Ihr Objekt erfassen</h1>
+            <p className="text-text-light text-sm mt-0.5">
+              {uploadMode === "select"
+                ? "Wie möchten Sie vorgehen?"
+                : uploadMode === "uploading"
+                ? "Laden Sie ein oder mehrere Dokumente hoch — die KI extrahiert die Daten automatisch."
+                : "Bitte prüfen und ggf. korrigieren — dann weiter."}
+            </p>
+          </div>
+
+          {/* Back arrow on upload/review screens */}
+          {uploadMode !== "select" && (
+            <button
+              type="button"
+              onClick={() =>
+                uploadMode === "uploading"
+                  ? setUploadMode("select")
+                  : setUploadMode("uploading")
+              }
+              className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-navy transition-colors mb-6"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Zurück
+            </button>
+          )}
+
+          {/* Card */}
+          <div className="bg-white border border-gray-100 rounded-2xl p-6 shadow-sm">
+            {uploadMode === "select" && (
+              <>
+                <h2 className="font-bold text-navy text-lg mb-5">Wie möchten Sie vorgehen?</h2>
+                <UploadModeSelect
+                  onSelectUpload={() => setUploadMode("uploading")}
+                  onSelectManual={() => { setUploadMode("manual"); setStep(1); }}
+                />
+              </>
+            )}
+
+            {uploadMode === "uploading" && (
+              <>
+                <h2 className="font-bold text-navy text-lg mb-5">Dokumente hochladen</h2>
+                <UploadScreen
+                  files={uploadFiles}
+                  setFiles={setUploadFiles}
+                  onAnalyze={handleAnalyze}
+                  extractError={extractError}
+                  onManual={() => { setUploadMode("manual"); setStep(1); }}
+                />
+              </>
+            )}
+
+            {uploadMode === "review" && extractedData && (
+              <>
+                <h2 className="font-bold text-navy text-lg mb-1">KI hat folgende Daten gefunden</h2>
+                <p className="text-text-light text-sm mb-5">Bitte prüfen und ggf. korrigieren — dann weiter.</p>
+                <ReviewScreen
+                  extracted={extractedData}
+                  confidence={extractedConfidence}
+                  onAccept={handleAcceptExtracted}
+                  onManual={handleReviewManual}
+                />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Normal wizard (uploadMode === "manual") ───────────────────────────────
   return (
     <div className="flex-1">
       <div className="max-w-2xl mx-auto px-6 py-8">
