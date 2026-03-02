@@ -5,8 +5,43 @@ import { eq } from "drizzle-orm";
 import { createToken } from "@/lib/auth/jwt";
 import { Resend } from "resend";
 
+// Strip any HTML tags from user input before storing
+function sanitize(val: string | null | undefined): string | null {
+  if (!val) return null;
+  return String(val).replace(/<[^>]*>/g, "").trim().slice(0, 500);
+}
+
+// Simple in-memory rate limiter (per IP, resets on cold start)
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || entry.resetAt < now) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 }); // 1 min window
+    return true;
+  }
+  if (entry.count >= 10) return false; // max 10 submissions per IP per minute
+  entry.count++;
+  return true;
+}
+
 export async function POST(req: NextRequest) {
   try {
+    // Rate limiting
+    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json({ error: "Zu viele Anfragen. Bitte warten Sie einen Moment." }, { status: 429 });
+    }
+
+    // Basic origin validation — only accept requests from our own domain
+    const origin = req.headers.get("origin") ?? "";
+    const referer = req.headers.get("referer") ?? "";
+    const allowedHosts = ["einfach-verwaltet.de", "einfach-verwaltet.vercel.app", "localhost"];
+    const originOk = allowedHosts.some(h => origin.includes(h) || referer.includes(h));
+    if (!originOk && origin !== "") {
+      return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 403 });
+    }
+
     const body = await req.json();
     const {
       email,
@@ -33,10 +68,24 @@ export async function POST(req: NextRequest) {
 
     // Derive email from body — wizard may pass it or it may be empty (magic-link flow)
     const rawEmail = email || body.emailAdresse || "";
-    const normalised = rawEmail.toLowerCase().trim();
+    const normalised = rawEmail.toLowerCase().trim().slice(0, 200);
+
+    // Validate email format
+    if (normalised && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalised)) {
+      return NextResponse.json({ error: "Ungültige E-Mail-Adresse." }, { status: 400 });
+    }
+
+    // Sanitize all user-controlled inputs
+    const sVorname = sanitize(vorname);
+    const sNachname = sanitize(nachname);
+    const sTelefon = sanitize(telefon);
+    const sUnternehmen = sanitize(unternehmen || firma);
+    const sStrasse = sanitize(strasse);
+    const sPlz = sanitize(plz);
+    const sStadt = sanitize(stadt);
 
     // Build display name from wizard fields or fallback
-    const displayName = name || (vorname && nachname ? `${vorname} ${nachname}` : null) || firma || unternehmen || null;
+    const displayName = sanitize(name) || (sVorname && sNachname ? `${sVorname} ${sNachname}` : null) || sanitize(firma) || sUnternehmen || null;
 
     let landlordId: string;
 
@@ -56,7 +105,7 @@ export async function POST(req: NextRequest) {
             .update(landlords)
             .set({
               name: displayName ?? existing[0].name,
-              companyName: (unternehmen || firma) ?? existing[0].companyName,
+              companyName: sUnternehmen ?? existing[0].companyName,
               type: type === "profi" ? "professional" : "private",
               onboardingCompleted: true,
             })
@@ -68,7 +117,7 @@ export async function POST(req: NextRequest) {
           .values({
             email: normalised,
             name: displayName,
-            companyName: unternehmen || firma || null,
+            companyName: sUnternehmen ?? null,
             type: type === "profi" ? "professional" : "private",
             communicationChannel: kommunikation || "email",
             aiAutonomyLevel: aiAutonomy || "supervised",
@@ -88,14 +137,14 @@ export async function POST(req: NextRequest) {
         struktur: struktur ?? null,
         verwaltungstyp: verwaltungstyp ?? null,
         einheitenAnzahl: einheitenAnzahl ? Number(einheitenAnzahl) : null,
-        vorname: vorname ?? null,
-        nachname: nachname ?? null,
-        telefon: telefon ?? null,
-        unternehmen: (unternehmen || firma) ?? null,
+        vorname: sVorname ?? null,
+        nachname: sNachname ?? null,
+        telefon: sTelefon ?? null,
+        unternehmen: sUnternehmen ?? null,
         data: {
-          strasse: strasse ?? null,
-          plz: plz ?? null,
-          stadt: stadt ?? null,
+          strasse: sStrasse ?? null,
+          plz: sPlz ?? null,
+          stadt: sStadt ?? null,
           mieterOption: mieterOption ?? null,
           mieter: mieter ?? [],
         },
@@ -109,7 +158,7 @@ export async function POST(req: NextRequest) {
         .values({
           email: `tmp-${Date.now()}@onboarding.ev`,
           name: displayName,
-          companyName: unternehmen || firma || null,
+          companyName: sUnternehmen ?? null,
           type: type === "profi" ? "professional" : "private",
           communicationChannel: "email",
           aiAutonomyLevel: "supervised",
@@ -127,14 +176,14 @@ export async function POST(req: NextRequest) {
         struktur: struktur ?? null,
         verwaltungstyp: verwaltungstyp ?? null,
         einheitenAnzahl: einheitenAnzahl ? Number(einheitenAnzahl) : null,
-        vorname: vorname ?? null,
-        nachname: nachname ?? null,
-        telefon: telefon ?? null,
-        unternehmen: (unternehmen || firma) ?? null,
+        vorname: sVorname ?? null,
+        nachname: sNachname ?? null,
+        telefon: sTelefon ?? null,
+        unternehmen: sUnternehmen ?? null,
         data: {
-          strasse: strasse ?? null,
-          plz: plz ?? null,
-          stadt: stadt ?? null,
+          strasse: sStrasse ?? null,
+          plz: sPlz ?? null,
+          stadt: sStadt ?? null,
           mieterOption: mieterOption ?? null,
           mieter: mieter ?? [],
         },

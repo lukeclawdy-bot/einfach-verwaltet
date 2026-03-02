@@ -715,12 +715,12 @@ export default function OnboardingWizardPage() {
   // Load draft on mount
   useEffect(() => {
     try {
-      const saved = localStorage.getItem(DRAFT_KEY);
+      const saved = sessionStorage.getItem(DRAFT_KEY);
       if (saved) {
         const parsed = JSON.parse(saved) as Partial<WizardData> & { mieterOption?: unknown; mieter?: unknown; _step?: number };
         // If draft has stale keys from old schema, discard it entirely
         if ('mieterOption' in parsed || 'mieter' in parsed) {
-          localStorage.removeItem(DRAFT_KEY);
+          sessionStorage.removeItem(DRAFT_KEY);
         } else {
           // Merge safely — ensure all string fields are strings, not undefined
           setData((prev) => ({
@@ -746,7 +746,7 @@ export default function OnboardingWizardPage() {
 
   const saveDraft = useCallback((d: WizardData, currentStep: number) => {
     try {
-      localStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, _step: currentStep }));
+      sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ ...d, _step: currentStep }));
     } catch {
       // ignore quota errors
     }
@@ -833,7 +833,7 @@ export default function OnboardingWizardPage() {
       }
 
       // Clear draft
-      try { localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
+      try { sessionStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
 
       // Advance to success step
       goTo(6);
